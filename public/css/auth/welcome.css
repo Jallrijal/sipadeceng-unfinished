@@ -1,0 +1,857 @@
+/* =====================================================
+   SIPADECENG - Landing Page Styles
+   File: public/css/auth/welcome.css
+   ===================================================== */
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 130px; /* Offset for fixed navbar */
+}
+* {
+    font-family: 'Poppins', 'Roboto', 'Inter', sans-serif;
+}
+body {
+    background: #f4f6fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* =================== NAVBAR =================== */
+/* NAVBAR NEW COOL FLOATING UI */
+.navbar {
+    background: transparent !important;
+    padding: 24px 0;
+    z-index: 1030;
+    border: none;
+}
+
+.navbar .container {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05), 0 5px 15px rgba(0, 0, 0, 0.03);
+    border-radius: 100px; /* Pill shape */
+    padding: 8px 24px;
+}
+
+/* No scroll animations */
+.navbar.active {
+    background: transparent !important;
+    padding: 24px 0;
+    box-shadow: none;
+    border: none;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.5px;
+}
+
+.navbar-brand img {
+    height: 38px;
+    margin-right: 12px;
+}
+
+.nav-link {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #64748b !important;
+    margin: 0 14px;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #0f172a !important; /* Cool dark tone */
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #0f172a;
+    border-radius: 50%;
+}
+
+.dropdown-menu {
+    background: #ffffff;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0,0,0,0.03);
+    padding: 10px 0;
+    margin-top: 20px;
+}
+
+.dropdown-item {
+    padding: 10px 24px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #475569;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+.nav-login {
+    background: #0f172a; /* Sleek dark button */
+    color: #fff !important;
+    border-radius: 100px;
+    padding: 10px 28px !important;
+    font-weight: 600;
+    margin-left: 15px;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.2);
+    display: inline-block;
+}
+
+.nav-login:hover {
+    background: #1e293b !important;
+}
+
+/* Mobile adjustments for the pill shape */
+@media (max-width: 991.98px) {
+    .navbar .container {
+        border-radius: 20px;
+        padding: 12px 20px;
+        position: relative;
+    }
+    .navbar-collapse {
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 16px;
+        padding: 20px;
+        margin-top: 15px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1050;
+    }
+    .nav-login {
+        margin-left: 0;
+        margin-top: 10px;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* =================== HERO SECTION =================== */
+.top-beranda {
+    position: relative;
+    background-color: #ffffff;
+    background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
+                      radial-gradient(circle at bottom left, rgba(37, 99, 235, 0.03) 0%, transparent 40%);
+    padding: 160px 0 80px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+.hero-glow-1 {
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+.hero-content-wrapper {
+    position: relative;
+    z-index: 2;
+}
+.title-top-beranda-1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.1;
+    margin-bottom: 5px;
+    letter-spacing: -1px;
+}
+.title-top-beranda-2 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #2563eb, #3b82f6, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 25px;
+    letter-spacing: -1px;
+}
+.top-beranda .text-justify {
+    font-size: 1.15rem;
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 40px;
+    max-width: 95%;
+}
+.tombol-top-beranda {
+    display: inline-flex;
+    align-items: center;
+    background: #2563eb;
+    color: #ffffff;
+    padding: 15px 40px;
+    border-radius: 100px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+.tombol-top-beranda:hover {
+    background: #1d4ed8;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.4);
+}
+.tombol-top-beranda i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+.hero-img-wrapper {
+    position: relative;
+    z-index: 2;
+}
+.hero-img-wrapper img {
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.08));
+    transform: scale(1.05);
+}
+
+/* =================== TENTANG SECTION =================== */
+.section-tentang {
+    padding: 100px 0;
+    background-color: #ffffff;
+    position: relative;
+    border-top: 1px solid rgba(0,0,0,0.03);
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+.tentang-badge {
+    display: inline-block;
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+.tentang-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 25px;
+    letter-spacing: -0.5px;
+    line-height: 1.3;
+}
+.tentang-desc {
+    font-size: 1.1rem;
+    color: #475569;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+.tentang-card {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(0,0,0,0.03);
+    height: 100%;
+    transition: all 0.3s ease;
+}
+.tentang-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+}
+.tentang-icon {
+    width: 50px;
+    height: 50px;
+    background: #ffffff;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #2563eb;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+}
+.tentang-card-title {
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+.tentang-card-desc {
+    color: #64748b;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* =================== ALUR SECTION =================== */
+.section-alur {
+    padding: 100px 0;
+    background-color: #f8fafc;
+    position: relative;
+}
+.title-alur-pengajuan {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    text-align: center;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+}
+.subtitle-alur {
+    text-align: center;
+    color: #64748b;
+    font-size: 1.1rem;
+    margin-bottom: 60px;
+}
+.alur-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 40px 25px;
+    height: 100%;
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+}
+.alur-card:hover {
+    box-shadow: 0 20px 40px rgba(37, 99, 235, 0.08);
+    border-color: rgba(37, 99, 235, 0.1);
+}
+.alur-step-number {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: 4px solid #f8fafc;
+    box-shadow: 0 5px 15px rgba(37,99,235,0.2);
+    z-index: 2;
+}
+.alur-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(37, 99, 235, 0.05);
+    color: #2563eb;
+    border-radius: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+}
+.alur-card:hover .alur-icon {
+    background: #2563eb;
+    color: #ffffff;
+}
+.alur-card:hover .alur-icon i {
+    animation: iconHoverAnim 1s ease infinite;
+}
+.alur-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #0f172a;
+    margin-bottom: 12px;
+}
+.alur-deskripsi {
+    font-size: 0.95rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* Animasi Alur Hover */
+@keyframes iconHoverAnim {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.tombol-download-panduan {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    padding: 15px 40px;
+    border-radius: 100px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+.tombol-download-panduan:hover {
+    background: rgba(37, 99, 235, 0.2);
+    color: #1d4ed8;
+    transform: translateY(-3px);
+}
+.tombol-download-panduan i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+/* =================== SIAPA SAJA SECTION =================== */
+.section-siapa {
+    padding: 100px 0;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+.siapa-main-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    letter-spacing: -1px;
+}
+.siapa-desc {
+    font-size: 1.1rem;
+    color: #64748b;
+    line-height: 1.8;
+    max-width: 90%;
+}
+.siapa-card-horizontal {
+    display: flex;
+    align-items: flex-start;
+    background: #f8fafc;
+    border: 1px solid rgba(0,0,0,0.03);
+    border-radius: 20px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    position: relative;
+    overflow: hidden;
+}
+.siapa-card-horizontal:hover {
+    transform: translateX(10px);
+    box-shadow: 0 15px 30px rgba(37, 99, 235, 0.08);
+    background: #ffffff;
+    border-color: rgba(37,99,235,0.1);
+}
+.siapa-card-horizontal::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #2563eb;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.siapa-card-horizontal:hover::before {
+    opacity: 1;
+}
+.siapa-card-horizontal .icon-box {
+    flex-shrink: 0;
+    width: 65px;
+    height: 65px;
+    background: rgba(37, 99, 235, 0.08);
+    color: #2563eb;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-right: 25px;
+    transition: all 0.3s ease;
+}
+.siapa-card-horizontal:hover .icon-box {
+    background: #2563eb;
+    color: #ffffff;
+    transform: scale(1.05) rotate(5deg);
+}
+.siapa-card-horizontal .text-box h4 {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #0f172a;
+    margin-bottom: 8px;
+    margin-top: 5px;
+}
+.siapa-card-horizontal .text-box p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* =================== HUBUNGI KAMI SECTION =================== */
+.section-hubungi {
+    padding: 100px 0;
+    background-color: #ffffff;
+    position: relative;
+}
+.hubungi-badge {
+    display: inline-block;
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0 auto 20px auto;
+    display: block;
+    width: max-content;
+}
+.hubungi-main-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    text-align: center;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+}
+.hubungi-subtitle {
+    text-align: center;
+    color: #64748b;
+    font-size: 1.1rem;
+    max-width: 650px;
+    margin: 0 auto 50px auto;
+    line-height: 1.6;
+}
+.contact-info-wrapper {
+    padding-right: 20px;
+}
+.contact-card {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.3s ease;
+}
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(37, 99, 235, 0.08) !important;
+    background: #ffffff;
+    border-color: rgba(37, 99, 235, 0.1);
+}
+.contact-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-right: 20px;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+.contact-card:hover .contact-icon {
+    background: #2563eb;
+    color: #ffffff;
+}
+.contact-details h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 5px;
+}
+.contact-details p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+.contact-details p a {
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.contact-details p a:hover {
+    color: #2563eb;
+}
+.map-wrapper {
+    border: 8px solid #ffffff;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.06) !important;
+}
+
+/* =================== WHATSAPP BUTTON =================== */
+.whatsapp {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+}
+.whatsapp:hover {
+    background: #20ba5a;
+    transform: scale(1.1);
+}
+.my-whatsapp {
+    color: #fff;
+    font-size: 1.8rem;
+}
+
+/* =================== FOOTER =================== */
+.section-footer-top {
+    background: #f8fafc;
+    padding: 80px 0 60px 0;
+    border-top: 1px solid rgba(0,0,0,0.03);
+}
+.footer-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding-bottom: 12px;
+}
+.footer-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 3px;
+    background: #2563eb;
+    border-radius: 2px;
+}
+.footer-text {
+    font-size: 0.95rem;
+    color: #64748b;
+    line-height: 1.7;
+}
+.contact-item-footer {
+    transition: transform 0.2s ease;
+}
+.contact-item-footer:hover {
+    transform: translateX(8px);
+}
+.contact-icon-footer {
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    flex-shrink: 0;
+}
+.contact-item-footer:hover .contact-icon-footer {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+}
+.hover-primary-text {
+    transition: color 0.2s ease;
+}
+.hover-primary-text:hover {
+    color: #2563eb !important;
+}
+.social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+.social-icon:hover {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(37,99,235,0.2);
+}
+.btn-kunjungi {
+    background-color: transparent;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+    font-weight: 600;
+    padding: 10px 25px;
+    border-radius: 100px;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.btn-kunjungi:hover {
+    background-color: #2563eb;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+}
+.section-footer-bottom {
+    background: #0f172a;
+    color: #94a3b8;
+    padding: 24px 0;
+}
+.footer-copyright {
+    font-size: 0.95rem;
+}
+
+/* =================== FAQ SECTION =================== */
+.section-faq {
+    padding: 100px 0;
+    background-color: #f8fafc;
+    position: relative;
+}
+.faq-badge {
+    display: inline-block;
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+.faq-main-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    letter-spacing: -1px;
+}
+.faq-desc {
+    font-size: 1.1rem;
+    color: #64748b;
+    line-height: 1.8;
+    max-width: 95%;
+}
+.btn-tanya-kami {
+    display: inline-flex;
+    align-items: center;
+    background: #ffffff;
+    color: #0f172a;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 100px;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+.btn-tanya-kami:hover {
+    background: #0f172a;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+}
+
+/* Modern Accordion */
+.modern-accordion .accordion-item {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.04);
+    border-radius: 16px !important;
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
+}
+.modern-accordion .accordion-item:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+    border-color: rgba(37, 99, 235, 0.1);
+}
+.modern-accordion .accordion-button {
+    background: #ffffff;
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 20px 24px;
+    box-shadow: none !important;
+    border-radius: 16px !important;
+}
+.modern-accordion .accordion-button:not(.collapsed) {
+    color: #2563eb;
+    background: #ffffff;
+    box-shadow: none;
+}
+.modern-accordion .accordion-button::after {
+    background-image: none;
+    content: '\f067'; /* FontAwesome plus icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 1rem;
+    color: #64748b;
+    transition: all 0.3s ease;
+}
+.modern-accordion .accordion-button:not(.collapsed)::after {
+    background-image: none;
+    content: '\f068'; /* FontAwesome minus icon */
+    color: #2563eb;
+    transform: rotate(180deg);
+}
+.modern-accordion .accordion-body {
+    padding: 0 24px 24px 24px;
+    color: #475569;
+    line-height: 1.7;
+    font-size: 1rem;
+    background: #ffffff;
+}
+
+/* =================== RESPONSIVE =================== */
+@media (max-width: 768px) {
+    .title-top-beranda-1 { font-size: 1.8rem; }
+    .title-top-beranda-2 { font-size: 1.4rem; }
+    .siapa-main-title { font-size: 2rem; line-height: 1.3; }
+    .siapa-desc { max-width: 100%; font-size: 1rem; }
+    .siapa-card-horizontal { padding: 20px; flex-direction: column; }
+    .siapa-card-horizontal .icon-box { margin-bottom: 15px; margin-right: 0; }
+    .faq-main-title { font-size: 2rem; }
+    .faq-desc { max-width: 100%; font-size: 1rem; }
+    .whatsapp { width: 50px; height: 50px; bottom: 20px; right: 20px; }
+    .my-whatsapp { font-size: 1.3rem; }
+    .hubungi-main-title { font-size: 2rem; }
+    .contact-info-wrapper { padding-right: 0; }
+}
+
+/* Float Animation */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
