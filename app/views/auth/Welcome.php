@@ -647,7 +647,7 @@
 			font-size: 1.8rem;
 		}
 
-		/* Modern Footer */
+		/* Footer */
 		.section-footer-top {
 			background: #f8fafc;
 			padding: 80px 0 60px 0;
