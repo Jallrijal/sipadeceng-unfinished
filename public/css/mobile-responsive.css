@@ -1,0 +1,775 @@
+/* Mobile Responsive Fixes - Only for mobile devices */
+@media (max-width: 768px) {
+
+    /* 1. Fix Sidebar - Single click to open */
+    .sidebar {
+        transform: translateX(-100%);
+        transition: all 0.3s ease-in-out;
+        z-index: 1060;
+        /* Higher than navbar z-index 1050 */
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: var(--sidebar-width);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .sidebar-toggle {
+        display: block !important;
+        z-index: 1061;
+        /* Higher than sidebar */
+        position: relative;
+    }
+
+    /* Ensure sidebar toggle button is always accessible */
+    #sidebarToggle {
+        z-index: 1061 !important;
+        /* Higher than sidebar */
+        position: relative !important;
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+    }
+
+    /* Prevent any interference with button clicks */
+    #sidebarToggle * {
+        pointer-events: none !important;
+    }
+
+    #sidebarToggle i {
+        pointer-events: none !important;
+    }
+
+    /* Ensure sidebar opens with single click */
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    /* Fix sidebar button styling */
+    .btn-sidebar-toggle {
+        border: none;
+        background: transparent;
+        color: var(--primary-color);
+        font-size: 1.5rem;
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+
+    /* Ensure sidebar toggle button works properly */
+    #sidebarToggle {
+        border: none !important;
+        background: transparent !important;
+        color: #333 !important;
+        font-size: 1.5rem !important;
+        padding: 0.5rem !important;
+        cursor: pointer !important;
+        outline: none !important;
+        box-shadow: none !important;
+        transition: color 0.3s ease !important;
+    }
+
+    #sidebarToggle:hover {
+        color: var(--primary-color) !important;
+        background: transparent !important;
+    }
+
+    #sidebarToggle:focus {
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+    #sidebarToggle:active {
+        transform: none !important;
+    }
+
+    /* 2. Fix Pagination - Limit pagination display */
+    .pagination {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .pagination .page-item {
+        display: none;
+    }
+
+    .pagination .page-item:first-child,
+    .pagination .page-item:last-child,
+    .pagination .page-item.active,
+    .pagination .page-item:nth-child(2),
+    .pagination .page-item:nth-last-child(2) {
+        display: block;
+    }
+
+    .pagination .page-item:nth-child(3)::after {
+        content: "...";
+        display: inline-block;
+        padding: 0.375rem 0.75rem;
+        color: #6c757d;
+        pointer-events: none;
+    }
+
+    .pagination .page-item:nth-child(3) {
+        display: none;
+    }
+
+    .pagination .page-item:nth-child(4) {
+        display: none;
+    }
+
+    /* DataTables pagination fix */
+    .dataTables_paginate .paginate_button {
+        padding: 0.375rem 0.75rem !important;
+        margin: 0 2px !important;
+        font-size: 0.875rem !important;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+        color: white !important;
+    }
+
+    .dataTables_paginate .paginate_button:hover {
+        background: var(--primary-light) !important;
+        border-color: var(--primary-light) !important;
+        color: white !important;
+    }
+
+    /* Hide some pagination buttons on mobile */
+    .dataTables_paginate .paginate_button:not(.current):not(.previous):not(.next) {
+        display: none !important;
+    }
+
+    .dataTables_paginate .paginate_button.previous,
+    .dataTables_paginate .paginate_button.next {
+        display: inline-block !important;
+    }
+
+    /* 3. Fix Detail Pengajuan Cuti - Left alignment */
+    .detail-pengajuan,
+    .detail-cuti,
+    .form-detail,
+    .card-body,
+    .form-container,
+    .detail-container,
+    .leave-form,
+    .cuti-form {
+        text-align: left !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    .detail-pengajuan .row,
+    .detail-cuti .row,
+    .form-detail .row,
+    .form-container .row,
+    .detail-container .row,
+    .leave-form .row,
+    .cuti-form .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .detail-pengajuan .col,
+    .detail-cuti .col,
+    .form-detail .col,
+    .detail-pengajuan .col-12,
+    .detail-cuti .col-12,
+    .form-detail .col-12,
+    .form-container .col,
+    .form-container .col-12,
+    .detail-container .col,
+    .detail-container .col-12,
+    .leave-form .col,
+    .leave-form .col-12,
+    .cuti-form .col,
+    .cuti-form .col-12 {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        text-align: left !important;
+    }
+
+    /* Fix form labels and inputs alignment */
+    .form-label,
+    .form-control-label,
+    label {
+        text-align: left !important;
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 5px !important;
+    }
+
+    .form-control,
+    .form-select,
+    .form-textarea {
+        text-align: left !important;
+        width: 100% !important;
+    }
+
+    /* 4. Fix History Page - Background alignment */
+    .history-section,
+    .report-section,
+    .section-background,
+    .report-container,
+    .history-container {
+        background: white !important;
+        margin: 0 !important;
+        padding: 15px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    .history-section .card,
+    .report-section .card,
+    .report-container .card,
+    .history-container .card {
+        margin: 0 !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+    }
+
+    /* Fix any section with background issues */
+    section {
+        background: white !important;
+        margin: 0 !important;
+        padding: 15px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    /* 5. Fix Signature All Page - Section cutoff at 599px */
+    @media (max-width: 599px) {
+
+        .signature-all-section,
+        .signature-section {
+            padding: 10px !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: auto !important;
+        }
+
+        .signature-all-section .container,
+        .signature-section .container {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+        }
+
+        .signature-all-section .row,
+        .signature-section .row {
+            margin: 0 !important;
+        }
+
+        .signature-all-section .col,
+        .signature-section .col {
+            padding: 5px !important;
+        }
+    }
+
+    /* 6. Fix Signature Page - Right side padding */
+    .signature-page,
+    .signature-container,
+    .signature-manage,
+    .paraf-manage {
+        padding-right: 15px !important;
+        padding-left: 15px !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    .signature-page .card,
+    .signature-container .card,
+    .signature-manage .card,
+    .paraf-manage .card {
+        margin-right: 10px !important;
+        margin-left: 10px !important;
+    }
+
+    /* 7. Fix User Manage Page - Background alignment */
+    .user-manage-section,
+    .manage-section,
+    .user-manage,
+    .manage-user {
+        background: white !important;
+        margin: 0 !important;
+        padding: 15px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    .user-manage-section .card,
+    .manage-section .card,
+    .user-manage .card,
+    .manage-user .card {
+        margin: 0 !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+    }
+
+    /* General Mobile Improvements */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 10px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        position: relative !important;
+        z-index: 1030 !important;
+        /* Lower than navbar */
+    }
+
+    /* When sidebar is open, main content should be behind */
+    body.sidebar-open .main-content {
+        z-index: 1030 !important;
+        /* Lower than sidebar overlay */
+    }
+
+    .page-content {
+        padding: 10px !important;
+        margin: 0 !important;
+    }
+
+    .container,
+    .container-fluid {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .col,
+    .col-12,
+    .col-md-6,
+    .col-md-4,
+    .col-md-8,
+    .col-md-3,
+    .col-md-2,
+    .col-md-9,
+    .col-md-12 {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+        text-align: left !important;
+    }
+
+    /* Ensure navbar is not affected by general improvements */
+    .top-navbar .container,
+    .top-navbar .container-fluid,
+    .top-navbar .row,
+    .top-navbar .col,
+    .top-navbar .col-12,
+    .top-navbar .col-md-6,
+    .top-navbar .col-md-4,
+    .top-navbar .col-md-8,
+    .top-navbar .col-md-3,
+    .top-navbar .col-md-2,
+    .top-navbar .col-md-9,
+    .top-navbar .col-md-12 {
+        padding: 0 !important;
+        margin: 0 !important;
+        text-align: inherit !important;
+    }
+
+    /* Table improvements for mobile - Exclude navbar */
+    .table-responsive:not(.top-navbar .table-responsive) {
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .table:not(.top-navbar .table) {
+        font-size: 0.875rem !important;
+        margin-bottom: 0 !important;
+    }
+
+    .table td:not(.top-navbar .table td),
+    .table th:not(.top-navbar .table th) {
+        padding: 8px 5px !important;
+        vertical-align: middle !important;
+        text-align: left !important;
+    }
+
+    /* Card improvements - Exclude navbar */
+    .card:not(.top-navbar .card) {
+        margin-bottom: 15px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .card-body:not(.top-navbar .card-body) {
+        padding: 15px !important;
+    }
+
+    /* Form improvements */
+    .form-control,
+    .form-select {
+        font-size: 16px !important;
+        /* Prevents zoom on iOS */
+        padding: 10px 12px !important;
+    }
+
+    .form-label {
+        font-weight: 600 !important;
+        margin-bottom: 5px !important;
+        text-align: left !important;
+    }
+
+    /* Button improvements - Exclude navbar buttons */
+    .btn:not(.top-navbar .btn):not(#sidebarToggle) {
+        padding: 8px 16px !important;
+        font-size: 14px !important;
+        border-radius: 6px !important;
+    }
+
+    /* Modal improvements - Exclude navbar */
+    .modal-dialog:not(.top-navbar .modal-dialog) {
+        margin: 10px !important;
+        max-width: calc(100% - 20px) !important;
+    }
+
+    .modal-body:not(.top-navbar .modal-body) {
+        padding: 15px !important;
+    }
+
+    /* Fix text alignment - Exclude navbar */
+    .text-center:not(.top-navbar *),
+    .text-md-center:not(.top-navbar *) {
+        text-align: left !important;
+    }
+
+    .text-end:not(.top-navbar *),
+    .text-right:not(.top-navbar *),
+    .text-md-end:not(.top-navbar *) {
+        text-align: left !important;
+    }
+
+    /* Fix flex alignment - Exclude navbar */
+    .d-flex:not(.top-navbar):not(.top-navbar *) {
+        flex-direction: column !important;
+    }
+
+    .justify-content-end:not(.top-navbar *),
+    .justify-content-md-end:not(.top-navbar *) {
+        justify-content: flex-start !important;
+    }
+
+    .align-items-center:not(.top-navbar *) {
+        align-items: flex-start !important;
+    }
+
+    /* Fix spacing - Exclude navbar */
+    .mb-3:not(.top-navbar *),
+    .mb-4:not(.top-navbar *),
+    .mb-5:not(.top-navbar *) {
+        margin-bottom: 1rem !important;
+    }
+
+    .mt-3:not(.top-navbar *),
+    .mt-4:not(.top-navbar *),
+    .mt-5:not(.top-navbar *) {
+        margin-top: 1rem !important;
+    }
+
+    /* Fix overflow issues */
+    body,
+    html {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* When sidebar is open, prevent body scroll */
+    body.sidebar-open {
+        overflow: hidden !important;
+        position: fixed !important;
+        width: 100% !important;
+    }
+
+    /* Ensure navbar is not affected by overflow fixes */
+    .top-navbar {
+        overflow: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Ensure sidebar has proper styling */
+    .sidebar {
+        background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+        color: white !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* Prevent Bootstrap offcanvas interference on mobile */
+    @media (max-width: 768px) {
+        .offcanvas {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+
+        .offcanvas.show {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+
+        /* Ensure our custom sidebar is visible */
+        .sidebar.active {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+    }
+
+    /* Sidebar menu items */
+    .sidebar .sidebar-menu a {
+        color: white !important;
+        text-decoration: none !important;
+        padding: 15px 20px !important;
+        display: block !important;
+        transition: all 0.3s !important;
+    }
+
+    .sidebar .sidebar-menu a:hover,
+    .sidebar .sidebar-menu a.active {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        border-left: 4px solid white !important;
+    }
+
+    /* Sidebar header */
+    .sidebar .sidebar-header {
+        padding: 20px !important;
+        text-align: center !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Sidebar menu container */
+    .sidebar .sidebar-menu {
+        padding: 20px 0 !important;
+    }
+
+    /* Sidebar icons */
+    .sidebar .sidebar-menu i {
+        margin-right: 10px !important;
+        width: 20px !important;
+        text-align: center !important;
+    }
+
+    /* Fix sidebar overlay */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1055;
+        /* Between navbar (1050) and sidebar (1060) */
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+
+    /* Additional fixes for specific pages - Exclude navbar */
+    .approval-page:not(.top-navbar .approval-page),
+    .approval-container:not(.top-navbar .approval-container) {
+        padding: 10px !important;
+        margin: 0 !important;
+    }
+
+    .approval-page .card:not(.top-navbar .card),
+    .approval-container .card:not(.top-navbar .card) {
+        margin-bottom: 15px !important;
+    }
+
+    /* Fix any remaining alignment issues - Exclude navbar */
+    .text-center:not(.top-navbar *),
+    .text-md-center:not(.top-navbar *),
+    .text-lg-center:not(.top-navbar *) {
+        text-align: left !important;
+    }
+
+    .justify-content-center:not(.top-navbar *),
+    .justify-content-md-center:not(.top-navbar *),
+    .justify-content-lg-center:not(.top-navbar *) {
+        justify-content: flex-start !important;
+    }
+
+    .align-items-center:not(.top-navbar *),
+    .align-items-md-center:not(.top-navbar *),
+    .align-items-lg-center:not(.top-navbar *) {
+        align-items: flex-start !important;
+    }
+
+    /* Navbar specific fixes to maintain original layout */
+    .top-navbar {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-direction: row !important;
+        background: white !important;
+        padding: 15px 20px !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1050 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* When sidebar is active, navbar should be behind */
+    body.sidebar-open .top-navbar {
+        z-index: 1040 !important;
+        /* Lower than sidebar overlay */
+    }
+
+    .top-navbar .d-flex {
+        flex-direction: row !important;
+        align-items: center !important;
+    }
+
+    .top-navbar .d-flex:first-child {
+        justify-content: flex-start !important;
+    }
+
+    .top-navbar .d-flex:last-child {
+        justify-content: flex-end !important;
+    }
+
+    .top-navbar-title {
+        margin: 0 !important;
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
+        color: #333 !important;
+    }
+
+    .top-navbar .btn {
+        padding: 8px 12px !important;
+        border: none !important;
+        background: transparent !important;
+        color: #333 !important;
+    }
+
+    .top-navbar .dropdown-menu {
+        position: absolute !important;
+        right: 0 !important;
+        left: auto !important;
+        transform: none !important;
+        z-index: 1051 !important;
+        /* Higher than navbar but lower than sidebar */
+    }
+
+    /* When sidebar is open, dropdown should be behind sidebar */
+    body.sidebar-open .top-navbar .dropdown-menu {
+        z-index: 1041 !important;
+        /* Lower than sidebar overlay */
+    }
+
+    /* Fix table responsive issues - Exclude navbar */
+    .table-responsive:not(.top-navbar .table-responsive) {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* Fix modal issues on mobile - Exclude navbar */
+    .modal:not(.top-navbar .modal) {
+        padding: 0 !important;
+    }
+
+    .modal-dialog:not(.top-navbar .modal-dialog) {
+        margin: 10px !important;
+        max-width: calc(100% - 20px) !important;
+    }
+
+    .modal-content:not(.top-navbar .modal-content) {
+        border-radius: 8px !important;
+    }
+
+    .modal-header:not(.top-navbar .modal-header),
+    .modal-body:not(.top-navbar .modal-body),
+    .modal-footer:not(.top-navbar .modal-footer) {
+        padding: 15px !important;
+    }
+}
+
+/* Additional fixes for very small screens */
+@media (max-width: 480px) {
+
+    .container:not(.top-navbar .container),
+    .container-fluid:not(.top-navbar .container-fluid) {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+
+    .card-body:not(.top-navbar .card-body) {
+        padding: 10px !important;
+    }
+
+    .table td:not(.top-navbar .table td),
+    .table th:not(.top-navbar .table th) {
+        padding: 6px 3px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .btn:not(.top-navbar .btn):not(#sidebarToggle) {
+        padding: 6px 12px !important;
+        font-size: 13px !important;
+    }
+
+    .form-control:not(.top-navbar .form-control),
+    .form-select:not(.top-navbar .form-select) {
+        padding: 8px 10px !important;
+        font-size: 16px !important;
+    }
+
+    /* Navbar specific fixes for very small screens */
+    .top-navbar {
+        padding: 10px 15px !important;
+    }
+
+    .top-navbar-title {
+        font-size: 1rem !important;
+        max-width: 120px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .top-navbar .btn {
+        padding: 6px 8px !important;
+        font-size: 1rem !important;
+    }
+
+    .top-navbar .dropdown {
+        margin-left: 5px !important;
+    }
+}

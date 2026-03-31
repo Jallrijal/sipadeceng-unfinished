@@ -1,0 +1,18 @@
+# Aktifkan RewriteEngine
+# File: .htaccess
+RewriteEngine On
+
+# Allow access to uploaded signatures via /uploads/signatures/...
+RewriteRule ^uploads/signatures/(.*)$ public/uploads/signatures/$1 [L]
+
+# Allow access to uploaded documents
+RewriteRule ^public/uploads/documents/(.*)$ public/uploads/documents/$1 [L]
+RewriteRule ^public/uploads/signatures/(.*)$ public/uploads/signatures/$1 [L]
+
+# Allow access to public assets
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# Protect sensitive directories
+RewriteRule ^(app|config|database|templates)/(.*)$ - [F,L]

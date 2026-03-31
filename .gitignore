@@ -1,0 +1,20 @@
+# Logs
+logs/
+*.log
+logs/unit_kerja_transfer.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Upload files
+public/uploads/documents/temp/
+public/uploads/signatures/temp/ 
