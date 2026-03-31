@@ -3,16 +3,10 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-5 mb-5 mb-lg-0" data-aos="fade-right">
-				<div class="faq-badge">Bantuan</div>
-				<h2 class="faq-main-title">Pertanyaan yang Sering<br>Diajukan (FAQ)</h2>
+				<h2 class="faq-main-title">Pertanyaan yang Sering<br>Diajukan</h2>
 				<p class="faq-desc mt-4">
 					Temukan jawaban atas pertanyaan umum seputar penggunaan aplikasi SIPADECENG. Jika Anda memiliki pertanyaan lain, jangan ragu untuk menghubungi tim dukungan kami.
 				</p>
-				<div class="mt-4">
-					<a href="#hubungi" class="btn-tanya-kami">
-						Tanya Kami <i class="fas fa-arrow-right ms-2"></i>
-					</a>
-				</div>
 			</div>
 			<div class="col-lg-7" data-aos="fade-left">
 				<div class="accordion modern-accordion" id="faqAccordion">
