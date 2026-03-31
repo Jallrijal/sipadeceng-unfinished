@@ -523,17 +523,102 @@
 			line-height: 1.6;
 		}
 
-		/* Hubungi Section */
-		#hubungi {
-			background: #fff;
-			padding: 80px 0;
+		/* Hubungi Kami Modern */
+		.section-hubungi {
+			padding: 100px 0;
+			background-color: #ffffff;
+			position: relative;
 		}
-		.hubungi-title {
-			font-size: 2.5rem;
+		.hubungi-badge {
+			display: inline-block;
+			background: rgba(37, 99, 235, 0.1);
+			color: #2563eb;
+			padding: 8px 16px;
+			border-radius: 50px;
 			font-weight: 700;
-			color: #1e293b;
+			font-size: 0.85rem;
+			letter-spacing: 1px;
+			text-transform: uppercase;
 			text-align: center;
-			margin-bottom: 50px;
+			margin: 0 auto 20px auto;
+			display: block;
+			width: max-content;
+		}
+		.hubungi-main-title {
+			font-size: 2.5rem;
+			font-weight: 800;
+			color: #0f172a;
+			text-align: center;
+			margin-bottom: 15px;
+			letter-spacing: -0.5px;
+		}
+		.hubungi-subtitle {
+			text-align: center;
+			color: #64748b;
+			font-size: 1.1rem;
+			max-width: 650px;
+			margin: 0 auto 50px auto;
+			line-height: 1.6;
+		}
+		.contact-info-wrapper {
+			padding-right: 20px;
+		}
+		.contact-card {
+			display: flex;
+			align-items: center;
+			background: #f8fafc;
+			padding: 25px;
+			border-radius: 20px;
+			border: 1px solid rgba(0,0,0,0.03);
+			transition: all 0.3s ease;
+		}
+		.contact-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 15px 30px rgba(37, 99, 235, 0.08) !important;
+			background: #ffffff;
+			border-color: rgba(37, 99, 235, 0.1);
+		}
+		.contact-icon {
+			width: 60px;
+			height: 60px;
+			background: rgba(37, 99, 235, 0.1);
+			color: #2563eb;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.5rem;
+			margin-right: 20px;
+			flex-shrink: 0;
+			transition: all 0.3s ease;
+		}
+		.contact-card:hover .contact-icon {
+			background: #2563eb;
+			color: #ffffff;
+		}
+		.contact-details h4 {
+			font-size: 1.1rem;
+			font-weight: 700;
+			color: #0f172a;
+			margin-bottom: 5px;
+		}
+		.contact-details p {
+			margin: 0;
+			color: #64748b;
+			font-size: 0.95rem;
+			line-height: 1.5;
+		}
+		.contact-details p a {
+			color: #64748b;
+			text-decoration: none;
+			transition: color 0.2s ease;
+		}
+		.contact-details p a:hover {
+			color: #2563eb;
+		}
+		.map-wrapper {
+			border: 8px solid #ffffff;
+			box-shadow: 0 15px 35px rgba(0,0,0,0.06) !important;
 		}
 
 		/* WhatsApp Button */
@@ -562,27 +647,113 @@
 			font-size: 1.8rem;
 		}
 
-		/* Footer */
+		/* Modern Footer */
 		.section-footer-top {
-			background: #f8f9fa;
-			padding: 60px 0;
+			background: #f8fafc;
+			padding: 80px 0 60px 0;
+			border-top: 1px solid rgba(0,0,0,0.03);
 		}
-		.footer-left-title {
-			font-size: 1.3rem;
-			font-weight: 700;
-			color: #1e293b;
+		.footer-title {
+			font-size: 1.15rem;
+			font-weight: 800;
+			color: #0f172a;
+			letter-spacing: 0.5px;
+			position: relative;
+			padding-bottom: 12px;
 		}
-		.footer-left-content {
+		.footer-title::after {
+			content: '';
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 40px;
+			height: 3px;
+			background: #2563eb;
+			border-radius: 2px;
+		}
+		.footer-text {
 			font-size: 0.95rem;
-			color: #666;
-			line-height: 1.6;
+			color: #64748b;
+			line-height: 1.7;
+		}
+		.contact-item-footer {
+			transition: transform 0.2s ease;
+		}
+		.contact-item-footer:hover {
+			transform: translateX(8px);
+		}
+		.contact-icon-footer {
+			width: 40px;
+			height: 40px;
+			background: #ffffff;
+			border: 1px solid rgba(37, 99, 235, 0.1);
+			color: #2563eb;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.1rem;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+			flex-shrink: 0;
+		}
+		.contact-item-footer:hover .contact-icon-footer {
+			background: #2563eb;
+			color: #ffffff;
+			border-color: #2563eb;
+			box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+		}
+		.hover-primary-text {
+			transition: color 0.2s ease;
+		}
+		.hover-primary-text:hover {
+			color: #2563eb !important;
+		}
+		.social-icon {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			background: #ffffff;
+			border: 1px solid rgba(0,0,0,0.05);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #64748b;
+			box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+			transition: all 0.3s ease;
+			text-decoration: none;
+		}
+		.social-icon:hover {
+			background: #2563eb;
+			color: #ffffff;
+			border-color: #2563eb;
+			transform: translateY(-3px);
+			box-shadow: 0 8px 15px rgba(37,99,235,0.2);
+		}
+		.btn-kunjungi {
+			background-color: transparent;
+			color: #2563eb;
+			border: 2px solid #2563eb;
+			font-weight: 600;
+			padding: 10px 25px;
+			border-radius: 100px;
+			display: inline-flex;
+			align-items: center;
+			text-decoration: none;
+			transition: all 0.3s ease;
+		}
+		.btn-kunjungi:hover {
+			background-color: #2563eb;
+			color: #ffffff;
+			transform: translateY(-2px);
+			box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
 		}
 		.section-footer-bottom {
-			background: #232336;
-			color: #e0e6ed;
+			background: #0f172a;
+			color: #94a3b8;
+			padding: 24px 0;
 		}
 		.footer-copyright {
-			text-align: center;
 			font-size: 0.95rem;
 		}
 
@@ -700,6 +871,8 @@
 			.faq-desc { max-width: 100%; font-size: 1rem; }
 			.whatsapp { width: 50px; height: 50px; bottom: 20px; right: 20px; }
 			.my-whatsapp { font-size: 1.3rem; }
+			.hubungi-main-title { font-size: 2rem; }
+			.contact-info-wrapper { padding-right: 0; }
 		}
 	</style>
 </head>
@@ -1041,33 +1214,53 @@
 	</section>
 
 	<!-- Hubungi Kami Section -->
-	<section id="hubungi" class="py-5">
+	<section id="hubungi" class="section-hubungi position-relative">
 		<div class="container">
-			<h2 class="hubungi-title">Hubungi Kami</h2>
-			<div class="row justify-content-center align-items-center">
-				<div class="col-lg-6 mb-4 mb-lg-0">
-					<div class="mb-3" style="font-size: 1.13rem; color: #444;">
-						<p><b>Butuh bantuan atau konsultasi terkait penggunaan SIPADECENG?</b></p>
-						<p>Silakan hubungi kami melalui kontak di bawah ini atau kunjungi langsung kantor kami. Tim kami siap membantu Anda terkait pengajuan, monitoring, maupun kendala teknis pada aplikasi.</p>
-					</div>
-					<div style="color: #666; font-size: 1.08rem;">
-						<div class="mb-3">
-							<strong><i class="fas fa-envelope text-primary"></i> Email:</strong><br>
-							admin@pta-makassar.go.id
+			<div class="row" data-aos="fade-up">
+				<div class="col-md-12">
+					<div class="hubungi-badge">Kontak</div>
+					<h2 class="hubungi-main-title">Hubungi Kami</h2>
+					<p class="hubungi-subtitle">Butuh bantuan atau konsultasi terkait penggunaan SIPADECENG? Tim kami siap membantu Anda terkait pengajuan, monitoring, maupun kendala teknis.</p>
+				</div>
+			</div>
+
+			<div class="row align-items-center mt-4">
+				<div class="col-lg-5 mb-5 mb-lg-0" data-aos="fade-right">
+					<div class="contact-info-wrapper">
+						<div class="contact-card border-0 mb-4 shadow-sm">
+							<div class="contact-icon">
+								<i class="fas fa-envelope"></i>
+							</div>
+							<div class="contact-details">
+								<h4>Email</h4>
+								<p><a href="mailto:admin@pta-makassar.go.id">admin@pta-makassar.go.id</a></p>
+							</div>
 						</div>
-						<div class="mb-3">
-							<strong><i class="fas fa-phone text-primary"></i> Telepon:</strong><br>
-							(0411) 452653
+						
+						<div class="contact-card border-0 mb-4 shadow-sm">
+							<div class="contact-icon">
+								<i class="fas fa-phone-alt"></i>
+							</div>
+							<div class="contact-details">
+								<h4>Telepon</h4>
+								<p><a href="tel:0411452653">(0411) 452653</a></p>
+							</div>
 						</div>
-						<div class="mb-3">
-							<strong><i class="fas fa-map-marker-alt text-primary"></i> Alamat:</strong><br>
-							Jln. A.P. Pettarani No.66, Makassar 90142
+
+						<div class="contact-card border-0 shadow-sm">
+							<div class="contact-icon">
+								<i class="fas fa-map-marker-alt"></i>
+							</div>
+							<div class="contact-details">
+								<h4>Alamat</h4>
+								<p>Jln. A.P. Pettarani No.66,<br>Makassar 90142</p>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-6">
-					<div class="ratio ratio-16x9 rounded-4 shadow-sm overflow-hidden">
-						<iframe title="mapsPTA" src="https://www.google.com/maps?q=-5.1521,119.4326&hl=id&z=16&output=embed" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+				<div class="col-lg-7" data-aos="fade-left">
+					<div class="map-wrapper rounded-4 overflow-hidden">
+						<iframe title="mapsPTA" src="https://www.google.com/maps?q=-5.1521,119.4326&hl=id&z=16&output=embed" width="100%" height="400" style="border:0; display:block;" allowfullscreen="" loading="lazy"></iframe>
 					</div>
 				</div>
 			</div>
@@ -1075,55 +1268,75 @@
 	</section>
 
 	<!-- Footer Top -->
-	<section class="section-footer-top py-5">
-		<div class="container">
+	<section class="section-footer-top">
+		<div class="container" data-aos="fade-up">
 			<div class="row">
-				<div class="col-md-4 mb-4">
-					<div class="footer-left-title mb-2"><i class="fas fa-laptop"></i> SIPADECENG</div>
-					<div class="footer-left-content">
-						SIPADECENG (Sistem Pengelolaan Administrasi Cuti Elektronik) adalah aplikasi web yang mempermudah proses pengajuan, persetujuan, dan monitoring cuti pegawai di lingkungan Pengadilan Tinggi Agama Makassar.
+				<div class="col-lg-4 mb-5 mb-lg-0">
+					<div class="mb-4">
+						<i class="fas fa-laptop text-primary" style="font-size: 1.5rem;"></i> 
+						<span class="fw-bold text-dark ms-2" style="font-size: 1.4rem; letter-spacing: -0.5px;">SIPADECENG</span>
+					</div>
+					<div class="footer-text mb-4 pe-lg-4">
+						Sistem Pengelolaan Administrasi Cuti Elektronik yang modern, transparan, dan terintegrasi untuk mempermudah proses cuti pegawai.
+					</div>
+					<div class="d-flex gap-3">
+						<a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+						<a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+						<a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
 					</div>
 				</div>
-				<div class="col-md-4 mb-4">
-					<div class="footer-left-title mb-2"><i class="fas fa-phone-alt"></i> KONTAK KAMI</div>
-					<div class="footer-left-content mb-2">
-						<strong>Pengadilan Tinggi Agama Makassar</strong>
-					</div>
-					<div class="d-flex footer-left-content mb-2">
-						<div class="me-2"><i class="fas fa-map-marker-alt text-primary"></i></div>
-						<div>Jln. A.P. Pettarani No.66, Makassar</div>
-					</div>
-					<div class="d-flex footer-left-content mb-2">
-						<div class="me-2"><i class="fas fa-phone text-primary"></i></div>
-						<div>(0411) 452653</div>
-					</div>
-					<div class="d-flex footer-left-content">
-						<div class="me-2"><i class="fas fa-envelope text-primary"></i></div>
-						<div>admin@pta-makassar.go.id</div>
+                
+				<div class="col-lg-4 mb-5 mb-lg-0">
+					<h4 class="footer-title mb-4">KONTAK KAMI</h4>
+					<div class="d-flex flex-column gap-3 mt-4">
+						<div class="contact-item-footer d-flex">
+							<div class="contact-icon-footer me-3">
+								<i class="fas fa-building"></i>
+							</div>
+							<div class="footer-text">
+								<strong class="d-block text-dark mb-1">Pengadilan Tinggi Agama</strong>
+								Jln. A.P. Pettarani No.66, Makassar 90142
+							</div>
+						</div>
+						<div class="contact-item-footer d-flex">
+							<div class="contact-icon-footer me-3">
+								<i class="fas fa-phone-alt"></i>
+							</div>
+							<div class="footer-text mt-2">
+								<a href="tel:0411452653" class="text-decoration-none text-muted hover-primary-text">(0411) 452653</a>
+							</div>
+						</div>
+						<div class="contact-item-footer d-flex">
+							<div class="contact-icon-footer me-3">
+								<i class="fas fa-envelope"></i>
+							</div>
+							<div class="footer-text mt-2">
+								<a href="mailto:admin@pta-makassar.go.id" class="text-decoration-none text-muted hover-primary-text">admin@pta-makassar.go.id</a>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<div class="footer-left-title mb-2"><i class="fas fa-building"></i> INSTITUSI</div>
-					<div class="footer-left-content mb-3">
-						SIPADECENG merupakan aplikasi yang dikembangkan oleh dan untuk Pengadilan Tinggi Agama Makassar guna mendukung tata kelola cuti yang transparan, efisien, dan akuntabel.
+
+				<div class="col-lg-4">
+					<h4 class="footer-title mb-4">INSTITUSI</h4>
+					<div class="footer-text mb-4 pe-lg-3 mt-4">
+						Dikembangkan oleh dan untuk Pengadilan Tinggi Agama Makassar guna mendukung tata kelola birokrasi dan layanan publik yang unggul.
 					</div>
-					<div>
-						<a href="<?php echo baseUrl(''); ?>" style="color: #2563eb; text-decoration: none; font-weight: 600;">
-							<i class="fas fa-globe"></i> www.pta-makassar.go.id
-						</a>
-					</div>
+					<a href="<?php echo baseUrl(''); ?>" class="btn-kunjungi">
+						<i class="fas fa-globe me-2"></i> Kunjungi Website
+					</a>
 				</div>
 			</div>
 		</div>
 	</section>
 
 	<!-- Footer Bottom -->
-	<section class="section-footer-bottom py-3">
+	<section class="section-footer-bottom">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-12 text-center">
 					<div class="footer-copyright">
-						© <script>document.write(new Date().getFullYear());</script> SIPADECENG - Pengadilan Tinggi Agama Makassar. Hak Cipta Dilindungi.
+						© <script>document.write(new Date().getFullYear());</script> <strong>SIPADECENG</strong> - Pengadilan Tinggi Agama Makassar. Hak Cipta Dilindungi.
 					</div>
 				</div>
 			</div>
