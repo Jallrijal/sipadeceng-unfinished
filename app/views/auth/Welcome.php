@@ -647,7 +647,7 @@
 			font-size: 1.8rem;
 		}
 
-		/* Footer */
+		/* Modern Footer */
 		.section-footer-top {
 			background: #f8fafc;
 			padding: 80px 0 60px 0;
@@ -761,7 +761,7 @@
 		.section-faq {
 			padding: 100px 0;
 			background-color: #f8fafc;
-			position: relative;
+		s	position: relative;
 		}
 		.faq-badge {
 			display: inline-block;
