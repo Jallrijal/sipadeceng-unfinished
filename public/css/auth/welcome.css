@@ -210,18 +210,35 @@ body {
     z-index: 2;
 }
 .hero-axios-title {
-    font-size: clamp(3rem, 5.5vw, 5.5rem);
+    font-size: clamp(2.5rem, 4.2vw, 4.5rem);
     font-weight: 800;
     line-height: 1.15;
-    letter-spacing: -2px;
+    letter-spacing: -1.5px;
 }
-.pill-blue {
+.pill-blue-wrapper {
     background-color: #38bdf8;
     color: #0f172a !important;
-    padding: 0 24px;
     border-radius: 100px;
-    display: inline-block;
-    padding-bottom: 8px; /* Adjusting for baseline alignment */
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: middle;
+    margin-bottom: 5px;
+}
+.pill-blue-marquee {
+    display: inline-flex;
+    align-items: center;
+    padding-bottom: 6px;
+    padding-top: 4px;
+    animation: marquee-running 10s linear infinite;
+}
+.pill-blue-marquee:hover {
+    animation-play-state: paused;
+}
+@keyframes marquee-running {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 .axios-side-content {
     padding-left: 2rem;
@@ -231,6 +248,10 @@ body {
     .axios-side-content {
         padding-left: 0;
         border-left: none;
+    }
+    .hero-axios-desc {
+        font-size: 0.95rem;
+        line-height: 1.6;
     }
 }
 .hero-axios-desc {
@@ -263,10 +284,17 @@ body {
     text-decoration: none;
     box-shadow: 0 10px 25px rgba(56, 189, 248, 0.3);
 }
+.btn-axios-circle i {
+    transform: rotate(-45deg);
+    transition: transform 0.3s ease;
+}
 .btn-axios-circle:hover {
     transform: scale(1.1);
     background: #ffffff;
     box-shadow: 0 15px 35px rgba(255, 255, 255, 0.4);
+}
+.btn-axios-circle:hover i {
+    transform: rotate(0deg);
 }
 .axios-circular-text {
     position: absolute;
@@ -383,10 +411,17 @@ body {
     text-decoration: none;
     box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
 }
+.btn-tentang-circle i {
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+}
 .btn-tentang-circle:hover {
     transform: scale(1.1);
     background: #1d4ed8;
     box-shadow: 0 15px 35px rgba(37, 99, 235, 0.4);
+}
+.btn-tentang-circle:hover i {
+    transform: rotate(90deg);
 }
 .tentang-circular-text {
     position: absolute;
@@ -465,10 +500,17 @@ body {
     text-decoration: none;
     box-shadow: 0 10px 25px rgba(56, 189, 248, 0.3);
 }
+.btn-alur-circle i {
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+}
 .btn-alur-circle:hover {
     transform: scale(1.1);
     background: #ffffff;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+.btn-alur-circle:hover i {
+    transform: rotate(90deg);
 }
 .alur-circular-text {
     position: absolute;
@@ -758,15 +800,18 @@ body {
     box-shadow: 0 10px 30px rgba(56, 189, 248, 0.3);
     font-size: 1.5rem;
 }
-
 .btn-hubungi-circle .fas {
     color: #0f172a !important;
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
 }
-
 .btn-hubungi-circle:hover {
     transform: scale(1.1);
     background: #ffffff;
     box-shadow: 0 15px 35px rgba(255, 255, 255, 0.4);
+}
+.btn-hubungi-circle:hover .fas {
+    transform: rotate(90deg);
 }
 
 .hubungi-circular-text-container {

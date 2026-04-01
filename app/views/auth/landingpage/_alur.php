@@ -12,7 +12,7 @@
 					
 					<div class="alur-circular-wrapper mt-5" data-aos="fade-up" data-aos-delay="200">
 						<a href="#pengguna" class="btn-alur-circle">
-							<i class="fas fa-arrow-up border-0" style="transform: rotate(45deg);"></i>
+							<i class="fas fa-arrow-up border-0"></i>
 						</a>
 						<svg class="alur-circular-text" viewBox="0 0 100 100">
 							<path d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" id="circle-path-alur" fill="none"></path>
