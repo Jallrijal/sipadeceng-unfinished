@@ -319,6 +319,10 @@ body {
 .section-tentang {
     padding: 120px 0;
     background-color: #ffffff;
+    background-image: 
+        linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
     position: relative;
     border-top: 1px solid rgba(0,0,0,0.03);
     border-bottom: 1px solid rgba(0,0,0,0.03);
@@ -362,12 +366,16 @@ body {
     z-index: 2;
 }
 
-.tentang-img-main {
+.tentang-img-main-wrapper {
     border-radius: 24px;
-    object-fit: cover;
     height: 100%;
     min-height: 450px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+}
+.tentang-img-main {
+    object-fit: cover;
+    height: 100%;
+    border-radius: 0;
 }
 
 .tentang-text-wrap {
@@ -434,10 +442,39 @@ body {
     pointer-events: none;
 }
 
-.tentang-img-secondary {
+.tentang-img-secondary-wrapper {
     border-radius: 20px;
-    object-fit: cover;
     box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+}
+.tentang-img-secondary {
+    object-fit: cover;
+    border-radius: 0;
+}
+
+/* Custom Image Reveal Wipe & Zoom */
+.image-reveal-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+[data-aos="wipe-wrap"] {
+    clip-path: inset(0 100% 0 0);
+    transition-property: clip-path;
+    transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+[data-aos="wipe-wrap"].aos-animate {
+    clip-path: inset(0 0 0 0);
+}
+
+[data-aos="wipe-wrap"] img {
+    transform: scale(1.4);
+    transition-property: transform;
+    transition-duration: inherit;
+    transition-delay: inherit;
+    transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+[data-aos="wipe-wrap"].aos-animate img {
+    transform: scale(1);
 }
 
 /* =================== ALUR SECTION (REDESIGN) =================== */
