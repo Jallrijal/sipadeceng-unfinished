@@ -3,7 +3,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-5 mb-5 mb-lg-0" data-aos="fade-right">
-				<h2 class="faq-main-title">Pertanyaan yang Sering<br>Diajukan</h2>
+				<h2 class="faq-main-title" data-aos="wipe-wrap" data-aos-duration="2000">Pertanyaan yang Sering<br>Diajukan</h2>
 				<p class="faq-desc mt-4">
 					Temukan jawaban atas pertanyaan umum seputar penggunaan aplikasi SIPADECENG. Jika Anda memiliki pertanyaan lain, jangan ragu untuk menghubungi tim dukungan kami.
 				</p>

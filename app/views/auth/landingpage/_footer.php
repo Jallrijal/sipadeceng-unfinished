@@ -1,10 +1,10 @@
 <!-- Footer Top -->
-<section class="section-footer-top">
+<section class="section-footer-top d-none d-md-block">
 	<div class="container" data-aos="fade-up">
 		<div class="row">
 			<div class="col-lg-4 mb-5 mb-lg-0">
-				<div class="mb-4">
-					<i class="fas fa-laptop text-primary" style="font-size: 1.5rem;"></i>
+				<div class="mb-4 d-flex align-items-center">
+					<img src="<?php echo baseUrl('public/images/sipadeceng.png'); ?>" alt="Logo SIPADECENG" height="38">
 					<span class="fw-bold text-dark ms-2" style="font-size: 1.4rem; letter-spacing: -0.5px;">SIPADECENG</span>
 				</div>
 				<div class="footer-text mb-4 pe-lg-4">
@@ -49,11 +49,11 @@
 			</div>
 
 			<div class="col-lg-4">
-				<h4 class="footer-title mb-4">INSTITUSI</h4>
+				<h4 class="footer-title mb-4">LEMBAGA</h4>
 				<div class="footer-text mb-4 pe-lg-3 mt-4">
 					Dikembangkan oleh dan untuk Pengadilan Tinggi Agama Makassar guna mendukung tata kelola birokrasi dan layanan publik yang unggul.
 				</div>
-				<a href="<?php echo baseUrl(''); ?>" class="btn-kunjungi">
+				<a href="http://pta-makassar.go.id/" target="_blank" class="btn-kunjungi">
 					<i class="fas fa-globe me-2"></i> Kunjungi Website
 				</a>
 			</div>
@@ -62,7 +62,7 @@
 </section>
 
 <!-- Footer Bottom -->
-<section class="section-footer-bottom">
+<section class="section-footer-bottom" id="footer">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12 text-center">

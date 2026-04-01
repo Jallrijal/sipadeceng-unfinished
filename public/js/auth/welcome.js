@@ -58,7 +58,7 @@ $(function() {
 AOS.init({
     easing: 'ease-out-back',
     duration: 1000,
-    once: true
+    once: false
 });
 
 // Interactive Hubungi Section Accordion Logic

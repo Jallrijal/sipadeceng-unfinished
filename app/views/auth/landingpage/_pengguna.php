@@ -3,7 +3,7 @@
 	<div class="container">
 		<div class="row mb-5">
 			<div class="col-12 text-center" data-aos="fade-up">
-				<h2 class="siapa-heading-large">Pengguna Sistem</h2>
+				<h2 class="siapa-heading-large" data-aos="wipe-wrap" data-aos-duration="2000">Pengguna Sistem</h2>
 			</div>
 		</div>
 		<div class="row g-4 justify-content-center">

@@ -5,13 +5,15 @@
 			<!-- Left Sticky Info -->
 			<div class="col-lg-5 mb-5 mb-lg-0">
 				<div class="alur-sticky-wrapper">
-					<h2 class="alur-heading-main" data-aos="fade-up">Alur Proses<br>Pengajuan Cuti</h2>
+					<div data-aos="fade-up">
+						<h2 class="alur-heading-main" data-aos="wipe-wrap" data-aos-duration="2000">Alur Proses<br>Pengajuan Cuti</h2>
+					</div>
 					<p class="alur-desc-main mt-4" data-aos="fade-up" data-aos-delay="100">
 						Seluruh rancangan proses diawasi secara sistematis untuk memastikan setiap permohonan cuti dapat berjalan dengan cepat, terpadu, dan transparan. Berikut adalah tahapan yang dilalui dalam aplikasi SIPADECENG.
 					</p>
 					
 					<div class="alur-circular-wrapper mt-5 d-none d-md-flex" data-aos="fade-up" data-aos-delay="200">
-						<a href="#pengguna" class="btn-alur-circle">
+						<a href="<?php echo baseUrl('auth/login'); ?>" class="btn-alur-circle">
 							<i class="fas fa-arrow-up border-0"></i>
 						</a>
 						<svg class="alur-circular-text" viewBox="0 0 100 100">

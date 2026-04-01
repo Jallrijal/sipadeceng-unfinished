@@ -20,8 +20,8 @@
 							</text>
 						</svg>
 					</div>
-					<a href="#hubungi" class="btn-hubungi-circle d-flex align-items-center justify-content-center text-decoration-none">
-						<i class="fas fa-arrow-up text-dark"></i>
+					<a href="#footer" class="btn-hubungi-circle d-flex align-items-center justify-content-center text-decoration-none">
+						<i class="fas fa-arrow-down text-dark"></i>
 					</a>
 				</div>
 			</div>
