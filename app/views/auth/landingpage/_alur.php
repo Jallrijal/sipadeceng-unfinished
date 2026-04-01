@@ -10,7 +10,7 @@
 						Seluruh rancangan proses diawasi secara sistematis untuk memastikan setiap permohonan cuti dapat berjalan dengan cepat, terpadu, dan transparan. Berikut adalah tahapan yang dilalui dalam aplikasi SIPADECENG.
 					</p>
 					
-					<div class="alur-circular-wrapper mt-5" data-aos="fade-up" data-aos-delay="200">
+					<div class="alur-circular-wrapper mt-5 d-none d-md-flex" data-aos="fade-up" data-aos-delay="200">
 						<a href="#pengguna" class="btn-alur-circle">
 							<i class="fas fa-arrow-up border-0"></i>
 						</a>
@@ -27,14 +27,13 @@
 			<!-- Right Scrollable Cards -->
 			<div class="col-lg-6 offset-lg-1" data-aos="fade-left">
 				<div class="alur-scroll-container" id="alur-scroll-container">
-					
 					<!-- Card 01 -->
 					<div class="alur-item" data-step="1">
 						<div class="alur-item-bg"></div>
 						<div class="alur-item-content">
 							<div class="alur-text">
-								<h3>Pemohon</h3>
-								<p>Pemohon masuk ke Aplikasi SIPADECENG dan mengisi formulir cuti sesuai dengan jenis cuti yang dimohonkan dengan menyertakan keterangan serta dokumen pendukung.</p>
+								<h3>Login & Pengajuan</h3>
+								<p>Pemohon melakukan login dan mengisi formulir cuti sesuai jenis cuti yang dimohonkan serta melampirkan keterangan dokumen pendukung.</p>
 							</div>
 							<div class="alur-number">01</div>
 						</div>
@@ -45,8 +44,8 @@
 						<div class="alur-item-bg"></div>
 						<div class="alur-item-content">
 							<div class="alur-text">
-								<h3>Operator</h3>
-								<p>Operator memverifikasi kelengkapan dokumen permohonan, menentukan pejabat yang sesuai, dan meneruskan permohonan agar diproses oleh atasan langsung.</p>
+								<h3>Verifikasi Berkas</h3>
+								<p>Operator memverifikasi kelengkapan dokumen permohonan dan menyalurkan permohonan tersebut ke atasan yang tepat.</p>
 							</div>
 							<div class="alur-number">02</div>
 						</div>
@@ -57,8 +56,8 @@
 						<div class="alur-item-bg"></div>
 						<div class="alur-item-content">
 							<div class="alur-text">
-								<h3>Atasan Langsung</h3>
-								<p>Atasan langsung menerima permohonan, meninjau ketersediaan pegawai lainnya, dan memperhitungkan tugas pelayanan dalam memberikan persetujuan atau penolakan dengan catatan.</p>
+								<h3>Rekomendasi Atasan</h3>
+								<p>Atasan langsung meninjau permohonan, mempertimbangkan tugas pelayanan, dan memberikan rekomendasi persetujuan awal.</p>
 							</div>
 							<div class="alur-number">03</div>
 						</div>
@@ -69,14 +68,36 @@
 						<div class="alur-item-bg"></div>
 						<div class="alur-item-content">
 							<div class="alur-text">
-								<h3>Pejabat Berwenang</h3>
-								<p>Pejabat Berwenang memberikan persetujuan akhir sesuai hasil verifikasi. Setelah disetujui, permohonan cuti dinyatakan selesai dan SK Cuti dapat diunduh langsung oleh pemohon.</p>
+								<h3>Finalisasi Keputusan</h3>
+								<p>Pejabat Berwenang meninjau ulang dan memberikan persetujuan akhir serta pengesahan atas permohonan cuti.</p>
 							</div>
 							<div class="alur-number">04</div>
 						</div>
 					</div>
 
-				</div>
+					<!-- Card 05 -->
+					<div class="alur-item" data-step="5">
+						<div class="alur-item-bg"></div>
+						<div class="alur-item-content">
+							<div class="alur-text">
+								<h3>Penerbitan SK</h3>
+								<p>Sistem secara otomatis membuat dan menerbitkan Surat Keputusan (SK) Cuti yang telah ditandatangani secara elektronik.</p>
+							</div>
+							<div class="alur-number">05</div>
+						</div>
+					</div>
+
+					<!-- Card 06 -->
+					<div class="alur-item" data-step="6">
+						<div class="alur-item-bg"></div>
+						<div class="alur-item-content">
+							<div class="alur-text">
+								<h3>Unduh Dokumen</h3>
+								<p>Permohonan selesai! Pemohon dapat langsung mengunduh SK Cuti yang telah disahkan kapan saja dari *dashboard*.</p>
+							</div>
+							<div class="alur-number">06</div>
+						</div>
+					</div>				</div>
 			</div>
 		</div>
 	</div>
