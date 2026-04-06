@@ -192,11 +192,15 @@ class LeaveBalance extends Model {
                 $userData['detail_sisa'] = 'Cuti Melahirkan: 90 (maksimal per sekali mengajukan)';
                 $userData['sisa_pengambilan'] = $sisaPengambilan;
             } else if ($leaveTypeId == 5) { // Cuti Alasan Penting - bukan akumulatif, batas per-pengajuan
-                $userData['kuota_tahunan'] = 0; // Tidak ada kuota akumulatif
+                $jabatan = isset($user['jabatan']) ? strtolower(trim($user['jabatan'])) : '';
+                $isHakimTinggi = (strpos($jabatan, 'hakim tinggi') !== false);
+                $maxDays = $isHakimTinggi ? 30 : 10;
+                
+                $userData['kuota_tahunan'] = $maxDays; // Maksimal hari cuti
                 $userData['sisa_kuota'] = 0;
                 $userData['cuti_terpakai'] = 0;
                 $userData['persentase_terpakai'] = 0;
-                $userData['detail_sisa'] = 'Maks 10 hari/pengajuan (Hakim Tinggi: maks 30 hari/pengajuan)';
+                $userData['detail_sisa'] = 'Maks ' . $maxDays . ' hari/pengajuan' . ($isHakimTinggi ? ' (Hakim Tinggi)' : '');
             } else if ($leaveTypeId == 6) { // Cuti Luar Tanggungan
                 $sqlLuar = "SELECT tahun, kuota_tahunan, sisa_kuota FROM kuota_cuti_luar_tanggungan WHERE user_id = ? ORDER BY tahun DESC";
                 $rows = $this->db->fetchAll($sqlLuar, [$user['id']]);
