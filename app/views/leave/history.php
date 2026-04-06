@@ -331,7 +331,7 @@ $(document).ready(function() {
             } else if ([ 'completed', 'approved', 'rejected' ].includes(item.status)) {
                 // Tidak ada tombol download dokumen final, hanya badge status jika perlu
                 // (Jika ingin badge tambahan, tambahkan di sini)
-            } else if (item.status === 'pending') {
+            } else if (item.status === 'pending' || item.status === 'pending_admin_upload') {
                 actions += `
                     <a href="${baseUrl('leave/downloadGeneratedDoc?id=' + item.id)}" 
                     class="btn btn-sm btn-primary btn-action" title="Download Dokumen" target="_blank" rel="noopener">

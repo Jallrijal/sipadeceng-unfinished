@@ -153,16 +153,8 @@ class LeaveController extends Controller
             }
         }
 
-        // Untuk cuti alasan penting, validasi maksimal 30 hari
-        if ($leaveTypeId == 5) {
-            $maxHariAlasanPenting = 30; // Maksimal 30 hari untuk cuti alasan penting
-            if ($jumlahHari > $maxHariAlasanPenting) {
-                $this->jsonResponse([
-                    'success' => false,
-                    'message' => "Cuti alasan penting maksimal {$maxHariAlasanPenting} hari per sekali mengajukan. Jumlah hari yang diajukan: {$jumlahHari} hari"
-                ]);
-            }
-        }
+        // Catatan: Validasi maksimal hari cuti alasan penting (id=5) sudah ditangani
+        // di validateKuotaCuti() dengan pembeda jabatan (hakim tinggi vs pegawai biasa).
 
         // Tambahan validasi: Cuti Melahirkan hanya untuk pegawai perempuan
         if ($leaveTypeId == 4) {
@@ -621,7 +613,7 @@ class LeaveController extends Controller
         // Cek apakah pengajuan milik user dan masih pending
         $leave = $this->leaveModel->find($leaveId);
 
-        if ($leave && $leave['user_id'] == $_SESSION['user_id'] && $leave['status'] == 'pending') {
+        if ($leave && $leave['user_id'] == $_SESSION['user_id'] && ($leave['status'] == 'pending' || $leave['status'] == 'pending_admin_upload')) {
             $this->leaveModel->delete($leaveId);
             $this->jsonResponse(['success' => true, 'message' => 'Pengajuan cuti berhasil dibatalkan']);
         }
@@ -736,8 +728,9 @@ class LeaveController extends Controller
                     }
                 }
                 elseif ($atasan_role === 'ketua') {
-                    // Ketua dapat mengakses dokumen hanya untuk status: awaiting_pimpinan, approved, rejected, changed, postponed
-                    $allowedStatuses = ['awaiting_pimpinan', 'approved', 'rejected', 'changed', 'postponed'];
+                    // Ketua sebagai atasan langsung (level 1): boleh akses saat status 'pending'
+                    // Ketua sebagai final approver: boleh akses saat awaiting_pimpinan, approved, dst.
+                    $allowedStatuses = ['pending', 'pending_kasubbag', 'pending_kabag', 'pending_sekretaris', 'awaiting_pimpinan', 'approved', 'rejected', 'changed', 'postponed'];
                     if (in_array($leave['status'], $allowedStatuses)) {
                         if ((isset($leave['ketua_approver_id']) && $leave['ketua_approver_id'] == $id_atasan) ||
                         (isset($leave['atasan_id']) && $leave['atasan_id'] == $id_atasan)) {

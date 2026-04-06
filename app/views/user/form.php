@@ -331,6 +331,7 @@ input[type="password"]::-o-reveal-button {
                                 <option value="besar">Cuti Besar (Akumulatif - setelah 6 tahun)</option>
                                 <option value="sakit">Cuti Sakit (Per tahun)</option>
                                 <option value="melahirkan">Cuti Melahirkan</option>
+                                <option value="alasan_penting">Cuti Alasan Penting (Info)</option>
                                 <option value="luar_tanggungan">Cuti Luar Tanggungan (Per tahun)</option>
                             </select>
                         </div>
@@ -465,7 +466,23 @@ input[type="password"]::-o-reveal-button {
                         </div>
                     </div>
                     
-                    <!-- Container untuk kuota tahunan (sakit, alasan penting, luar tanggungan) -->
+                    <!-- Container untuk info cuti alasan penting (tidak ada kuota akumulatif) -->
+                    <div id="quotaAlasanPentingContainer" style="display: none;">
+                        <div class="alert alert-warning">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            <strong>Cuti Alasan Penting – Tidak Ada Kuota Akumulatif</strong>
+                            <hr class="my-2">
+                            <p class="mb-1">Cuti karena alasan penting <strong>tidak berpatokan pada kuota</strong> yang tersimpan di database.</p>
+                            <p class="mb-1">Batas yang berlaku adalah <strong>per sekali pengajuan</strong>:</p>
+                            <ul class="mb-0">
+                                <li><strong>Pegawai biasa:</strong> maksimal <strong>10 hari</strong> per 1 kali pengajuan</li>
+                                <li><strong>Hakim Tinggi:</strong> maksimal <strong>30 hari</strong> per 1 kali pengajuan</li>
+                            </ul>
+                            <p class="mt-2 mb-0 text-muted"><small>Tidak diperlukan pengaturan kuota untuk jenis cuti ini.</small></p>
+                        </div>
+                    </div>
+
+                    <!-- Container untuk kuota tahunan (sakit, luar tanggungan) -->
                     <div id="quotaTahunanLainContainer" style="display: none;">
                         <div class="row">
                             <div class="col-md-6">
@@ -1183,7 +1200,7 @@ $(document).ready(function() {
         const userId = <?php echo $user ? $user['id'] : 0; ?>;
         
         // Sembunyikan semua container terlebih dahulu
-        $('#quotaTahunanContainer, #quotaBesarContainer, #quotaMelahirkanContainer, #quotaTahunanLainContainer').hide();
+        $('#quotaTahunanContainer, #quotaBesarContainer, #quotaMelahirkanContainer, #quotaTahunanLainContainer, #quotaAlasanPentingContainer').hide();
         
         if (!jenisKuota) {
             return;
@@ -1208,6 +1225,10 @@ $(document).ready(function() {
                 $('#quotaTahunanLainKuota').prop('readonly', true);
                 updateQuotaTahunanLainTitle(jenisKuota);
                 loadKuotaTahunanLain(userId, jenisKuota);
+                break;
+            case 'alasan_penting':
+                // Cuti alasan penting tidak memiliki kuota akumulatif - tampilkan info saja
+                $('#quotaAlasanPentingContainer').show();
                 break;
             case 'luar_tanggungan':
                 $('#quotaTahunanLainContainer').show();
@@ -1268,8 +1289,6 @@ $(document).ready(function() {
                 // Set default berdasarkan jenis kuota
                 if (jenisKuota === 'sakit') {
                     if (!kuota || kuota == 0) kuota = 14;
-                } else if (jenisKuota === 'alasan_penting') {
-                    kuota = 30; // Maksimal 30 hari per sekali mengajukan
                 } else {
                     if (!kuota || kuota == 0) kuota = 14;
                 }
@@ -1277,12 +1296,7 @@ $(document).ready(function() {
                 $('#quotaTahunanLainKuota').val(kuota);
                 $('#quotaTahunanLainSisa').val(data.sisa_kuota || 0);
             } else {
-                // Jika belum ada data, set default berdasarkan jenis kuota
-                if (jenisKuota === 'alasan_penting') {
-                    $('#quotaTahunanLainKuota').val(10);
-                } else {
-                    $('#quotaTahunanLainKuota').val(14);
-                }
+                $('#quotaTahunanLainKuota').val(14);
                 $('#quotaTahunanLainSisa').val(0);
             }
             // Reset validasi
@@ -1296,18 +1310,11 @@ $(document).ready(function() {
     window.updateQuotaTahunanLainTitle = function(jenisKuota) {
         const titles = {
             'sakit': 'Kuota Cuti Sakit',
-            'alasan_penting': 'Kuota Cuti Alasan Penting',
             'luar_tanggungan': 'Kuota Cuti Luar Tanggungan'
         };
         $('#quotaTahunanLainTitle').text(titles[jenisKuota] || 'Kuota Cuti');
-        
-        // Tampilkan informasi khusus untuk alasan penting
-        if (jenisKuota === 'alasan_penting') {
-            $('#quotaTahunanLainInfo').show();
-            $('#quotaTahunanLainInfoText').text('Cuti Alasan Penting bersifat tidak akumulatif dengan maksimal 30 hari per sekali mengajukan. Kuota tahunan diset ke 30 hari dan tidak dapat diubah.');
-        } else {
-            $('#quotaTahunanLainInfo').hide();
-        }
+        // Sembunyikan info box (tidak ada info khusus untuk sakit/luar tanggungan)
+        $('#quotaTahunanLainInfo').hide();
     }
     
     // Fungsi untuk update kuota cuti besar
@@ -1365,12 +1372,19 @@ $(document).ready(function() {
     window.updateKuotaTahunanLain = function() {
         const userId = <?php echo $user ? $user['id'] : 0; ?>;
         const jenisKuota = $('#jenisKuotaSelect').val();
-        let kuotaTahunan = $('#quotaTahunanLainKuota').val();
         
-        // Untuk alasan penting, selalu set ke 10
+        // Untuk alasan penting, tidak ada kuota akumulatif
         if (jenisKuota === 'alasan_penting') {
-            kuotaTahunan = 10;
+            Swal.fire({
+                icon: 'info',
+                title: 'Tidak Diperlukan',
+                text: 'Cuti Alasan Penting tidak memiliki kuota akumulatif. Tidak ada yang perlu diupdate.',
+                confirmButtonColor: '#1b5e20'
+            });
+            return;
         }
+        
+        let kuotaTahunan = $('#quotaTahunanLainKuota').val();
         
         const data = {
             user_id: userId,

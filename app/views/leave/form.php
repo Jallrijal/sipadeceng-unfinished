@@ -56,6 +56,14 @@
                     </select>
                     <small id="infoHakMelahirkan" class="text-muted d-block mt-1"></small>
                 </div>
+                <!-- Info box untuk Cuti Alasan Penting - ditampilkan via JS saat dipilih -->
+                <div id="alasanPentingInfo" class="alert alert-info mt-2" style="display:none;">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <strong>Informasi Cuti Alasan Penting</strong><br>
+                    Cuti ini <strong>tidak berpatokan pada kuota</strong> yang tersedia.
+                    Batas hari per 1 kali pengajuan:
+                    <span id="alasanPentingMaxDaysInfo"></span>
+                </div>
             </div>
             
             <!-- Section 3: Alasan Cuti -->
@@ -521,6 +529,27 @@ $(document).ready(function() {
         }
     }
 
+    // Info box cuti alasan penting: jabatan user dideteksi dari PHP
+    <?php
+        $jabatanUser = isset($_SESSION['jabatan']) ? strtolower(trim($_SESSION['jabatan'])) : '';
+        $isHakimTinggiUser = (strpos($jabatanUser, 'hakim tinggi') !== false);
+        $maxDaysAlasanPenting = $isHakimTinggiUser ? 30 : 10;
+        $tipeAlasanPenting = $isHakimTinggiUser ? 'Hakim Tinggi' : 'Pegawai';
+    ?>
+    const maxDaysAlasanPenting = <?php echo $maxDaysAlasanPenting; ?>;
+    const tipeAlasanPenting = '<?php echo $tipeAlasanPenting; ?>';
+    $('#alasanPentingMaxDaysInfo').html(`<strong>${maxDaysAlasanPenting} hari</strong> (sebagai ${tipeAlasanPenting}).`);
+
+    // Tampilkan/sembunyikan info box alasan penting saat jenis cuti berubah
+    function updateAlasanPentingInfo() {
+        const typeId = $('#leave_type_id').val();
+        if (typeId == 5) {
+            $('#alasanPentingInfo').show();
+        } else {
+            $('#alasanPentingInfo').hide();
+        }
+    }
+
     // Trigger load alasan cuti saat jenis cuti berubah
     $('#leave_type_id').on('change', function() {
         const typeId = $(this).val();
@@ -566,6 +595,8 @@ $(document).ready(function() {
         updateCatatanFieldState();
         // Update dokumen pendukung state
         updateDokumenFieldState();
+        // Update info box alasan penting
+        updateAlasanPentingInfo();
         // Update catatan cuti otomatis / cek auto-fill
         setTimeout(function() {
             updateCatatanCutiOtomatis();
@@ -752,6 +783,19 @@ $(document).ready(function() {
             }
         }
         
+        // Validasi cuti alasan penting: cek batas hari per-pengajuan
+        if (leaveTypeId == 5) {
+            const jumlahHari = parseInt($('#jumlahHari').text()) || 0;
+            if (jumlahHari > maxDaysAlasanPenting) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Jumlah Hari Melebihi Batas',
+                    text: `Cuti Alasan Penting untuk ${tipeAlasanPenting} maksimal ${maxDaysAlasanPenting} hari per 1 kali pengajuan. Jumlah hari yang diajukan: ${jumlahHari} hari.`,
+                    confirmButtonColor: '#1b5e20'
+                });
+                return;
+            }
+        }
 
         // Validasi cuti sakit: jika melebihi sisa kuota, tampilkan konfirmasi terlebih dahulu, lalu peringatan
         if (leaveTypeId == 3 && jumlahHari > window.cutiSakitQuota) {

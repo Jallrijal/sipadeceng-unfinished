@@ -99,9 +99,10 @@ function canDownloadGeneratedDocRow($leaveRow) {
 
     // atasan roles
     if (function_exists('isAtasan') && isAtasan()) {
-        // ketua can grab documents for the same set that admins can
+        // ketua can be the direct atasan (level 1, status=pending) OR the final approver
+        // (awaiting_pimpinan) OR can view completed requests – allow all relevant statuses.
         if (function_exists('isKetua') && isKetua()) {
-            return in_array($leaveRow['status'], ['awaiting_pimpinan', 'approved', 'rejected', 'changed', 'postponed']);
+            return in_array($leaveRow['status'], ['pending', 'pending_kasubbag', 'pending_kabag', 'pending_sekretaris', 'awaiting_pimpinan', 'approved', 'rejected', 'changed', 'postponed']);
         }
 
         // other atasan (including kasubbag/kabag/sekretaris) – only when the
@@ -127,6 +128,8 @@ function getStatusBadge($status) {
             return '<span class="badge bg-info text-dark">Menunggu Kasubbag</span>';
         case 'awaiting_pimpinan':
             return '<span class="badge bg-warning text-dark">Menunggu Pimpinan</span>';
+        case 'pending_admin_upload':
+            return '<span class="badge bg-secondary">Menunggu Dokumen</span>';
         case 'approved':
             return '<span class="badge bg-success">Disetujui</span>';
         case 'rejected':
@@ -252,11 +255,11 @@ function getSisaKuotaByType($userId, $leaveTypeId, $tahun = null) {
             $result = $db->fetch($sql, [$userId]);
             return $result ? (int)$result['sisa_pengambilan'] : 0;
             
-        case 5: // Cuti Alasan Penting - cek kuota tahunan
-            if (!$tahun) $tahun = date('Y');
-            $sql = "SELECT kuota_tahunan FROM kuota_cuti_alasan_penting WHERE user_id = ? AND tahun = ?";
-            $result = $db->fetch($sql, [$userId, $tahun]);
-            return $result ? (int)$result['kuota_tahunan'] : 0;
+        case 5: // Cuti Alasan Penting - tidak berpatokan pada kuota DB
+            // Cuti alasan penting tidak menggunakan kuota akumulatif.
+            // Batas adalah per-pengajuan: maks 10 hari (pegawai biasa) atau 30 hari (hakim tinggi).
+            // Kembalikan nilai besar agar validasi kuota tidak memblokir (validasi sesungguhnya di validateKuotaCuti).
+            return 99999;
             
         case 6: // Cuti Luar Tanggungan
             if (!$tahun) $tahun = date('Y');
@@ -366,13 +369,19 @@ function validateKuotaCuti($userId, $leaveTypeId, $jumlahHari, $tahun = null) {
     }
     
     if ($leaveTypeId == 5) { // Cuti Alasan Penting
-        $maxDays = 30; // Maksimal 30 hari untuk cuti alasan penting
+        // Tidak berpatokan pada kuota DB. Validasi hanya batas hari per pengajuan.
+        // Hakim Tinggi: maks 30 hari. Pegawai biasa: maks 10 hari.
+        $jabatan = isset($_SESSION['jabatan']) ? strtolower(trim($_SESSION['jabatan'])) : '';
+        $isHakimTinggi = (strpos($jabatan, 'hakim tinggi') !== false);
+        $maxDays = $isHakimTinggi ? 30 : 10;
         if ($jumlahHari > $maxDays) {
+            $tipe = $isHakimTinggi ? 'Hakim Tinggi' : 'Pegawai';
             return [
                 'valid' => false,
-                'message' => "Cuti Alasan Penting maksimal {$maxDays} hari per sekali mengajukan. Jumlah hari yang diajukan: {$jumlahHari} hari"
+                'message' => "Cuti Alasan Penting untuk {$tipe} maksimal {$maxDays} hari per sekali mengajukan. Jumlah hari yang diajukan: {$jumlahHari} hari"
             ];
         }
+        return ['valid' => true, 'message' => 'Cuti Alasan Penting valid'];
     }
     
     // Untuk cuti lainnya, validasi sisa kuota

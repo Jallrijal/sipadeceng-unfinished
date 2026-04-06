@@ -1314,6 +1314,7 @@ class UserController extends Controller {
                 $action = "diupdate";
             }
             
+            require_once __DIR__ . '/../helpers/satker_helper.php';
             return [
                 'success' => true,
                 'message' => "Baris {$rowNumber}: Berhasil update {$nama} ({$action})",
@@ -1323,10 +1324,11 @@ class UserController extends Controller {
                     'jabatan' => $jabatan,
                     'golongan' => $golongan,
                     'unit_kerja' => $satker,
+                    'nama_satker' => get_nama_satker($satker),
                     'username' => $newUsername,
                     'action' => $action,
                     'row_number' => $rowNumber,
-                    'old_unit_kerja' => $oldUnitKerja,
+                    'old_unit_kerja' => get_nama_satker($oldUnitKerja),
                     'old_jabatan' => $oldJabatan,
                     'old_username' => $oldUsername
                 ]
@@ -1377,6 +1379,7 @@ class UserController extends Controller {
             
             $action = "data ditimpa ({$oldNama} → {$nama}, {$oldNIP} → {$nip})";
             
+            require_once __DIR__ . '/../helpers/satker_helper.php';
             return [
                 'success' => true,
                 'message' => "Baris {$rowNumber}: Berhasil timpa data {$nama} ({$action})",
@@ -1386,6 +1389,7 @@ class UserController extends Controller {
                     'jabatan' => $jabatan,
                     'golongan' => $golongan,
                     'unit_kerja' => $satker,
+                    'nama_satker' => get_nama_satker($satker),
                     'username' => $newUsername,
                     'action' => $action,
                     'row_number' => $rowNumber,
@@ -1460,6 +1464,7 @@ class UserController extends Controller {
                 $tahunSekarang = date('Y');
                 $this->leaveBalanceModel->updateBalance($userId, $tahunSekarang, (int)$sisa_kuota);
             }
+            require_once __DIR__ . '/../helpers/satker_helper.php';
             return [
                 'success' => true,
                 'message' => "Baris {$rowNumber}: Berhasil import {$nama} ({$username})",
@@ -1469,6 +1474,7 @@ class UserController extends Controller {
                     'jabatan' => $jabatan,
                     'golongan' => $golongan,
                     'unit_kerja' => $satker,
+                    'nama_satker' => get_nama_satker($satker),
                     'username' => $username,
                     'action' => 'Tambah Baru',
                     'row_number' => $rowNumber
@@ -2047,9 +2053,24 @@ class UserController extends Controller {
             // Jika belum ada data, buat data default
             $kuotaDefault = getKuotaFromLeaveType($leaveTypeId);
             
-            // Untuk alasan penting, selalu set ke 10
+            // Untuk alasan penting, tidak ada kuota akumulatif – hanya batasan per-pengajuan.
+            // Kembalikan respons informatif dan tidak insert ke DB kuota.
             if ($jenisKuota === 'alasan_penting') {
-                $kuotaDefault = 10;
+                $this->jsonResponse([
+                    'success' => true,
+                    'data' => [
+                        'user_id' => $userId,
+                        'leave_type_id' => 5,
+                        'tahun' => $tahun,
+                        'kuota_tahunan' => null,
+                        'sisa_kuota' => null,
+                        'is_per_submission' => true,
+                        'max_days_regular' => 10,
+                        'max_days_hakim_tinggi' => 30
+                    ],
+                    'message' => 'Cuti Alasan Penting tidak memiliki kuota akumulatif. Batas: 10 hari/pengajuan (Hakim Tinggi: 30 hari/pengajuan).'
+                ]);
+                return;
             }
             
             // Coba buat data default
@@ -2096,7 +2117,15 @@ class UserController extends Controller {
         $userId = cleanInput($_POST['user_id']);
         $jenisKuota = cleanInput($_POST['jenis_kuota']);
         $tahun = cleanInput($_POST['tahun']);
-        $kuotaTahunan = isset($_POST['kuota_tahunan']) && $_POST['kuota_tahunan'] !== '' ? (int)cleanInput($_POST['kuota_tahunan']) : ($jenisKuota === 'alasan_penting' ? 30 : 14);
+        // Untuk alasan penting, tidak ada kuota akumulatif – hanya batasan per-pengajuan
+        if ($jenisKuota === 'alasan_penting') {
+            $this->jsonResponse([
+                'success' => true,
+                'message' => 'Cuti Alasan Penting tidak memiliki kuota akumulatif. Batas per pengajuan: 10 hari (Hakim Tinggi: 30 hari). Tidak ada data yang perlu diupdate.'
+            ]);
+            return;
+        }
+        $kuotaTahunan = isset($_POST['kuota_tahunan']) && $_POST['kuota_tahunan'] !== '' ? (int)cleanInput($_POST['kuota_tahunan']) : 14;
         $sisaKuota = (int)cleanInput($_POST['sisa_kuota']);
         
         $db = Database::getInstance();

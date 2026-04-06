@@ -191,12 +191,12 @@ class LeaveBalance extends Model {
                 $userData['persentase_terpakai'] = $jumlahPengambilan > 0 ? round(($jumlahPengambilan / 3) * 100) : 0;
                 $userData['detail_sisa'] = 'Cuti Melahirkan: 90 (maksimal per sekali mengajukan)';
                 $userData['sisa_pengambilan'] = $sisaPengambilan;
-            } else if ($leaveTypeId == 5) { // Cuti Alasan Penting - bukan akumulatif
-                $userData['kuota_tahunan'] = 30;
-                $userData['sisa_kuota'] = 30;
+            } else if ($leaveTypeId == 5) { // Cuti Alasan Penting - bukan akumulatif, batas per-pengajuan
+                $userData['kuota_tahunan'] = 0; // Tidak ada kuota akumulatif
+                $userData['sisa_kuota'] = 0;
                 $userData['cuti_terpakai'] = 0;
                 $userData['persentase_terpakai'] = 0;
-                $userData['detail_sisa'] = 'Cuti Alasan Penting: 30 (maksimal per sekali mengajukan)';
+                $userData['detail_sisa'] = 'Maks 10 hari/pengajuan (Hakim Tinggi: maks 30 hari/pengajuan)';
             } else if ($leaveTypeId == 6) { // Cuti Luar Tanggungan
                 $sqlLuar = "SELECT tahun, kuota_tahunan, sisa_kuota FROM kuota_cuti_luar_tanggungan WHERE user_id = ? ORDER BY tahun DESC";
                 $rows = $this->db->fetchAll($sqlLuar, [$user['id']]);
@@ -304,10 +304,12 @@ class LeaveBalance extends Model {
     
     /**
      * Get sisa kuota cuti alasan penting untuk user tertentu
+     * Cuti alasan penting tidak berpatokan pada kuota akumulatif.
+     * Batas adalah per-pengajuan: maks 10 hari (pegawai biasa) atau 30 hari (hakim tinggi).
      */
     public function getSisaKuotaAlasanPenting($userId, $tahun = null) {
-        // Cuti alasan penting selalu 30 hari karena bukan akumulatif
-        return 30;
+        // Return nilai besar; validasi sesungguhnya (per-pengajuan) dilakukan di validateKuotaCuti()
+        return 99999;
     }
     
     /**

@@ -3,23 +3,27 @@
     <div class="col-12">
         <ul class="nav nav-tabs" id="profileTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="profil-tab" data-bs-toggle="tab" data-bs-target="#profil-content" type="button" role="tab" aria-controls="profil-content" aria-selected="true">
+                <button class="nav-link active" id="profil-tab" data-bs-toggle="tab" data-bs-target="#profil-content"
+                    type="button" role="tab" aria-controls="profil-content" aria-selected="true">
                     <i class="bi bi-person-circle me-2"></i>Informasi Profil
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="keamanan-tab" data-bs-toggle="tab" data-bs-target="#keamanan-content" type="button" role="tab" aria-controls="keamanan-content" aria-selected="false">
+                <button class="nav-link" id="keamanan-tab" data-bs-toggle="tab" data-bs-target="#keamanan-content"
+                    type="button" role="tab" aria-controls="keamanan-content" aria-selected="false">
                     <i class="bi bi-shield-lock me-2"></i>Keamanan Akun
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="kuota-tab" data-bs-toggle="tab" data-bs-target="#kuota-content" type="button" role="tab" aria-controls="kuota-content" aria-selected="false">
+                <button class="nav-link" id="kuota-tab" data-bs-toggle="tab" data-bs-target="#kuota-content"
+                    type="button" role="tab" aria-controls="kuota-content" aria-selected="false">
                     <i class="bi bi-calendar-check me-2"></i>Informasi Kuota Cuti
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="signature-tab" data-bs-toggle="tab" data-bs-target="#signature-content" type="button" role="tab" aria-controls="signature-content" aria-selected="false">
-                    <i class="bi bi-pen me-2"></i>Tanda Tangan Digital
+                <button class="nav-link" id="signature-tab" data-bs-toggle="tab" data-bs-target="#signature-content"
+                    type="button" role="tab" aria-controls="signature-content" aria-selected="false">
+                    <i class="bi bi-pen me-2"></i>Tanda Tangan
                 </button>
             </li>
 
@@ -57,7 +61,10 @@
                             </tr>
                             <tr>
                                 <td><strong>Unit Kerja</strong></td>
-                                <td>: <?php require_once __DIR__ . '/../../helpers/satker_helper.php'; echo get_nama_satker($_SESSION['unit_kerja']); ?></td>
+                                <td>:
+                                    <?php require_once __DIR__ . '/../../helpers/satker_helper.php';
+                                    echo get_nama_satker($_SESSION['unit_kerja']); ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td><strong>Username</strong></td>
@@ -65,7 +72,9 @@
                             </tr>
                             <tr>
                                 <td><strong>Role</strong></td>
-                                <td>: <?php echo $_SESSION['user_type'] == 'admin' ? 'Pimpinan' : (isset($_SESSION['user_type']) && $_SESSION['user_type'] == 'atasan' ? 'Atasan' : 'Pegawai'); ?></td>
+                                <td>:
+                                    <?php echo $_SESSION['user_type'] == 'admin' ? 'Pimpinan' : (isset($_SESSION['user_type']) && $_SESSION['user_type'] == 'atasan' ? 'Atasan' : 'Pegawai'); ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td><strong>Masa Kerja</strong></td>
@@ -105,9 +114,9 @@
                                 <i class="bi bi-key me-2"></i>Ubah Password
                             </button>
                         </form>
-                        
+
                         <hr class="my-4">
-                        
+
                         <div class="text-center">
                             <p class="text-muted mb-2">Login Terakhir</p>
                             <small><?php echo date('d F Y H:i'); ?></small>
@@ -169,245 +178,249 @@
 </div>
 
 <style>
-/* Tab styling */
-.nav-tabs {
-    border-bottom: 2px solid #dee2e6;
-}
-
-.nav-link {
-    color: #6c757d;
-    border: none;
-    border-bottom: 3px solid transparent;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.nav-link:hover {
-    color: #1b5e20;
-    border-bottom-color: #1b5e20;
-}
-
-.nav-link.active {
-    color: #fff;
-    background-color: #1b5e20;
-    border-bottom-color: #1b5e20;
-    border-radius: 5px 5px 0 0;
-}
-
-.tab-content {
-    padding: 20px 0;
-}
-
-@media (max-width: 768px) {
+    /* Tab styling */
     .nav-tabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        --webkit-overflow-scrolling: touch;
+        border-bottom: 2px solid #dee2e6;
     }
 
     .nav-link {
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
-        white-space: nowrap;
-    }
-}
-
-@media (max-width: 768px) {
-    /* Data profile rata kiri dan tetap table normal */
-    .card-body table.table-borderless td {
-        text-align: left !important;
-        vertical-align: top !important;
-        display: table-cell !important;
-        width: auto !important;
-        justify-content: flex-start !important;
-        align-items: flex-start !important;
-        padding: 0.5rem 0.75rem !important;
-        border: none !important;
-        font-size: 1rem !important;
-    }
-    .card-body table.table-borderless, .card-body table.table-borderless tr, .card-body table.table-borderless td {
-        display: table !important;
-    }
-    
-    /* Tabel kuota cuti: thead di kiri, tbody data di kanan */
-    .tab-pane .table-responsive {
-        display: block !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow-x: hidden !important;
-        padding-bottom: 0 !important;
-        border: 1px solid #dee2e6 !important;
-        box-sizing: border-box !important;
+        color: #6c757d;
+        border: none;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+        font-weight: 500;
     }
 
-    .tab-pane .table-responsive .table.table-bordered {
-        margin: 0 !important;
-        display: flex !important;
-        flex-direction: row !important;
-        border: none !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
+    .nav-link:hover {
+        color: #1b5e20;
+        border-bottom-color: #1b5e20;
     }
 
-    .tab-pane .table-responsive .table.table-bordered thead {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-shrink: 0 !important;
-        background-color: var(--bs-card-cap-bg);
-        width: 40% !important;
-        max-width: 150px !important;
-        min-width: 0 !important;
+    .nav-link.active {
+        color: #fff;
+        background-color: #1b5e20;
+        border-bottom-color: #1b5e20;
+        border-radius: 5px 5px 0 0;
     }
 
-    .tab-pane .table-responsive .table.table-bordered tbody {
-        display: flex !important;
-        flex-direction: row !important;
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        flex-grow: 1 !important;
-        width: 60% !important;
-        min-width: 0 !important;
+    .tab-content {
+        padding: 20px 0;
     }
 
-    .tab-pane .table-responsive .table.table-bordered th,
-    .tab-pane .table-responsive .table.table-bordered td {
-        display: block !important;
-        width: 100% !important;
-        padding: 0.5rem 0.75rem !important;
-        font-size: 0.95rem !important;
-        border: none !important;
-        border-bottom: 1px solid #dee2e6 !important;
-        border-right: 1px solid #dee2e6 !important;
-        box-sizing: border-box !important;
-        white-space: nowrap !important;
-        min-height: 45px !important;
+    @media (max-width: 768px) {
+        .nav-tabs {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            --webkit-overflow-scrolling: touch;
+        }
+
+        .nav-link {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            white-space: nowrap;
+        }
     }
 
-    .tab-pane .table-responsive .table.table-bordered tr th:last-child {
-        border-bottom: none !important;
+    @media (max-width: 768px) {
+
+        /* Data profile rata kiri dan tetap table normal */
+        .card-body table.table-borderless td {
+            text-align: left !important;
+            vertical-align: top !important;
+            display: table-cell !important;
+            width: auto !important;
+            justify-content: flex-start !important;
+            align-items: flex-start !important;
+            padding: 0.5rem 0.75rem !important;
+            border: none !important;
+            font-size: 1rem !important;
+        }
+
+        .card-body table.table-borderless,
+        .card-body table.table-borderless tr,
+        .card-body table.table-borderless td {
+            display: table !important;
+        }
+
+        /* Tabel kuota cuti: thead di kiri, tbody data di kanan */
+        .tab-pane .table-responsive {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            padding-bottom: 0 !important;
+            border: 1px solid #dee2e6 !important;
+            box-sizing: border-box !important;
+        }
+
+        .tab-pane .table-responsive .table.table-bordered {
+            margin: 0 !important;
+            display: flex !important;
+            flex-direction: row !important;
+            border: none !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .tab-pane .table-responsive .table.table-bordered thead {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-shrink: 0 !important;
+            background-color: var(--bs-card-cap-bg);
+            width: 40% !important;
+            max-width: 150px !important;
+            min-width: 0 !important;
+        }
+
+        .tab-pane .table-responsive .table.table-bordered tbody {
+            display: flex !important;
+            flex-direction: row !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            flex-grow: 1 !important;
+            width: 60% !important;
+            min-width: 0 !important;
+        }
+
+        .tab-pane .table-responsive .table.table-bordered th,
+        .tab-pane .table-responsive .table.table-bordered td {
+            display: block !important;
+            width: 100% !important;
+            padding: 0.5rem 0.75rem !important;
+            font-size: 0.95rem !important;
+            border: none !important;
+            border-bottom: 1px solid #dee2e6 !important;
+            border-right: 1px solid #dee2e6 !important;
+            box-sizing: border-box !important;
+            white-space: nowrap !important;
+            min-height: 45px !important;
+        }
+
+        .tab-pane .table-responsive .table.table-bordered tr th:last-child {
+            border-bottom: none !important;
+        }
+
+        .tab-pane .table-responsive .table.table-bordered tr td:last-child {
+            border-bottom: none !important;
+        }
+
+        .tab-pane .table-responsive .table.table-bordered tr {
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1 1 auto !important;
+            min-width: 110px !important;
+        }
     }
 
-    .tab-pane .table-responsive .table.table-bordered tr td:last-child {
-        border-bottom: none !important;
-    }
+    @media (max-width: 576px) {
+        .nav-link {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.6rem;
+        }
 
-    .tab-pane .table-responsive .table.table-bordered tr {
-        display: flex !important;
-        flex-direction: column !important;
-        flex: 1 1 auto !important;
-        min-width: 110px !important;
+        .nav-link i {
+            display: none;
+        }
     }
-}
-
-@media (max-width: 576px) {
-    .nav-link {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.6rem;
-    }
-
-    .nav-link i {
-        display: none;
-    }
-}
 </style>
 
 <script>
-$(document).ready(function() {
-    let quotaLoaded = false;
-    let signatureLoaded = false;
-    
-    // Handle change password
-    $('#changePasswordForm').submit(function(e) {
-        e.preventDefault();
-        
-        const formData = {
-            old_password: $('#old_password').val(),
-            new_password: $('#new_password').val(),
-            confirm_password: $('#confirm_password').val()
-        };
-        
-        $.post(baseUrl('auth/changePassword'), formData, function(response) {
-            if (response.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: response.message,
-                    confirmButtonColor: '#1b5e20'
-                });
-                $('#changePasswordForm')[0].reset();
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal',
-                    text: response.message,
-                    confirmButtonColor: '#1b5e20'
-                });
-            }
-        }, 'json');
-    });
-    
-    // Tab switching events
-    $('#kuota-tab').on('click', function() {
-        if (!quotaLoaded) {
-            loadQuotaInfo();
-            quotaLoaded = true;
-        }
-    });
+    $(document).ready(function () {
+        let quotaLoaded = false;
+        let signatureLoaded = false;
 
-    $('#signature-tab').on('click', function() {
-        if (!signatureLoaded) {
-            loadSignatureManagement();
-            signatureLoaded = true;
-        }
-    });
+        // Handle change password
+        $('#changePasswordForm').submit(function (e) {
+            e.preventDefault();
 
+            const formData = {
+                old_password: $('#old_password').val(),
+                new_password: $('#new_password').val(),
+                confirm_password: $('#confirm_password').val()
+            };
 
-    
-    function loadQuotaInfo() {
-        const currentYear = new Date().getFullYear();
-        const years = [currentYear - 2, currentYear - 1, currentYear];
-        const tbody = $('#quotaTableBody');
-        tbody.empty();
-        
-        let totalQuota = 0;
-        let totalUsed = 0;
-        let results = [];
-        let processed = 0;
-        
-        years.forEach(function(year, idx) {
-            $.post(baseUrl('leave/getBalance'), {
-                tahun: year
-            }, function(response) {
+            $.post(baseUrl('auth/changePassword'), formData, function (response) {
                 if (response.success) {
-                    const data = response.data;
-                    const used = data.kuota_tahunan - data.sisa_kuota;
-                    const percentage = (used / data.kuota_tahunan * 100).toFixed(1);
-                    results[idx] = {
-                        year: year,
-                        kuota: data.kuota_tahunan,
-                        used: used,
-                        sisa: data.sisa_kuota,
-                        percentage: percentage
-                    };
-                    totalQuota += data.kuota_tahunan;
-                    totalUsed += used;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: response.message,
+                        confirmButtonColor: '#1b5e20'
+                    });
+                    $('#changePasswordForm')[0].reset();
                 } else {
-                    results[idx] = {
-                        year: year,
-                        kuota: 0,
-                        used: 0,
-                        sisa: 0,
-                        percentage: 0
-                    };
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: response.message,
+                        confirmButtonColor: '#1b5e20'
+                    });
                 }
-                processed++;
-                if (processed === years.length) {
-                    // Render setelah semua data diterima
-                    results.forEach(function(item) {
-                        const progressClass = item.percentage > 80 ? 'danger' : 
-                                              item.percentage > 50 ? 'warning' : 'success';
-                        tbody.append(`
+            }, 'json');
+        });
+
+        // Tab switching events
+        $('#kuota-tab').on('click', function () {
+            if (!quotaLoaded) {
+                loadQuotaInfo();
+                quotaLoaded = true;
+            }
+        });
+
+        $('#signature-tab').on('click', function () {
+            if (!signatureLoaded) {
+                loadSignatureManagement();
+                signatureLoaded = true;
+            }
+        });
+
+
+
+        function loadQuotaInfo() {
+            const currentYear = new Date().getFullYear();
+            const years = [currentYear - 2, currentYear - 1, currentYear];
+            const tbody = $('#quotaTableBody');
+            tbody.empty();
+
+            let totalQuota = 0;
+            let totalUsed = 0;
+            let results = [];
+            let processed = 0;
+
+            years.forEach(function (year, idx) {
+                $.post(baseUrl('leave/getBalance'), {
+                    tahun: year
+                }, function (response) {
+                    if (response.success) {
+                        const data = response.data;
+                        const used = data.kuota_tahunan - data.sisa_kuota;
+                        const percentage = (used / data.kuota_tahunan * 100).toFixed(1);
+                        results[idx] = {
+                            year: year,
+                            kuota: data.kuota_tahunan,
+                            used: used,
+                            sisa: data.sisa_kuota,
+                            percentage: percentage
+                        };
+                        totalQuota += data.kuota_tahunan;
+                        totalUsed += used;
+                    } else {
+                        results[idx] = {
+                            year: year,
+                            kuota: 0,
+                            used: 0,
+                            sisa: 0,
+                            percentage: 0
+                        };
+                    }
+                    processed++;
+                    if (processed === years.length) {
+                        // Render setelah semua data diterima
+                        results.forEach(function (item) {
+                            const progressClass = item.percentage > 80 ? 'danger' :
+                                item.percentage > 50 ? 'warning' : 'success';
+                            tbody.append(`
                             <tr>
                                 <td>${item.year}</td>
                                 <td>${item.kuota} hari</td>
@@ -424,9 +437,9 @@ $(document).ready(function() {
                                 </td>
                             </tr>
                         `);
-                    });
-                    const totalPercentage = (totalUsed / totalQuota * 100).toFixed(1);
-                    tbody.append(`
+                        });
+                        const totalPercentage = (totalUsed / totalQuota * 100).toFixed(1);
+                        tbody.append(`
                         <tr class="table-secondary">
                             <td><strong>TOTAL</strong></td>
                             <td><strong>${totalQuota} hari</strong></td>
@@ -435,25 +448,25 @@ $(document).ready(function() {
                             <td><strong>${totalPercentage}%</strong></td>
                         </tr>
                     `);
-                }
-            }, 'json');
-        });
-    }
+                    }
+                }, 'json');
+            });
+        }
 
-    function loadSignatureManagement() {
-        const container = $('#signatureManagementDiv');
-        
-        // Load signature management page via AJAX
-        $.get(baseUrl('user/signatureManagement'), function(data) {
-            container.html(data);
-        }).fail(function() {
-            container.html(`
+        function loadSignatureManagement() {
+            const container = $('#signatureManagementDiv');
+
+            // Load signature management page via AJAX
+            $.get(baseUrl('user/signatureManagement'), function (data) {
+                container.html(data);
+            }).fail(function () {
+                container.html(`
                 <div class="alert alert-danger" role="alert">
                     <i class="bi bi-exclamation-triangle me-2"></i>Gagal memuat halaman manajemen tanda tangan.
                 </div>
             `);
-        });
-    }
-});
+            });
+        }
+    });
 
-</script> 
+</script>

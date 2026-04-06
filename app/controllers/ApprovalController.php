@@ -721,10 +721,11 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
         
         // Get additional info
     $sql = "SELECT lr.*, lt.nama_cuti, u.nama, u.nip, u.jabatan, u.golongan, u.unit_kerja,
-        au.nama as approved_by_name
+        au.nama as approved_by_name, s.nama_satker
         FROM leave_requests lr
         JOIN leave_types lt ON lr.leave_type_id = lt.id
         JOIN users u ON lr.user_id = u.id
+        LEFT JOIN satker s ON u.unit_kerja = s.id_satker
         LEFT JOIN users au ON lr.approved_by = au.id AND au.is_deleted = 0
         WHERE lr.id = ?";
         

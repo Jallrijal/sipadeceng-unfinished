@@ -1080,7 +1080,7 @@ $(document).ready(function() {
                 if (data.action !== 'Tambah Baru' && data.old_unit_kerja) {
                     const changes = [];
                     if (data.old_unit_kerja !== data.unit_kerja) {
-                        changes.push(`Unit: ${data.old_unit_kerja} → ${data.unit_kerja}`); // tampilkan id, bisa diubah ke nama jika perlu
+                        changes.push(`Unit: ${data.old_unit_kerja} &rarr; ${data.nama_satker ? data.nama_satker : data.unit_kerja}`);
                     }
                     if (data.old_jabatan && data.old_jabatan !== data.jabatan) {
                         changes.push(`Jabatan: ${data.old_jabatan} → ${data.jabatan}`);
@@ -1114,7 +1114,7 @@ $(document).ready(function() {
                         <td>${data.nip}</td>
                         <td>${data.jabatan}</td>
                         <td>${data.golongan || '-'}</td>
-                        <td><?php require_once __DIR__ . '/../../helpers/satker_helper.php'; echo get_nama_satker($data['unit_kerja']); ?></td>
+                        <td>${data.nama_satker ? data.nama_satker : (data.unit_kerja || '-')}</td>
                         <td><code>${data.username}</code></td>
                         <td>${actionBadge}</td>
                         <td>${detailInfo}</td>

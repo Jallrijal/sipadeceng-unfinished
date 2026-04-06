@@ -43,7 +43,7 @@ $isSpecialRole = $isKasubbag || $isKabag || $isSekretaris || $isKetua;
                     <option value="pending_kasubbag">Menunggu Kasubbag</option>
                     <option value="pending_kabag">Menunggu Kabag</option>
                     <option value="pending_sekretaris">Menunggu Sekretaris</option>
-                    <option value="pending_admin_upload">Menunggu Upload Admin</option>
+                    <option value="pending_admin_upload">Menunggu Dokumen</option>
                     <option value="approved">Disetujui</option>
                     <option value="rejected">Ditolak</option>
                     <option value="changed">Perlu Perubahan</option>
@@ -455,7 +455,7 @@ function getStatusDisplay(statusCode) {
         'pending_kasubbag': 'Menunggu Kasubbag',
         'pending_kabag': 'Menunggu Kabag',
         'pending_sekretaris': 'Menunggu Sekretaris',
-        'pending_admin_upload': 'Menunggu Upload Admin',
+        'pending_admin_upload': 'Menunggu Dokumen',
         'awaiting_pimpinan': 'Menunggu Pimpinan',
         'approved': 'Disetujui',
         'rejected': 'Ditolak',
@@ -700,6 +700,12 @@ function loadPersetujuanData(status = '') {
                 if (item.jumlah_hari_ditangguhkan && parseInt(item.jumlah_hari_ditangguhkan) > 0) {
                     postponedInfo = `<div class=\"small text-warning\">Ditangguhkan: ${item.jumlah_hari_ditangguhkan} hari</div>`;
                 }
+                
+                let actionBtns = actions.replace(/ me-1/g, '').trim();
+                let btnCount = (actionBtns.match(/<button/g) || []).length + (actionBtns.match(/<a/g) || []).length;
+                let gridCols = btnCount > 4 ? 3 : 2;
+                let actionContainer = `<div style="display: grid; grid-template-columns: repeat(${gridCols}, 1fr); gap: 0.25rem;">${actionBtns}</div>`;
+
                 tbody.append(`
                     <tr data-leave-id="${item.id}">
                         <td data-label="No">${index + 1}</td>
@@ -709,7 +715,7 @@ function loadPersetujuanData(status = '') {
                         <td data-label="Jenis Cuti">${item.nama_cuti || '-'}</td>
                         <td data-label="Periode">${item.tanggal_mulai_formatted || item.tanggal_mulai || '-'} - ${item.tanggal_selesai_formatted || item.tanggal_selesai || '-'}</td>
                         <td data-label="Status">${status_display} ${postponedInfo}</td>
-                        <td data-label="Aksi">${actions}</td>
+                        <td data-label="Aksi">${actionContainer}</td>
                     </tr>
                 `);
             });
@@ -824,38 +830,44 @@ function viewDetail(id) {
                                 <i class="bi ${(data.blanko_uploaded || data.has_generated_doc) ? 'bi-check-circle' : 'bi-clock'}"></i>
                                 Blanko Pegawai
                             </span>\n                            ${(hasGenerated || data.can_download_generated) && data.has_generated_doc ? `
-                                <span class="text-muted small">Blanko (diberikan oleh sistem)</span>
-                                <a href="${baseUrl('leave/downloadGeneratedDoc?id=' + data.id)}" class="btn btn-sm btn-outline-primary ms-2 btn-download-generated-modal" target="_blank" rel="noopener">
-                                    <i class="bi bi-file-earmark-arrow-down"></i> Download Blanko
-                                </a>
+                                <div class="mt-2 text-muted small d-flex flex-column align-items-start gap-1">
+                                    <span>Blanko (diberikan oleh sistem)</span>
+                                    <a href="${baseUrl('leave/downloadGeneratedDoc?id=' + data.id)}" class="btn btn-sm btn-outline-primary btn-download-generated-modal" target="_blank" rel="noopener">
+                                        <i class="bi bi-file-earmark-arrow-down"></i> Download Blanko
+                                    </a>
+                                </div>
                                 ${data.blanko_uploaded ? `
-                                    <div class="mt-2">
+                                    <div class="mt-2 d-flex flex-column align-items-start gap-1">
                                         <span class="text-muted small">Signed upload: ${data.signed_doc_upload_date || '-'}</span>
-                                        <a href="${baseUrl('leave/downloadSignedDoc?id=' + data.id)}" class="btn btn-sm btn-outline-primary ms-2">
+                                        <a href="${baseUrl('leave/downloadSignedDoc?id=' + data.id)}" class="btn btn-sm btn-outline-primary">
                                             <i class="bi bi-download"></i> Download Signed
                                         </a>
                                     </div>
                                 ` : ''}
                             ` : (
                                 data.blanko_uploaded ? 
-                                `<span class="text-muted small">Upload: ${data.signed_doc_upload_date || '-'}</span>
-                                <a href="${baseUrl('leave/downloadSignedDoc?id=' + data.id)}" class="btn btn-sm btn-outline-primary ms-2">
-                                    <i class="bi bi-download"></i> Download
-                                </a>` : 
-                                '<span class="text-muted small">Belum diupload</span>'
+                                `<div class="mt-2 d-flex flex-column align-items-start gap-1">
+                                    <span class="text-muted small">Upload: ${data.signed_doc_upload_date || '-'}</span>
+                                    <a href="${baseUrl('leave/downloadSignedDoc?id=' + data.id)}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-download"></i> Download
+                                    </a>
+                                </div>` : 
+                                '<div class="mt-1"><span class="text-muted small">Belum diupload</span></div>'
                             )}
                         </div>
-                        <div class="mb-2">
+                        <div class="mb-2 mt-3">
                             <span class="badge ${data.has_final_doc ? 'bg-success' : 'bg-secondary'} me-2">
                                 <i class="bi ${data.has_final_doc ? 'bi-check-circle' : 'bi-x-circle'}"></i>
                                 Blanko Final
                             </span>
                             ${data.has_final_doc ? 
-                                `<span class="text-muted small">Upload: ${data.final_doc_upload_date || '-'}</span>
-                                <a href="${baseUrl('leave/downloadFinalDoc?id=' + data.id)}" class="btn btn-sm btn-outline-success ms-2">
-                                    <i class="bi bi-download"></i> Download
-                                </a>` : 
-                                '<span class="text-muted small">Belum dibuat</span>'
+                                `<div class="mt-2 d-flex flex-column align-items-start gap-1">
+                                    <span class="text-muted small">Upload: ${data.final_doc_upload_date || '-'}</span>
+                                    <a href="${baseUrl('leave/downloadFinalDoc?id=' + data.id)}" class="btn btn-sm btn-outline-success">
+                                        <i class="bi bi-download"></i> Download
+                                    </a>
+                                </div>` : 
+                                '<div class="mt-1"><span class="text-muted small">Belum dibuat</span></div>'
                             }
                         </div>
                         
@@ -868,11 +880,11 @@ function viewDetail(id) {
                         ` : ''}
 
                         ${(data.status === 'pending' || data.status === 'pending_kasubbag' || data.status === 'awaiting_pimpinan' || (data.status_draft && data.is_pta_makassar)) ? `
-                            <div class="mt-3">
+                            <div class="d-flex flex-column align-items-start gap-2 mt-3">
                                 ${((data.status === 'awaiting_pimpinan' && window.IS_KETUA) || ((data.status === 'pending' || (data.status === 'pending_kasubbag' && window.IS_KASUBBAG)) && (data.blanko_uploaded || data.has_generated_doc || window.IS_ATASAN)) || (data.status_draft && data.is_pta_makassar)) ? `
-                                            ${window.IS_ATASAN ? `<button class="btn btn-primary btn-sm me-2" onclick="approveLeave(${data.id})">
+                                            ${window.IS_ATASAN ? `<button class="btn btn-primary btn-sm" onclick="approveLeave(${data.id})">
                                                 <i class="bi bi-arrow-up-right-circle"></i> Setujui
-                                            </button>` : `<button class="btn btn-success btn-sm me-2" onclick="approveLeave(${data.id})">
+                                            </button>` : `<button class="btn btn-success btn-sm" onclick="approveLeave(${data.id})">
                                                 <i class="bi bi-check"></i> Setujui
                                             </button>`}
                                             <button class="btn btn-danger btn-sm" onclick="rejectLeave(${data.id})">
@@ -883,7 +895,7 @@ function viewDetail(id) {
                             </div>
                         ` : (['approved','rejected','changed','postponed'].includes(data.status)) ? `
                             ${((['approved','rejected','changed','postponed'].includes(data.status)) && (!data.is_completed || data.is_completed == 0)) ? `
-                                <div class="mt-3">
+                                <div class="d-flex flex-column align-items-start gap-2 mt-3">
                                     <a href="${baseUrl('approval/upload/' + data.id)}" class="btn btn-warning btn-sm">
                                         <i class="bi bi-upload"></i> Upload Blanko Final
                                     </a>
@@ -892,8 +904,8 @@ function viewDetail(id) {
                         ` : ''
                         }
                         ${(data.status === 'pending') ? `
-                            <div class="mt-3">
-                                <button class="btn btn-warning btn-sm me-2" onclick="changeLeave(${data.id})"><i class="bi bi-pencil"></i> Perlu Perubahan</button>
+                            <div class="d-flex flex-column align-items-start gap-2 mt-2">
+                                <button class="btn btn-warning btn-sm text-white" onclick="changeLeave(${data.id})"><i class="bi bi-pencil"></i> Perlu Perubahan</button>
                                 <button class="btn btn-secondary btn-sm" onclick="postponeLeave(${data.id})"><i class="bi bi-pause"></i> Tangguhkan</button>
                             </div>
                         ` : ''}
