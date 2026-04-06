@@ -489,3 +489,60 @@ function generateCatatanCuti($satker_id, $leave_type_id = 1, $tanggal = null) {
         return '';
     }
 }
+
+/**
+ * Hitung persentase pegawai yang sedang menjalankan cuti tahunan (approved)
+ * pada tanggal dan satker tertentu.
+ *
+ * @param int|string $satker_id  ID satuan kerja (unit_kerja dari session)
+ * @param string     $tanggal    Tanggal yang dicek (format: Y-m-d)
+ * @return array ['persentase' => float, 'jumlah_cuti' => int, 'total_pegawai' => int]
+ */
+function getCutiTahunanPercentage($satker_id, $tanggal) {
+    try {
+        $db = Database::getInstance();
+
+        // Jumlah pegawai yang sedang menjalankan cuti tahunan (leave_type_id=1, status='approved')
+        $sqlCuti = "
+            SELECT COUNT(DISTINCT lr.user_id) AS jumlah_cuti
+            FROM leave_requests lr
+            INNER JOIN users u ON lr.user_id = u.id
+            WHERE u.unit_kerja = ?
+              AND lr.leave_type_id = 1
+              AND lr.status = 'approved'
+              AND ? BETWEEN lr.tanggal_mulai AND lr.tanggal_selesai
+              AND u.user_type IN ('pegawai', 'atasan')
+              AND u.is_deleted = 0
+        ";
+        $resCuti = $db->query($sqlCuti, [$satker_id, $tanggal])->get_result()->fetch_assoc();
+        $jumlah_cuti = $resCuti ? (int)$resCuti['jumlah_cuti'] : 0;
+
+        // Total pegawai aktif di satker
+        $sqlTotal = "
+            SELECT COUNT(*) AS total_pegawai
+            FROM users
+            WHERE unit_kerja = ?
+              AND user_type IN ('pegawai', 'atasan')
+              AND is_deleted = 0
+        ";
+        $resTotal = $db->query($sqlTotal, [$satker_id])->get_result()->fetch_assoc();
+        $total_pegawai = $resTotal ? (int)$resTotal['total_pegawai'] : 0;
+
+        $persentase = 0;
+        if ($total_pegawai > 0) {
+            $persentase = round(($jumlah_cuti / $total_pegawai) * 100, 2);
+        }
+
+        return [
+            'persentase'    => $persentase,
+            'jumlah_cuti'   => $jumlah_cuti,
+            'total_pegawai' => $total_pegawai,
+        ];
+    } catch (Exception $e) {
+        return [
+            'persentase'    => 0,
+            'jumlah_cuti'   => 0,
+            'total_pegawai' => 0,
+        ];
+    }
+}

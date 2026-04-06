@@ -6,6 +6,18 @@ $hide_charts = false;
 
 <?php $hide_charts = isset($hide_charts) ? $hide_charts : false; ?>
 
+<?php
+require_once dirname(dirname(__DIR__)) . '/helpers/signature_helper.php';
+$hasParaf = getUserParaf($_SESSION['user_id']);
+if (!$hasParaf):
+?>
+<div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    Anda belum mengunggah gambar paraf petugas cuti. Silakan unggah paraf Anda <a href="<?= baseUrl('signature/paraf') ?>" class="alert-link">di sini</a>.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php endif; ?>
+
 <!-- Statistics Cards -->
 <div class="row mb-4">
     <div class="col-md-2 mb-3">

@@ -20,11 +20,11 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
             <?php if ($paraf): ?>
                 <div class="row">
                     <div class="col-md-6">
-                        <div style="border:1px solid #ccc; background:#f8f9fa; padding:15px; border-radius:8px; text-align:center;">
+                        <div class="border rounded p-3 text-center">
                             <h6 class="mb-2">Preview Paraf</h6>
                             <img src="<?php echo getSignatureUrl($paraf['signature_file']); ?>"
                                  alt="Paraf Petugas Cuti"
-                                 style="max-width:120px; max-height:60px; display:block; margin:0 auto; border:1px solid #ddd; background:white; padding:5px;">
+                                 style="max-width:120px; max-height:60px; display:block; margin:0 auto; border:1px solid var(--bs-border-color); background:white; padding:5px;">
                             <div class="mt-2">
                                 <small class="text-muted">
                                     Ukuran tampilan di blanko: 60x30 pixel
@@ -33,7 +33,7 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div style="border:1px solid #ccc; background:#f8f9fa; padding:15px; border-radius:8px;">
+                        <div class="border rounded p-3">
                             <h6 class="mb-2">Informasi File</h6>
                             <table class="table table-sm table-borderless mb-0">
                                 <tr>
@@ -68,8 +68,8 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
                     </button>
                 </div>
             <?php else: ?>
-                <div style="border:2px dashed #ccc; background:#f8f9fa; padding:30px; border-radius:8px; text-align:center;">
-                    <i class="bi bi-image" style="font-size:3rem; color:#ccc;"></i>
+                <div class="rounded text-center p-4" style="border:2px dashed var(--bs-border-color);">
+                    <i class="bi bi-image text-muted" style="font-size:3rem;"></i>
                     <p class="text-muted mt-2 mb-0">Belum ada paraf yang diupload</p>
                 </div>
             <?php endif; ?>
@@ -89,13 +89,13 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
                 <label class="form-label">Preview File yang Dipilih:</label>
                 <div class="row">
                     <div class="col-md-6">
-                        <div style="border:1px solid #ccc; background:#f8f9fa; padding:15px; border-radius:8px; text-align:center;">
+                        <div class="border rounded p-3 text-center">
                             <h6 class="mb-2">Preview</h6>
-                            <img id="previewImage" src="" alt="Preview" style="max-width:120px; max-height:60px; display:block; margin:0 auto; border:1px solid #ddd; background:white; padding:5px;">
+                            <img id="previewImage" src="" alt="Preview" style="max-width:120px; max-height:60px; display:block; margin:0 auto; border:1px solid var(--bs-border-color); background:white; padding:5px;">
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div style="border:1px solid #ccc; background:#f8f9fa; padding:15px; border-radius:8px;">
+                        <div class="border rounded p-3">
                             <h6 class="mb-2">Informasi File</h6>
                             <table class="table table-sm table-borderless mb-0">
                                 <tr>
@@ -311,16 +311,16 @@ function showParafModal(imageUrl, fileName) {
             <div class="modal-body text-center">
                 <div class="mb-3">
                     <h6>Ukuran Asli</h6>
-                    <img id="modalParafImage" src="" alt="Paraf Detail" style="max-width:100%; max-height:400px; border:1px solid #ddd; background:white; padding:10px;">
+                    <img id="modalParafImage" src="" alt="Paraf Detail" style="max-width:100%; max-height:400px; border:1px solid var(--bs-border-color); background:white; padding:10px;">
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <h6>Ukuran di Blanko (60x30 pixel)</h6>
-                        <img id="modalParafSmall" src="" alt="Paraf Kecil" style="width:60px; height:30px; border:1px solid #ddd; background:white; padding:2px; object-fit:contain;">
+                        <img id="modalParafSmall" src="" alt="Paraf Kecil" style="width:60px; height:30px; border:1px solid var(--bs-border-color); background:white; padding:2px; object-fit:contain;">
                     </div>
                     <div class="col-md-6">
                         <h6>Ukuran Preview (120x60 pixel)</h6>
-                        <img id="modalParafMedium" src="" alt="Paraf Sedang" style="width:120px; height:60px; border:1px solid #ddd; background:white; padding:5px; object-fit:contain;">
+                        <img id="modalParafMedium" src="" alt="Paraf Sedang" style="width:120px; height:60px; border:1px solid var(--bs-border-color); background:white; padding:5px; object-fit:contain;">
                     </div>
                 </div>
                 <div class="mt-3">

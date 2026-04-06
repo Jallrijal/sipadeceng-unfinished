@@ -89,11 +89,51 @@ class LeaveController extends Controller
         ]);
     }
 
+    /**
+     * Cek apakah persentase pegawai yang sedang cuti tahunan pada tanggal tertentu
+     * sudah mencapai atau melebihi batas 30%. Jika ya, pengajuan cuti tahunan di
+     * tanggal tersebut harus dihentikan.
+     *
+     * POST params: tanggal (Y-m-d)
+     * Returns: { success, blocked, persentase, jumlah_cuti, total_pegawai, message }
+     */
+    public function checkCutiTahunanQuota()
+    {
+        if (!isUser()) {
+            $this->jsonResponse(['success' => false, 'message' => 'Unauthorized']);
+        }
+
+        $tanggal = isset($_POST['tanggal']) ? cleanInput($_POST['tanggal']) : '';
+        if (!$tanggal || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $tanggal)) {
+            $this->jsonResponse(['success' => false, 'message' => 'Tanggal tidak valid']);
+        }
+
+        $satker_id = isset($_SESSION['unit_kerja']) ? $_SESSION['unit_kerja'] : null;
+        if (!$satker_id) {
+            $this->jsonResponse(['success' => false, 'message' => 'Unit kerja tidak ditemukan di sesi']);
+        }
+
+        $result = getCutiTahunanPercentage($satker_id, $tanggal);
+        $blocked = $result['persentase'] >= 30;
+
+        $this->jsonResponse([
+            'success'       => true,
+            'blocked'       => $blocked,
+            'persentase'    => $result['persentase'],
+            'jumlah_cuti'   => $result['jumlah_cuti'],
+            'total_pegawai' => $result['total_pegawai'],
+            'message'       => $blocked
+                ? "Pengajuan cuti tahunan pada tanggal {$tanggal} tidak dapat diproses karena sudah {$result['persentase']}% pegawai ({$result['jumlah_cuti']} dari {$result['total_pegawai']} orang) sedang menjalankan cuti tahunan (batas maksimal 30%)."
+                : "Tanggal tersedia. Saat ini {$result['persentase']}% pegawai sedang cuti tahunan."
+        ]);
+    }
+
     public function submit()
     {
         if (!isUser()) {
             $this->jsonResponse(['success' => false, 'message' => 'Hanya pegawai dan atasan yang dapat mengajukan cuti']);
         }
+
 
         // Validasi input
         $leaveTypeId = cleanInput($_POST['leave_type_id']);

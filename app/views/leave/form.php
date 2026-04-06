@@ -368,6 +368,9 @@ $(document).ready(function() {
     let currentBalance = 0;
     window.cutiSakitQuota = 14; // Default kuota cuti sakit
     window.jumlahPengambilanMelahirkan = 0;
+    // State untuk validasi batas 30% cuti tahunan
+    let cutiTahunanBlocked = false;
+    let cutiTahunanBlockedMsg = '';
     // NIP current user (untuk validasi jenis kelamin pada cuti melahirkan)
     window.currentUserNip = '<?php echo isset($_SESSION["nip"]) ? addslashes($_SESSION["nip"]) : ""; ?>';
     
@@ -394,6 +397,11 @@ $(document).ready(function() {
         onChange: function(selectedDates, dateStr) {
             endDatePicker.set('minDate', dateStr);
             calculateDays();
+            // Cek batas 30% jika jenis cuti tahunan
+            const leaveTypeId = $('#leave_type_id').val();
+            if (leaveTypeId == 1 && dateStr) {
+                checkCutiTahunanDate(dateStr);
+            }
         }
     });
     
@@ -550,10 +558,56 @@ $(document).ready(function() {
         }
     }
 
+    // Fungsi cek batas 30% cuti tahunan untuk tanggal tertentu
+    function checkCutiTahunanDate(tanggal) {
+        $.ajax({
+            url: baseUrl('leave/checkCutiTahunanQuota'),
+            type: 'POST',
+            data: { tanggal: tanggal },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    cutiTahunanBlocked = response.blocked;
+                    cutiTahunanBlockedMsg = response.message;
+                    if (response.blocked) {
+                        $('#submitLeaveBtn').prop('disabled', true);
+                        // Tampilkan peringatan permanen di bawah field tanggal mulai
+                        if ($('#cutiTahunanBlockedAlert').length === 0) {
+                            $('#tanggal_mulai').closest('.col-md-6').append(
+                                '<div id="cutiTahunanBlockedAlert" class="alert alert-danger mt-2 py-2" style="font-size:0.875rem;"><i class="bi bi-x-circle-fill me-1"></i>' + response.message + '</div>'
+                            );
+                        } else {
+                            $('#cutiTahunanBlockedAlert').html('<i class="bi bi-x-circle-fill me-1"></i>' + response.message);
+                        }
+                    } else {
+                        cutiTahunanBlocked = false;
+                        $('#submitLeaveBtn').prop('disabled', false);
+                        $('#cutiTahunanBlockedAlert').remove();
+                    }
+                }
+            },
+            error: function() {
+                // Jika error jaringan, biarkan user lanjut (jangan blokir)
+                cutiTahunanBlocked = false;
+                $('#cutiTahunanBlockedAlert').remove();
+            }
+        });
+    }
+
     // Trigger load alasan cuti saat jenis cuti berubah
     $('#leave_type_id').on('change', function() {
         const typeId = $(this).val();
         loadAlasanCuti(typeId);
+        // Reset blokir 30% jika berganti dari cuti tahunan
+        if (typeId != 1) {
+            cutiTahunanBlocked = false;
+            $('#cutiTahunanBlockedAlert').remove();
+            $('#submitLeaveBtn').prop('disabled', false);
+        } else {
+            // Jika kembali ke cuti tahunan, cek ulang tanggal yang ada
+            const tgl = $('#tanggal_mulai').val();
+            if (tgl) checkCutiTahunanDate(tgl);
+        }
         // Check and display quota sections
         if (typeId == 1) { // Cuti Tahunan
             $('#sisaKuotaWrapper').show();
@@ -718,6 +772,16 @@ $(document).ready(function() {
         }
         // Validasi cuti tahunan (default)
         if (leaveTypeId == 1) {
+            // Blokir jika persentase cuti 30% atau lebih
+            if (cutiTahunanBlocked) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Pengajuan Tidak Dapat Diproses',
+                    text: cutiTahunanBlockedMsg,
+                    confirmButtonColor: '#1b5e20'
+                });
+                return;
+            }
             if (jumlahHari > sisaKuota) {
                 Swal.fire({
                     icon: 'error',
