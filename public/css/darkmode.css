@@ -62,6 +62,23 @@ body.dark-mode .notification-dropdown {
     border-color: #30363d !important;
 }
 
+body.dark-mode .notification-item {
+    border-bottom-color: #30363d !important;
+    background-color: transparent !important;
+}
+
+body.dark-mode .notification-item:hover {
+    background-color: #21262d !important;
+}
+
+body.dark-mode .notification-item p {
+    color: #c9d1d9 !important;
+}
+
+body.dark-mode .notification-item small {
+    color: #8b949e !important;
+}
+
 /* =============================================
    DARK MODE - SIDEBAR
    ============================================= */
@@ -406,7 +423,38 @@ body.dark-mode .form-control::placeholder {
 }
 
 body.dark-mode .form-label,
-body.dark-mode label {
+body.dark-mode label,
+body.dark-mode .form-text {
+    color: #c9d1d9 !important;
+}
+
+/* Specific to Leave Form Elements */
+body.dark-mode .info-box {
+    background-color: rgba(38, 94, 63, 0.15) !important;
+    border-left-color: #238636 !important;
+}
+
+body.dark-mode .info-box,
+body.dark-mode .info-box i,
+body.dark-mode .info-box small {
+    color: #c9d1d9 !important;
+}
+
+body.dark-mode .file-upload-label {
+    background-color: #161b22 !important;
+    border-color: #30363d !important;
+    color: #8b949e !important;
+}
+
+body.dark-mode .file-upload-wrapper:hover .file-upload-label {
+    background-color: #1c2128 !important;
+    border-color: #58a6ff !important;
+    color: #58a6ff !important;
+}
+
+body.dark-mode .date-info {
+    background-color: #161b22 !important;
+    border: 1px solid #30363d !important;
     color: #c9d1d9 !important;
 }
 

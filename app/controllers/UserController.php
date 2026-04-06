@@ -305,21 +305,50 @@ class UserController extends Controller {
         if (isAtasan()) {
             $user = $this->userModel->find($_SESSION['user_id']);
             $atasanId = null;
+            $atasanRole = null;
             $userNip = $user['nip'] ?? null;
             $db = Database::getInstance();
             if ($userNip) {
-                $row = $db->fetch("SELECT id_atasan FROM atasan WHERE NIP = ? LIMIT 1", [$userNip]);
+                $row = $db->fetch("SELECT id_atasan, role FROM atasan WHERE NIP = ? LIMIT 1", [$userNip]);
                 if ($row && isset($row['id_atasan'])) {
                     $atasanId = $row['id_atasan'];
-                    error_log("[getRecentActivities] resolved atasanId={$atasanId} for userNIP={$userNip}");
+                    $atasanRole = $row['role'] ?? null;
+                    error_log("[getRecentActivities] resolved atasanId={$atasanId} with role={$atasanRole} for userNIP={$userNip}");
                 } else {
                     error_log("[getRecentActivities] no atasan found for userNIP={$userNip}");
                 }
             } else {
                 error_log("[getRecentActivities] atasan user has no NIP (userId={$_SESSION['user_id']})");
             }
+            
             if ($atasanId) {
-                $activities = $this->leaveModel->getRecentActivities($limit, $atasanId);
+                // Construct filters for getHistory
+                $filters = ['atasan_id' => $atasanId];
+                
+                // Add special viewer roles if atasan has a role
+                if (!empty($atasanRole)) {
+                    switch ($atasanRole) {
+                        case 'kasubbag':
+                            $filters['is_kasubbag_viewer'] = true;
+                            $filters['kasubbag_id'] = $atasanId;
+                            break;
+                        case 'kabag':
+                            $filters['is_kabag_viewer'] = true;
+                            $filters['kabag_approver_id'] = $atasanId;
+                            break;
+                        case 'sekretaris':
+                            $filters['is_sekretaris_viewer'] = true;
+                            $filters['sekretaris_approver_id'] = $atasanId;
+                            break;
+                        case 'ketua':
+                            $filters['is_ketua_viewer'] = true;
+                            $filters['ketua_approver_id'] = $atasanId;
+                            break;
+                    }
+                }
+                
+                $allActivities = $this->leaveModel->getHistory($filters);
+                $activities = array_slice($allActivities, 0, $limit);
             } else {
                 $activities = []; // No mapping for this atasan account, show no activities
             }

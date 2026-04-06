@@ -34,7 +34,7 @@
 				<!-- Text Description -->
 				<div class="tentang-text-wrap mb-5">
 					<p class="tentang-desc-modern">
-						<strong>SIPADECENG</strong> (Sistem Pengelolaan Administrasi Cuti Elektronik) hadir sebagai inovasi untuk menjawab tantangan birokrasi manual di <strong>lingkungan Pengadilan Tinggi Agama Makassar</strong>. Sistem ini memfasilitasi seluruh rangkaian pengelolaan cuti pegawai secara elektronik, dari tahap pengajuan, verifikasi operasional, persetujuan atasan, hingga penetapan akhir dalam satu platform terintegrasi terpusat. Transformasi digital ini secara signifikan memangkas antrean permohonan, meminimalisir penggunaan kertas (paperless), dan menjamin riwayat cuti setiap pegawai terekam secara jelas, transparan, serta dapat diakses kapan saja.
+						<strong>SIPADECENG</strong> (Sistem Pengelolaan Data Elektronik Cuti Pengadilan Tinggi Agama Makassar) hadir sebagai inovasi untuk menjawab tantangan birokrasi manual di <strong>lingkungan Pengadilan Tinggi Agama Makassar</strong>. Sistem ini memfasilitasi seluruh rangkaian pengelolaan cuti pegawai secara elektronik, dari tahap pengajuan, verifikasi operasional, persetujuan atasan, hingga penetapan akhir dalam satu platform terintegrasi terpusat. Transformasi digital ini secara signifikan memangkas antrean permohonan, meminimalisir penggunaan kertas (paperless), dan menjamin riwayat cuti setiap pegawai terekam secara jelas, transparan, serta dapat diakses kapan saja.
 					</p>
 				</div>
 				
