@@ -247,7 +247,22 @@ class UserController extends Controller {
                     $quotaInfo['is_akumulatif'] = 0;
                     $quotaInfo['sisa_kuota'] = $leaveType['max_days'];
                     $quotaInfo['kuota_tersedia'] = $leaveType['max_days'];
-                    $quotaInfo['keterangan'] = "Maksimal 90 hari per sekali mengajukan, tidak akumulatif";
+                    
+                    // Check if user is female (digit 15 of NIP = '2')
+                    $nip = isset($_SESSION['nip']) ? str_replace(' ', '', $_SESSION['nip']) : '';
+                    $isFemale = (strlen($nip) >= 15 && substr($nip, 14, 1) === '2');
+                    
+                    if ($isFemale) {
+                        // Max kesempatatan = 3
+                        $sqlMelahirkan = "SELECT jumlah_pengambilan FROM kuota_cuti_melahirkan WHERE user_id = ? LIMIT 1";
+                        $resMelahirkan = $db->fetch($sqlMelahirkan, [$userId]);
+                        $taken = $resMelahirkan ? (int)$resMelahirkan['jumlah_pengambilan'] : 0;
+                        $left = max(0, 3 - $taken);
+                        $quotaInfo['keterangan'] = "Maksimal 90 hari per sekali mengajukan, sisa kesempatan mengambil: {$left} kali lagi";
+                        $quotaInfo['kesempatan_sisa'] = $left;
+                    } else {
+                        $quotaInfo['keterangan'] = "Maksimal 90 hari per sekali mengajukan, tidak akumulatif";
+                    }
                     break;
                     
                 case 5: // Cuti Karena Alasan Penting (Per tahun)
@@ -311,6 +326,29 @@ class UserController extends Controller {
         } else {
             $activities = $this->leaveModel->getRecentActivities($limit);
         }
+
+        foreach ($activities as &$activity) {
+            $activity['status_badge'] = getStatusBadge($activity['status']);
+            $activity['created_at_formatted'] = formatTanggal($activity['created_at']);
+            // Fallback jika tanggal/jumlah_hari null/empty
+            $activity['tanggal_mulai'] = empty($activity['tanggal_mulai']) ? '-' : $activity['tanggal_mulai'];
+            $activity['tanggal_selesai'] = empty($activity['tanggal_selesai']) ? '-' : $activity['tanggal_selesai'];
+            $activity['jumlah_hari'] = (isset($activity['jumlah_hari']) && $activity['jumlah_hari'] !== null && $activity['jumlah_hari'] !== '') ? $activity['jumlah_hari'] : '-';
+        }
+
+        $this->jsonResponse(['success' => true, 'data' => $activities]);
+    }
+
+    public function getMyRecentActivities() {
+        requireLogin();
+        $limit = 10;
+        $userId = $_SESSION['user_id'];
+        
+        // Use getHistory from LeaveModel which supports user_id filter
+        $activities = $this->leaveModel->getHistory(['user_id' => $userId]);
+        
+        // Limit to $limit items
+        $activities = array_slice($activities, 0, $limit);
 
         foreach ($activities as &$activity) {
             $activity['status_badge'] = getStatusBadge($activity['status']);

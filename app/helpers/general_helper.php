@@ -138,6 +138,10 @@ function getStatusBadge($status) {
             return '<span class="badge bg-warning text-dark">Perlu Diubah</span>';
         case 'postponed':
             return '<span class="badge bg-secondary">Ditangguhkan</span>';
+        case 'pending_kabag':
+            return '<span class="badge bg-info text-dark">Menunggu Kabag</span>';
+        case 'pending_sekretaris':
+            return '<span class="badge bg-info text-dark">Menunggu Sekretaris</span>';
         case 'completed':
             return '<span class="badge bg-primary">Selesai</span>';
         default:

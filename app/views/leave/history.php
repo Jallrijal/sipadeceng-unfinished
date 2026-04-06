@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div> -->
-        
+
         <!-- Filter Section -->
         <div class="filter-section mb-4">
             <div class="row">
@@ -33,11 +33,11 @@
                     <label class="form-label">Status</label>
                     <select class="form-select" id="filterStatus">
                         <option value="">Semua Status</option>
-                        <option value="draft">Draft</option>
+                        <!--<option value="draft">Draft</option>-->
                         <option value="pending">Menunggu</option>
                         <option value="approved">Disetujui</option>
                         <option value="rejected">Ditolak</option>
-                        <option value="completed">Selesai</option>
+                        <!--<option value="completed">Selesai</option>-->
                     </select>
                 </div>
                 <div class="col-md-4 mb-2">
@@ -61,7 +61,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Table -->
         <div class="table-responsive">
             <table class="table table-hover" id="historyTable">
@@ -107,7 +107,7 @@
         padding: 20px;
         border-radius: 10px;
     }
-    
+
     .timeline-badge {
         width: 10px;
         height: 10px;
@@ -115,22 +115,26 @@
         display: inline-block;
         margin-right: 5px;
     }
-    
+
     .timeline-badge.pending {
         background-color: #ffc107;
     }
-    
+
     .timeline-badge.approved {
         background-color: #28a745;
     }
-    
+
     .timeline-badge.rejected {
         background-color: #dc3545;
     }
+
     /* Tambahan agar tabel di HP lebih memanjang dan tidak terlalu mepet kiri */
     @media (max-width: 576px) {
+
         /* Fix double click issue on mobile */
-        .table-hover tbody tr:hover { background: transparent; }
+        .table-hover tbody tr:hover {
+            background: transparent;
+        }
 
         .table-responsive {
             width: 100%;
@@ -138,18 +142,22 @@
             margin-right: 0;
             overflow-x: auto;
         }
+
         .table {
             font-size: 0.97rem;
             margin-bottom: 0;
         }
+
         /* Perkecil search field di mobile */
         #historyTable_filter {
             margin-bottom: 10px;
         }
+
         #historyTable_filter input {
             max-width: 150px !important;
             font-size: 0.85rem !important;
         }
+
         #historyTable_filter label {
             font-size: 0.85rem;
         }
@@ -161,76 +169,77 @@
             overflow: auto !important;
             padding-right: 0 !important;
         }
+
         .modal-backdrop {
             display: none !important;
         }
+
         .modal {
             background-color: rgba(0, 0, 0, 0.5) !important;
         }
     }
 
     /* Fix detail modal content alignment on mobile - make it left-aligned */
-        #detailContent * {
-            text-align: left !important;
-        }
-        
-        #detailContent {
-            direction: ltr !important;
-            text-align: left !important;
-        }
-        
-        #detailContent .row {
-            display: block !important;
-        }
-        
-        #detailContent .col-md-6 {
-            display: block !important;
-            width: 100% !important;
-            margin-bottom: 20px !important;
-            text-align: left !important;
-        }
-        
-        #detailContent table {
-            width: 100% !important;
-        }
-        
-        #detailContent table tr {
-            display: table-row !important;
-        }
-        
-        #detailContent table td {
-            display: table-cell !important;
-            text-align: left !important;
-            padding: 0.5rem !important;
-            justify-content: flex-start !important;
-            align-items: flex-start !important;
-            width: auto !important;
-            flex-basis: auto !important;
-        }
-        
-        #detailContent table td:before {
-            display: none !important;
-        }
-        
-        #detailContent h6 {
-            text-align: left !important;
-            margin-top: 15px !important;
-        }
-        
-        #detailContent p {
-            text-align: left !important;
-            margin: 0.5rem 0 !important;
-        }
-        
-        #detailContent .badge,
-        #detailContent .alert {
-            text-align: left !important;
-        }
-        
-        #detailContent div {
-            text-align: left !important;
-        }
+    #detailContent * {
+        text-align: left !important;
+    }
 
+    #detailContent {
+        direction: ltr !important;
+        text-align: left !important;
+    }
+
+    #detailContent .row {
+        display: block !important;
+    }
+
+    #detailContent .col-md-6 {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 20px !important;
+        text-align: left !important;
+    }
+
+    #detailContent table {
+        width: 100% !important;
+    }
+
+    #detailContent table tr {
+        display: table-row !important;
+    }
+
+    #detailContent table td {
+        display: table-cell !important;
+        text-align: left !important;
+        padding: 0.5rem !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        width: auto !important;
+        flex-basis: auto !important;
+    }
+
+    #detailContent table td:before {
+        display: none !important;
+    }
+
+    #detailContent h6 {
+        text-align: left !important;
+        margin-top: 15px !important;
+    }
+
+    #detailContent p {
+        text-align: left !important;
+        margin: 0.5rem 0 !important;
+    }
+
+    #detailContent .badge,
+    #detailContent .alert {
+        text-align: left !important;
+    }
+
+    #detailContent div {
+        text-align: left !important;
+    }
 </style>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
@@ -243,78 +252,78 @@
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
 
 <script>
-$(document).ready(function() {
-    let dataTable;
-    let leaveData = [];
-    let leaveTypes = [];
-    
-    // Initialize
-    loadFilters();
-    loadHistoryData();
-    
-    // Load filters
-    function loadFilters() {
-        // Load years
-        $.post(baseUrl('user/getYears'), function(response) {
-            if (response.success) {
-                let yearOptions = '<option value="">Semua Tahun</option>';
-                response.data.forEach(year => {
-                    yearOptions += `<option value="${year}">${year}</option>`;
-                });
-                $('#filterYear').html(yearOptions);
-            }
-        }, 'json');
-        
-        // Load leave types
-        $.post(baseUrl('leave/getTypes'), function(response) {
-            if (response.success) {
-                leaveTypes = response.data;
-                let typeOptions = '<option value="">Semua Jenis</option>';
-                response.data.forEach(type => {
-                    typeOptions += `<option value="${type.id}">${type.nama_cuti}</option>`;
-                });
-                $('#filterType').html(typeOptions);
-            }
-        }, 'json');
-    }
-    
-    // Load history data
-    function loadHistoryData(filters = {}) {
-        $.post(baseUrl('leave/getHistory'), filters, function(response) {
-            if (response.success) {
-                leaveData = response.data;
-                populateTable(response.data);
-            }
-        }, 'json');
-    }
-    
-    // Populate table
-    function populateTable(data) {
-        if (dataTable) {
-            dataTable.destroy();
+    $(document).ready(function () {
+        let dataTable;
+        let leaveData = [];
+        let leaveTypes = [];
+
+        // Initialize
+        loadFilters();
+        loadHistoryData();
+
+        // Load filters
+        function loadFilters() {
+            // Load years
+            $.post(baseUrl('user/getYears'), function (response) {
+                if (response.success) {
+                    let yearOptions = '<option value="">Semua Tahun</option>';
+                    response.data.forEach(year => {
+                        yearOptions += `<option value="${year}">${year}</option>`;
+                    });
+                    $('#filterYear').html(yearOptions);
+                }
+            }, 'json');
+
+            // Load leave types
+            $.post(baseUrl('leave/getTypes'), function (response) {
+                if (response.success) {
+                    leaveTypes = response.data;
+                    let typeOptions = '<option value="">Semua Jenis</option>';
+                    response.data.forEach(type => {
+                        typeOptions += `<option value="${type.id}">${type.nama_cuti}</option>`;
+                    });
+                    $('#filterType').html(typeOptions);
+                }
+            }, 'json');
         }
-        
-        const tbody = $('#historyTable tbody');
-        tbody.empty();
-        
-        data.forEach((item, index) => {
-            let actions = `
+
+        function loadHistoryData(filters = {}) {
+            filters.only_self = 1;
+            $.post(baseUrl('leave/getHistory'), filters, function (response) {
+                if (response.success) {
+                    leaveData = response.data;
+                    populateTable(response.data);
+                }
+            }, 'json');
+        }
+
+        // Populate table
+        function populateTable(data) {
+            if (dataTable) {
+                dataTable.destroy();
+            }
+
+            const tbody = $('#historyTable tbody');
+            tbody.empty();
+
+            data.forEach((item, index) => {
+                let actions = `
                 <button class="btn btn-sm btn-info btn-action" onclick="viewDetail(${item.id})">
                     <i class="bi bi-eye"></i>
                 </button>
             `;
-            // Tampilkan tombol download blanko final hanya jika selesai dan status utama salah satu dari 4 keputusan
-            if (item.is_completed == 1 && ['approved','rejected','changed','postponed'].includes(item.status) && item.has_final_doc) {
-                actions += `
+                // Tampilkan tombol download blanko final hanya jika selesai dan status utama salah satu dari 4 keputusan
+                if (item.is_completed == 1 && ['approved', 'rejected', 'changed', 'postponed'].includes(item.status) && item.has_final_doc) {
+                    actions += `
                     <a href="${baseUrl('leave/downloadFinalDoc?id=' + item.id)}" 
                        class="btn btn-sm btn-success btn-action" title="Download Blanko Final">
                         <i class="bi bi-file-earmark-check"></i>
                     </a>
                 `;
-            }
-            // Hapus tombol download dokumen final pada status lain (approved, rejected, changed, postponed, dsb)
-            if (item.status === 'draft') {
-                actions += `
+                }
+                // Hapus tombol download dokumen final pada status lain (approved, rejected, changed, postponed, dsb)
+                if (item.status === 'draft') {
+                    actions += `
                     <a href="${baseUrl('leave/downloadGeneratedDoc?id=' + item.id)}" 
                        class="btn btn-sm btn-outline-primary btn-action" title="Download Blanko">
                         <i class="bi bi-download"></i>
@@ -328,11 +337,11 @@ $(document).ready(function() {
                         <i class="bi bi-trash"></i>
                     </button>
                 `;
-            } else if ([ 'completed', 'approved', 'rejected' ].includes(item.status)) {
-                // Tidak ada tombol download dokumen final, hanya badge status jika perlu
-                // (Jika ingin badge tambahan, tambahkan di sini)
-            } else if (item.status === 'pending' || item.status === 'pending_admin_upload') {
-                actions += `
+                } else if (['completed', 'approved', 'rejected'].includes(item.status)) {
+                    // Tidak ada tombol download dokumen final, hanya badge status jika perlu
+                    // (Jika ingin badge tambahan, tambahkan di sini)
+                } else if (item.status === 'pending' || item.status === 'pending_admin_upload') {
+                    actions += `
                     <a href="${baseUrl('leave/downloadGeneratedDoc?id=' + item.id)}" 
                     class="btn btn-sm btn-primary btn-action" title="Download Dokumen" target="_blank" rel="noopener">
                         <i class="bi bi-file-earmark-arrow-down"></i>
@@ -341,15 +350,15 @@ $(document).ready(function() {
                         <i class="bi bi-x-circle"></i>
                     </button>
                 `;
-            }
-            
-            // Ubah tampilan status
-            let status_display = '';
-            if (item.is_completed && item.is_completed == 1) {
-                status_display += '<span class="badge bg-primary me-1">Selesai</span>';
-            }
-            status_display += item.status_badge;
-            tbody.append(`
+                }
+
+                // Ubah tampilan status
+                let status_display = '';
+                if (item.is_completed && item.is_completed == 1) {
+                    status_display += '<span class="badge bg-primary me-1">Selesai</span>';
+                }
+                status_display += item.status_badge;
+                tbody.append(`
                 <tr>
                     <td data-label="No">${index + 1}</td>
                     <td data-label="Tanggal Pengajuan">${item.created_at_formatted}</td>
@@ -361,74 +370,74 @@ $(document).ready(function() {
                     <td data-label="Aksi">${actions}</td>
                 </tr>
             `);
-        });
-        
-        // Initialize DataTable
-        dataTable = $('#historyTable').DataTable({
-            language: {
-                "sEmptyTable": "Tidak ada data",
-                "sInfo": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                "sInfoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
-                "sInfoFiltered": "(disaring dari _MAX_ total data)",
-                "sInfoPostFix": "",
-                "sInfoThousands": ".",
-                "sLengthMenu": "Tampilkan _MENU_ data",
-                "sLoadingRecords": "Memuat...",
-                "sProcessing": "Sedang memproses...",
-                "sSearch": "Cari:",
-                "sZeroRecords": "Tidak ditemukan data yang sesuai",
-                "oPaginate": {
-                    "sFirst": "Pertama",
-                    "sLast": "Terakhir",
-                    "sNext": "Selanjutnya",
-                    "sPrevious": "Sebelumnya"
-                }
-            },
-            order: [[0, 'asc']],
-            dom: 'Bfrtip',
-            buttons: [
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="bi bi-file-earmark-excel me-2"></i>Export Excel',
-                    className: 'btn btn-success btn-sm',
-                    title: 'Riwayat Cuti - <?php echo $_SESSION['nama']; ?>',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
+            });
+
+            // Initialize DataTable
+            dataTable = $('#historyTable').DataTable({
+                language: {
+                    "sEmptyTable": "Tidak ada data",
+                    "sInfo": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    "sInfoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+                    "sInfoFiltered": "(disaring dari _MAX_ total data)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLengthMenu": "Tampilkan _MENU_ data",
+                    "sLoadingRecords": "Memuat...",
+                    "sProcessing": "Sedang memproses...",
+                    "sSearch": "Cari:",
+                    "sZeroRecords": "Tidak ditemukan data yang sesuai",
+                    "oPaginate": {
+                        "sFirst": "Pertama",
+                        "sLast": "Terakhir",
+                        "sNext": "Selanjutnya",
+                        "sPrevious": "Sebelumnya"
                     }
-                }
-            ]
-        });
-    }
-    
-    // Filter button click
-    $('#btnFilter').click(function() {
-        const filters = {
-            status: $('#filterStatus').val(),
-            tahun: $('#filterYear').val(),
-            leave_type_id: $('#filterType').val()
-        };
-        
-        loadHistoryData(filters);
-    });
-    
-    // View detail function
-    window.viewDetail = function(id) {
-        const leave = leaveData.find(item => item.id == id);
-        if (!leave) return;
-        
-        // Tampilkan jumlah_hari_ditangguhkan jika status postponed, apapun nilainya
-        let jumlahDitangguhkan = '';
-        if (
-            leave.status === 'postponed' &&
-            typeof leave.jumlah_hari_ditangguhkan !== 'undefined' &&
-            leave.jumlah_hari_ditangguhkan !== null &&
-            leave.jumlah_hari_ditangguhkan !== '' &&
-            !isNaN(parseInt(leave.jumlah_hari_ditangguhkan))
-        ) {
-            jumlahDitangguhkan = parseInt(leave.jumlah_hari_ditangguhkan);
+                },
+                order: [[0, 'asc']],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="bi bi-file-earmark-excel me-2"></i>Export Excel',
+                        className: 'btn btn-success btn-sm',
+                        title: 'Riwayat Cuti - <?php echo $_SESSION['nama']; ?>',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6]
+                        }
+                    }
+                ]
+            });
         }
 
-        const content = `
+        // Filter button click
+        $('#btnFilter').click(function () {
+            const filters = {
+                status: $('#filterStatus').val(),
+                tahun: $('#filterYear').val(),
+                leave_type_id: $('#filterType').val()
+            };
+
+            loadHistoryData(filters);
+        });
+
+        // View detail function
+        window.viewDetail = function (id) {
+            const leave = leaveData.find(item => item.id == id);
+            if (!leave) return;
+
+            // Tampilkan jumlah_hari_ditangguhkan jika status postponed, apapun nilainya
+            let jumlahDitangguhkan = '';
+            if (
+                leave.status === 'postponed' &&
+                typeof leave.jumlah_hari_ditangguhkan !== 'undefined' &&
+                leave.jumlah_hari_ditangguhkan !== null &&
+                leave.jumlah_hari_ditangguhkan !== '' &&
+                !isNaN(parseInt(leave.jumlah_hari_ditangguhkan))
+            ) {
+                jumlahDitangguhkan = parseInt(leave.jumlah_hari_ditangguhkan);
+            }
+
+            const content = `
             <div class="row">
                 <div class="col-md-6">
                     <h6 class="text-primary mb-3">Data Pemohon</h6>
@@ -498,81 +507,81 @@ $(document).ready(function() {
                 </div>
             </div>
         `;
-        
-        $('#detailContent').html(content);
-        $('#detailModal').modal('show');
-    };
-    
-    // Cancel leave function
-    window.cancelLeave = function(id) {
-        Swal.fire({
-            title: 'Batalkan Pengajuan?',
-            text: 'Apakah Anda yakin ingin membatalkan pengajuan cuti ini?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, Batalkan!',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.post(baseUrl('leave/cancel'), {
-                    leave_id: id
-                }, function(response) {
-                    if (response.success) {
-                        Swal.fire(
-                            'Dibatalkan!',
-                            response.message,
-                            'success'
-                        );
-                        loadHistoryData();
-                    } else {
-                        Swal.fire(
-                            'Gagal!',
-                            response.message,
-                            'error'
-                        );
-                    }
-                }, 'json');
-            }
-        });
-    };
-    
-    // Delete draft function
-    window.deleteDraft = function(id) {
-        Swal.fire({
-            title: 'Hapus Draft?',
-            text: 'Draft yang dihapus tidak dapat dikembalikan!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.post(baseUrl('leave/deleteDraft'), {
-                    leave_id: id
-                }, function(response) {
-                    if (response.success) {
-                        Swal.fire('Terhapus!', 'Draft berhasil dihapus.', 'success');
-                        loadHistoryData();
-                    } else {
-                        Swal.fire('Error!', response.message, 'error');
-                    }
-                }, 'json');
-            }
-        });
-    };
-    
-    // Helper function to format date
-    function formatDate(dateString) {
-        const options = { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+
+            $('#detailContent').html(content);
+            $('#detailModal').modal('show');
         };
-        return new Date(dateString).toLocaleDateString('id-ID', options);
-    }
-});
+
+        // Cancel leave function
+        window.cancelLeave = function (id) {
+            Swal.fire({
+                title: 'Batalkan Pengajuan?',
+                text: 'Apakah Anda yakin ingin membatalkan pengajuan cuti ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Batalkan!',
+                cancelButtonText: 'Tidak'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post(baseUrl('leave/cancel'), {
+                        leave_id: id
+                    }, function (response) {
+                        if (response.success) {
+                            Swal.fire(
+                                'Dibatalkan!',
+                                response.message,
+                                'success'
+                            );
+                            loadHistoryData();
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                response.message,
+                                'error'
+                            );
+                        }
+                    }, 'json');
+                }
+            });
+        };
+
+        // Delete draft function
+        window.deleteDraft = function (id) {
+            Swal.fire({
+                title: 'Hapus Draft?',
+                text: 'Draft yang dihapus tidak dapat dikembalikan!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post(baseUrl('leave/deleteDraft'), {
+                        leave_id: id
+                    }, function (response) {
+                        if (response.success) {
+                            Swal.fire('Terhapus!', 'Draft berhasil dihapus.', 'success');
+                            loadHistoryData();
+                        } else {
+                            Swal.fire('Error!', response.message, 'error');
+                        }
+                    }, 'json');
+                }
+            });
+        };
+
+        // Helper function to format date
+        function formatDate(dateString) {
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+    });
 </script>

@@ -1,21 +1,24 @@
 <?php
-class ApprovalController extends Controller {
+class ApprovalController extends Controller
+{
     private $leaveModel;
     private $leaveBalanceModel;
     private $notificationModel;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         // Make sure Database class is available
         if (!class_exists('Database')) {
             require_once 'app/core/Database.php';
         }
-        
+
         $this->leaveModel = $this->model('Leave');
         $this->leaveBalanceModel = $this->model('LeaveBalance');
         $this->notificationModel = $this->model('Notification');
     }
-    
-    public function index() {
+
+    public function index()
+    {
         requireLogin();
 
         if (!isAtasan() && !isAdmin()) {
@@ -29,8 +32,9 @@ class ApprovalController extends Controller {
 
         $this->view('approval/index', $data);
     }
-    
-    public function process() {
+
+    public function process()
+    {
         // Allow both atasan and pimpinan to process approvals
         requireLogin();
 
@@ -40,27 +44,27 @@ class ApprovalController extends Controller {
         $jumlahHariDitangguhkan = isset($_POST['jumlah_hari_ditangguhkan']) ? intval($_POST['jumlah_hari_ditangguhkan']) : 0;
         // New parameter for kasubbag forward routing
         $forwardToRole = isset($_POST['forward_to_role']) ? cleanInput($_POST['forward_to_role']) : null;
-        
+
         // Reject any attempt by admin (pimpinan) to directly process approvals
         if (isAdmin()) {
-            $this->jsonResponse(['success' => false, 'message' => 'Akses tidak diizinkan. Final approval hanya dapat dilakukan oleh atasan dengan role ketua.']);
+            $this->jsonResponse(['success' => false, 'message' => 'Akses tidak diizinkan. Final approval hanya dapat dilakukan oleh pimpinan.']);
         }
         if (in_array($action, ['reject_leave', 'change_leave', 'postpone_leave']) && empty($catatan)) {
             $this->jsonResponse(['success' => false, 'message' => 'Catatan wajib diisi untuk aksi ini!']);
         }
-        
+
         $leave = $this->leaveModel->find($leaveId);
         $userModel = $this->model('User');
         $userData = $userModel->find($leave['user_id']);
         // Hanya untuk Pengadilan Tinggi Agama Makassar (unit_kerja = 1)
-        $isPTAMks = ($userData && isset($userData['unit_kerja']) && (int)$userData['unit_kerja'] === 1);
-        
+        $isPTAMks = ($userData && isset($userData['unit_kerja']) && (int) $userData['unit_kerja'] === 1);
+
         // Load kasubbag workflow helper
         require_once dirname(__DIR__) . '/helpers/kasubbag_workflow_helper.php';
-        
+
         // Determine what approval levels this user can process
         $isKasubbagRole = isKasubbag();
-        
+
         // For atasan users, lookup their id_atasan based on NIP
         $atasanData = null;
         if (isAtasan()) {
@@ -69,7 +73,7 @@ class ApprovalController extends Controller {
                 [$_SESSION['nip']]
             );
         }
-        
+
         // For atasan users, allow processing when status is 'pending' (level 1 approval)
         // Also allow 'pending_kasubbag' if they are kasubbag
         // Also allow 'pending_kabag' if they are kabag, and 'pending_sekretaris' if they are sekretaris
@@ -92,7 +96,7 @@ class ApprovalController extends Controller {
         if ($isKetuaRole) {
             $allowedStatusesForAtasan[] = 'awaiting_pimpinan';
         }
-        
+
         // For pimpinan, expect status 'awaiting_pimpinan' (set by kasubbag or atasan) or legacy 'pending'
         $allowedStatusesForPimpinan = ['awaiting_pimpinan', 'pending'];
 
@@ -115,7 +119,7 @@ class ApprovalController extends Controller {
             $isKasubbagApprover = ($isKasubbagRole && $leave['kasubbag_id'] == $userAtasanId && $leave['status'] === 'pending_kasubbag');
             $isKabagApprover = ($isKabagRole && $leave['kabag_approver_id'] == $userAtasanId && $leave['status'] === 'pending_kabag');
             $isSekretarisApprover = ($isSekretarisRole && $leave['sekretaris_approver_id'] == $userAtasanId && $leave['status'] === 'pending_sekretaris');
-            
+
             if (!$isDirectAtasan && !$isKasubbagApprover && !$isKabagApprover && !$isSekretarisApprover && !$isLevelFiveApprovalKetuaCheck) {
                 $this->jsonResponse(['success' => false, 'message' => 'Anda tidak memiliki akses untuk memproses pengajuan ini!']);
             }
@@ -130,9 +134,9 @@ class ApprovalController extends Controller {
         if (!$leave['blanko_uploaded'] && !isAtasan() && !isAdmin() && !($isPTAMks && $leave['status'] === 'draft')) {
             $this->jsonResponse(['success' => false, 'message' => 'Pengajuan belum lengkap. User belum mengupload blanko yang ditandatangani.']);
         }
-        
+
         $this->db()->beginTransaction();
-        
+
         try {
             if (isAtasan()) {
                 $userAtasanId = $atasanData['id_atasan'];
@@ -145,8 +149,8 @@ class ApprovalController extends Controller {
                 $isLevelFiveApprovalKetua = ($isKetuaRole && $leave['status'] === 'awaiting_pimpinan' && (
                     (isset($leave['ketua_approver_id']) && $leave['ketua_approver_id'] == $userAtasanId) ||
                     ($leave['atasan_id'] == $userAtasanId)
-                )); 
-                
+                ));
+
                 // Validate allowed actions based on approval level
                 // Level 1 and 5: all actions (approve, reject, change, postpone)
                 // Level 2, 3, 4: only approve and reject
@@ -156,20 +160,20 @@ class ApprovalController extends Controller {
                         $this->jsonResponse(['success' => false, 'message' => 'Aksi ini tidak diizinkan untuk level approval Anda.']);
                     }
                 }
-                
+
                 // Actions performed by atasan: approve -> forward to next level, change, postpone, reject
                 if ($action == 'approve_leave') {
                     if ($isLevelOneApproval) {
                         // Level 1: Direct atasan approval
                         // Determine if kasubbag level is needed
                         $nextApprover = getNextApproverAfterAtasan($leave['atasan_id'], $leave['user_id'], $this->db());
-                        
+
                         if ($nextApprover['requires_kasubbag']) {
                             // Forward to kasubbag level 2
                             $sql = "UPDATE leave_requests SET status = 'pending_kasubbag', kasubbag_id = ?, atasan_approval_date = NOW(), atasan_catatan = ? WHERE id = ?";
                             $this->db()->execute($sql, [$nextApprover['kasubbag_id'], $catatan, $leaveId]);
                             $message = 'Pengajuan cuti direkomendasikan ke Kasubbag.';
-                            
+
                             // Get kasubbag user_id for notification
                             $kasubbagUser = $this->db()->fetch(
                                 "SELECT u.id FROM users u JOIN atasan a ON u.nip = a.NIP WHERE a.id_atasan = ? AND u.user_type = 'atasan' LIMIT 1",
@@ -189,7 +193,7 @@ class ApprovalController extends Controller {
                             $note = "[Rekomendasi Atasan: " . $_SESSION['nama'] . "]\n";
                             $this->db()->execute($sql, [$note, $catatan, $leaveId]);
                             $message = 'Pengajuan cuti direkomendasikan ke pimpinan.';
-                            
+
                             // Notify admins/pimpinan
                             $this->notificationModel->notifyAdmins(
                                 "Pengajuan cuti dari " . $userData['nama'] . " direkomendasikan oleh atasan/kasubbag " . $_SESSION['nama'] . ". Silakan proses.",
@@ -203,29 +207,29 @@ class ApprovalController extends Controller {
                             $this->db()->rollback();
                             $this->jsonResponse(['success' => false, 'message' => 'Pilih routing untuk meneruskan pengajuan (ke Kabag atau Sekretaris)!']);
                         }
-                        
+
                         // Find the target approver (Kabag or Sekretaris)
                         $approverRole = $forwardToRole;
                         $targetApprover = $this->db()->fetch(
                             "SELECT id_atasan, nama_atasan FROM atasan WHERE role = ? LIMIT 1",
                             [$approverRole]
                         );
-                        
+
                         if (!$targetApprover) {
                             $this->db()->rollback();
                             $this->jsonResponse(['success' => false, 'message' => 'Target atasan (' . $approverRole . ') tidak ditemukan.']);
                         }
-                        
+
                         // Set status based on forward_to_role
                         $newStatus = ($forwardToRole === 'kabag') ? 'pending_kabag' : 'pending_sekretaris';
                         $approverIdColumn = ($forwardToRole === 'kabag') ? 'kabag_approver_id' : 'sekretaris_approver_id';
-                        
+
                         // Update leave request with new status and forward info
                         $updateSql = "UPDATE leave_requests SET status = ?, " . $approverIdColumn . " = ?, kasubbag_approval_date = NOW(), kasubbag_catatan = ? WHERE id = ?";
                         $this->db()->execute($updateSql, [$newStatus, $targetApprover['id_atasan'], $catatan, $leaveId]);
-                        
+
                         $message = 'Pengajuan cuti diteruskan ke ' . ucfirst($forwardToRole) . '.';
-                        
+
                         // Get target approver user for notification
                         $targetApproverUser = $this->db()->fetch(
                             "SELECT u.id FROM users u JOIN atasan a ON u.nip = a.NIP WHERE a.id_atasan = ? AND u.user_type = 'atasan' LIMIT 1",
@@ -246,20 +250,20 @@ class ApprovalController extends Controller {
                             "SELECT id_atasan, nama_atasan FROM atasan WHERE role = 'sekretaris' LIMIT 1",
                             []
                         );
-                        
+
                         if (!$sekretarisApprover) {
                             $this->db()->rollback();
                             $this->jsonResponse(['success' => false, 'message' => 'Atasan Sekretaris tidak ditemukan.']);
                         }
-                        
+
                         // Update leave request to forward to sekretaris
                         $this->db()->execute(
                             "UPDATE leave_requests SET status = 'pending_sekretaris', sekretaris_approver_id = ?, kabag_approval_date = NOW(), kabag_catatan = ? WHERE id = ?",
                             [$sekretarisApprover['id_atasan'], $catatan, $leaveId]
                         );
-                        
+
                         $message = 'Pengajuan cuti diteruskan ke Sekretaris setelah persetujuan Kabag.';
-                        
+
                         // Get sekretaris user for notification
                         $sekretarisUser = $this->db()->fetch(
                             "SELECT u.id FROM users u JOIN atasan a ON u.nip = a.NIP WHERE a.id_atasan = ? AND u.user_type = 'atasan' LIMIT 1",
@@ -333,7 +337,9 @@ class ApprovalController extends Controller {
                                 $existingDoc = $documentModel->getLatestByLeaveId($leaveId, 'generated');
                                 if ($existingDoc) {
                                     $oldPath = dirname(dirname(__DIR__)) . '/public/uploads/documents/temp/' . $existingDoc['filename'];
-                                    if (file_exists($oldPath)) { @unlink($oldPath); }
+                                    if (file_exists($oldPath)) {
+                                        @unlink($oldPath);
+                                    }
                                     $documentModel->update($existingDoc['id'], [
                                         'filename' => $result['filename'],
                                         'status' => $leave['status'],
@@ -353,7 +359,7 @@ class ApprovalController extends Controller {
                             error_log('[ApprovalController] Gagal generate dokumen setelah sekretaris approve: ' . $e->getMessage());
                         }
                     }
-                    
+
                     // If this is final approval by Pimpinan (ketua), process approval now and generate final doc
                     if ($isLevelFiveApprovalKetua) {
                         // Final approval by selected ketua
@@ -366,7 +372,7 @@ class ApprovalController extends Controller {
                             'success',
                             $leaveId
                         );
-                        
+
                         // === Generate ulang dokumen (generated) setelah ketua approval ===
                         // Placeholder admin akan terisi dengan data ketua
                         try {
@@ -374,24 +380,26 @@ class ApprovalController extends Controller {
                             // Ambil data leave terbaru dengan status yang sudah diupdate ke 'approved'
                             $leaveForRegenerate = $this->leaveModel->find($leaveId);
                             $userDataForRegenerate = $userModel->find($leaveForRegenerate['user_id']);
-                            
+
                             // Generate dokumen dengan status 'approved' (placeholder admin akan terisi)
                             $resultGenerated = generateLeaveDocument(
-                                $leaveForRegenerate, 
-                                $userDataForRegenerate, 
-                                'blanko_cuti_template.docx', 
+                                $leaveForRegenerate,
+                                $userDataForRegenerate,
+                                'blanko_cuti_template.docx',
                                 false,  // includeAdminSignature = false (hanya untuk generated, bukan final)
                                 true    // isAfterApprove = true (agar placeholder admin terisi dengan data ketua)
                             );
-                            
+
                             if ($resultGenerated['success']) {
                                 $documentModel = $this->model('DocumentModel');
                                 $existingDoc = $documentModel->getLatestByLeaveId($leaveId, 'generated');
-                                
+
                                 if ($existingDoc) {
                                     // Update existing generated document
                                     $oldPath = dirname(dirname(__DIR__)) . '/public/uploads/documents/temp/' . $existingDoc['filename'];
-                                    if (file_exists($oldPath)) { @unlink($oldPath); }
+                                    if (file_exists($oldPath)) {
+                                        @unlink($oldPath);
+                                    }
                                     $documentModel->update($existingDoc['id'], [
                                         'filename' => $resultGenerated['filename'],
                                         'status' => $leaveForRegenerate['status'],
@@ -423,15 +431,15 @@ class ApprovalController extends Controller {
                         // Ambil data leave terbaru untuk mendapatkan status yang sudah diupdate
                         $leave = $this->leaveModel->find($leaveId);
                         $leaveDataWithStatus = $leave;
-                        
+
                         $currentUserData = $userModel->find($_SESSION['user_id']);
                         // generate blanko again using original user data; the helper now ignores any approver fields
-$result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_template.docx', false, false, false);
-                        
+                        $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_template.docx', false, false, false);
+
                         if ($result['success']) {
                             $documentModel = $this->model('DocumentModel');
                             $existingDoc = $documentModel->getLatestByLeaveId($leaveId, 'generated');
-                            
+
                             if ($existingDoc) {
                                 $oldPath = dirname(dirname(__DIR__)) . '/public/uploads/documents/temp/' . $existingDoc['filename'];
                                 if (file_exists($oldPath)) {
@@ -453,7 +461,7 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
                             }
                         }
                     }
-                    
+
                     $this->db()->commit();
                     $this->jsonResponse(['success' => true, 'message' => $message]);
                     return;
@@ -560,13 +568,13 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
                 $this->db()->rollback();
                 $this->jsonResponse(['success' => false, 'message' => 'Akses tidak diizinkan untuk pimpinan (admin).']);
             }
-            
+
             // Ambil data leave terbaru setelah update
             $leave = $this->leaveModel->find($leaveId);
-            
+
             // Ambil data user
             $userData = $userModel->find($leave['user_id']);
-            
+
             // Jika status sekarang adalah 'approved' (pimpinan menyetujui), generate dokumen untuk preview
             // is_completed masih tetap 0, akan diset menjadi 1 ketika admin mengupload dokumen final
             if ($leave['status'] == 'approved') {
@@ -643,7 +651,7 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
                     throw new Exception('Gagal generate blanko final: ' . $result['message']);
                 }
             }
-            
+
             // DEBUG: Log status sebelum commit
             error_log("=== APPROVAL PROCESS DEBUG ===");
             error_log("Action: " . $action);
@@ -654,7 +662,7 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
                 error_log("Admin approver ID: " . $adminApproverId);
             }
             error_log("=== END APPROVAL PROCESS DEBUG ===");
-            
+
             $this->db()->commit();
             $this->jsonResponse(['success' => true, 'message' => $message . ' Blanko final berhasil dibuat dan notifikasi dikirim ke user.']);
         } catch (Exception $e) {
@@ -662,26 +670,27 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
             $this->jsonResponse(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
-    
+
     // Method baru untuk mengirim notifikasi setelah upload dokumen final
-    public function sendFinalNotification() {
+    public function sendFinalNotification()
+    {
         requireAdmin();
-        
+
         $leaveId = cleanInput($_POST['leave_id']);
         $leave = $this->leaveModel->find($leaveId);
-        
+
         if (!$leave || !in_array($leave['status'], ['approved', 'rejected'])) {
             $this->jsonResponse(['success' => false, 'message' => 'Pengajuan tidak valid untuk dikirim notifikasi']);
         }
-        
+
         // Cek apakah dokumen final sudah diupload
         $documentModel = $this->model('DocumentModel');
         $finalDoc = $documentModel->getLatestByLeaveId($leaveId, 'admin_signed');
-        
+
         if (!$finalDoc) {
             $this->jsonResponse(['success' => false, 'message' => 'Dokumen final belum diupload']);
         }
-        
+
         try {
             if ($leave['status'] == 'approved') {
                 // Kirim notifikasi approval
@@ -698,15 +707,16 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
                     'warning'
                 );
             }
-            
+
             $this->jsonResponse(['success' => true, 'message' => 'Notifikasi berhasil dikirim ke user']);
-            
+
         } catch (Exception $e) {
             $this->jsonResponse(['success' => false, 'message' => 'Gagal mengirim notifikasi: ' . $e->getMessage()]);
         }
     }
-    
-    public function getDetail() {
+
+    public function getDetail()
+    {
         requireLogin();
         if (!isAtasan() && !isAdmin()) {
             $this->jsonResponse(['success' => false, 'message' => 'Akses ditolak']);
@@ -714,13 +724,13 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
 
         $leaveId = cleanInput($_POST['leave_id']);
         $leave = $this->leaveModel->find($leaveId);
-        
+
         if (!$leave) {
             $this->jsonResponse(['success' => false, 'message' => 'Data tidak ditemukan']);
         }
-        
+
         // Get additional info
-    $sql = "SELECT lr.*, lt.nama_cuti, u.nama, u.nip, u.jabatan, u.golongan, u.unit_kerja,
+        $sql = "SELECT lr.*, lt.nama_cuti, u.nama, u.nip, u.jabatan, u.golongan, u.unit_kerja,
         au.nama as approved_by_name, s.nama_satker
         FROM leave_requests lr
         JOIN leave_types lt ON lr.leave_type_id = lt.id
@@ -728,29 +738,29 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
         LEFT JOIN satker s ON u.unit_kerja = s.id_satker
         LEFT JOIN users au ON lr.approved_by = au.id AND au.is_deleted = 0
         WHERE lr.id = ?";
-        
+
         $data = $this->db()->fetch($sql, [$leaveId]);
-        
+
         // Format dates
         $data['tanggal_mulai_formatted'] = formatTanggal($data['tanggal_mulai']);
         $data['tanggal_selesai_formatted'] = formatTanggal($data['tanggal_selesai']);
         $data['status_badge'] = getStatusBadge($data['status']);
-        
+
         // Get user's leave balance
         $tahun = date('Y', strtotime($data['tanggal_mulai']));
         $data['sisa_kuota'] = $this->leaveBalanceModel->getTotalBalance($data['user_id'], $tahun);
-        
+
         // Check for documents
         $documentModel = $this->model('DocumentModel');
         $signedDoc = $documentModel->getLatestByLeaveId($leaveId, 'user_signed');
         $finalDoc = $documentModel->getLatestByLeaveId($leaveId, 'admin_signed');
-        
+
         $data['has_signed_doc'] = !empty($signedDoc);
         $data['has_final_doc'] = !empty($finalDoc);
         $data['blanko_uploaded'] = $leave['blanko_uploaded'];
         $data['final_blanko_sent'] = $leave['final_blanko_sent'];
         $data['quota_deducted'] = $leave['quota_deducted'];
-        
+
         // Add document info if available
         if ($signedDoc) {
             $data['signed_doc_filename'] = $signedDoc['filename'];
@@ -771,7 +781,7 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
         $data['can_download_generated'] = canDownloadGeneratedDocRow($data);
         // Tambahan: kirim dokumen pendukung jika ada
         $data['dokumen_pendukung'] = $leave['dokumen_pendukung'] ?? null;
-        
+
         // Tambahan: info tentang siapa yang approve sebelum sampai ke sekretaris
         $data['last_approver_info'] = null;
         $data['last_approver_source'] = null; // 'kasubbag' atau 'kabag'
@@ -794,17 +804,18 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
                 }
             }
         }
-        
-    // Tambahan: info khusus PTA Makassar dan status draft
-    $data['is_pta_makassar'] = (isset($data['unit_kerja']) && (int)$data['unit_kerja'] === 1);
-    $data['status_draft'] = ($data['status'] === 'draft');
-    $this->jsonResponse(['success' => true, 'data' => $data, 'is_admin' => (function_exists('isAdmin') && isAdmin())]);
+
+        // Tambahan: info khusus PTA Makassar dan status draft
+        $data['is_pta_makassar'] = (isset($data['unit_kerja']) && (int) $data['unit_kerja'] === 1);
+        $data['status_draft'] = ($data['status'] === 'draft');
+        $this->jsonResponse(['success' => true, 'data' => $data, 'is_admin' => (function_exists('isAdmin') && isAdmin())]);
     }
 
     /**
      * Return list of atasan with role=ketua (Ketua, Wakil, PLH) for Sekretaris to choose
      */
-    public function getPimpinanList() {
+    public function getPimpinanList()
+    {
         requireLogin();
         if (!isAtasan()) {
             $this->jsonResponse(['success' => false, 'message' => 'Akses ditolak']);
@@ -820,21 +831,23 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
             $this->jsonResponse(['success' => false, 'message' => 'Gagal mengambil daftar pimpinan: ' . $e->getMessage()]);
         }
     }
-    
-    public function quota() {
+
+    public function quota()
+    {
         requireAdmin();
-        
+
         $data = [
             'title' => 'Kuota Cuti Pegawai',
             'page_title' => 'Kuota Cuti Pegawai'
         ];
-        
+
         $this->view('approval/quota', $data);
     }
-    
-    public function getUsersWithBalance() {
+
+    public function getUsersWithBalance()
+    {
         requireAdmin();
-        
+
         $tahun = isset($_POST['tahun']) ? intval($_POST['tahun']) : date('Y');
         $leaveTypeId = isset($_POST['leave_type_id']) ? intval($_POST['leave_type_id']) : 1;
         try {
@@ -844,38 +857,39 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
             $this->jsonResponse(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
         }
     }
-    
-    public function upload($leaveId = null) {
+
+    public function upload($leaveId = null)
+    {
         requireAdmin();
-        
+
         if (!$leaveId) {
             $this->redirect('approval');
         }
-        
+
         $leave = $this->leaveModel->find($leaveId);
-        
+
         // Validasi akses dan status - sekarang bisa untuk approved, rejected, changed, atau postponed
         if (!$leave || !in_array($leave['status'], ['approved', 'rejected', 'changed', 'postponed'])) {
             $_SESSION['error'] = 'Pengajuan tidak ditemukan atau belum diproses';
             $this->redirect('approval');
         }
-        
+
         // Get additional info
-    $sql = "SELECT lr.*, lt.nama_cuti, u.nama, u.nip, u.jabatan, u.unit_kerja
+        $sql = "SELECT lr.*, lt.nama_cuti, u.nama, u.nip, u.jabatan, u.unit_kerja
         FROM leave_requests lr
         JOIN leave_types lt ON lr.leave_type_id = lt.id
         JOIN users u ON lr.user_id = u.id
         WHERE lr.id = ?";
-        
+
         $leaveData = $this->db()->fetch($sql, [$leaveId]);
-        
+
         $data = [
             'title' => 'Upload Dokumen Final',
             'page_title' => 'Upload Dokumen Final',
             'leaveId' => $leaveId,
             'leaveData' => $leaveData
         ];
-        
+
         $this->view('approval/upload', $data);
     }
 
@@ -883,32 +897,37 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
      * Endpoint untuk menjalankan pengelolaan kuota otomatis secara manual
      * Hanya untuk testing dan admin
      */
-    public function runQuotaManagement() {
+    public function runQuotaManagement()
+    {
         requireAdmin();
         try {
             // Jalankan pengelolaan kuota menggunakan model LeaveBalance
             $targetYear = isset($_POST['year']) ? intval($_POST['year']) : null;
-                $result = $this->leaveBalanceModel->runQuotaManagement($targetYear);
+            $result = $this->leaveBalanceModel->runQuotaManagement($targetYear);
 
-                if (is_array($result) && isset($result['success']) && $result['success']) {
-                    $response = [
-                        'success' => true,
-                        'message' => 'Pengelolaan kuota otomatis selesai',
-                        'year' => $result['year'],
-                        'processed' => $result['processed'],
-                        'created' => $result['created'],
-                        'updated' => $result['updated']
-                    ];
-                    if (!empty($result['backup_file'])) $response['backup_file'] = $result['backup_file'];
-                    if (!empty($result['log_file'])) $response['log_file'] = $result['log_file'];
-                    $this->jsonResponse($response);
-                } else {
-                    $msg = is_array($result) && isset($result['message']) ? $result['message'] : 'Pengelolaan kuota otomatis gagal. Cek log aplikasi.';
-                    $resp = ['success' => false, 'message' => $msg];
-                    if (is_array($result) && !empty($result['backup_file'])) $resp['backup_file'] = $result['backup_file'];
-                    if (is_array($result) && !empty($result['log_file'])) $resp['log_file'] = $result['log_file'];
-                    $this->jsonResponse($resp);
-                }
+            if (is_array($result) && isset($result['success']) && $result['success']) {
+                $response = [
+                    'success' => true,
+                    'message' => 'Pengelolaan kuota otomatis selesai',
+                    'year' => $result['year'],
+                    'processed' => $result['processed'],
+                    'created' => $result['created'],
+                    'updated' => $result['updated']
+                ];
+                if (!empty($result['backup_file']))
+                    $response['backup_file'] = $result['backup_file'];
+                if (!empty($result['log_file']))
+                    $response['log_file'] = $result['log_file'];
+                $this->jsonResponse($response);
+            } else {
+                $msg = is_array($result) && isset($result['message']) ? $result['message'] : 'Pengelolaan kuota otomatis gagal. Cek log aplikasi.';
+                $resp = ['success' => false, 'message' => $msg];
+                if (is_array($result) && !empty($result['backup_file']))
+                    $resp['backup_file'] = $result['backup_file'];
+                if (is_array($result) && !empty($result['log_file']))
+                    $resp['log_file'] = $result['log_file'];
+                $this->jsonResponse($resp);
+            }
         } catch (Exception $e) {
             $this->jsonResponse([
                 'success' => false,
@@ -922,15 +941,16 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
     /**
      * Mendapatkan data kuota 3 tahun terakhir untuk user tertentu
      */
-    public function getThreeYearQuota() {
+    public function getThreeYearQuota()
+    {
         requireAdmin();
-        
+
         $userId = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
-        
+
         if (!$userId) {
             $this->jsonResponse(['success' => false, 'message' => 'User ID tidak valid']);
         }
-        
+
         try {
             $quotaData = $this->leaveBalanceModel->getTotalQuotaLastThreeYears($userId);
             $this->jsonResponse(['success' => true, 'data' => $quotaData]);
@@ -942,9 +962,10 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
     /**
      * Mendapatkan daftar user dengan kuota 3 tahun terakhir
      */
-    public function getUsersWithThreeYearQuota() {
+    public function getUsersWithThreeYearQuota()
+    {
         requireAdmin();
-        
+
         try {
             $users = $this->leaveBalanceModel->getUsersWithThreeYearQuota();
             $this->jsonResponse(['success' => true, 'data' => $users]);
@@ -956,32 +977,33 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
     /**
      * Endpoint test untuk debugging
      */
-    public function testQuotaHelper() {
+    public function testQuotaHelper()
+    {
         requireAdmin();
-        
+
         try {
             // Include database config first
             require_once dirname(__DIR__) . '/../config/database.php';
-            
+
             // Test database connection
             $db = Database::getInstance();
-            
+
             // Test helper include
             $helperPath = dirname(__DIR__) . '/helpers/quota_scheduler_helper_fixed.php';
             if (!file_exists($helperPath)) {
                 throw new Exception('Helper file tidak ditemukan: ' . $helperPath);
             }
-            
+
             require_once $helperPath;
-            
+
             // Test function exists
             if (!function_exists('runAnnualQuotaManagement')) {
                 throw new Exception('Function runAnnualQuotaManagement tidak ditemukan');
             }
-            
+
             // Test simple database query
             $testQuery = $db->fetchAll("SELECT COUNT(*) as total FROM users WHERE user_type IN ('pegawai', 'atasan')");
-            
+
             $this->jsonResponse([
                 'success' => true,
                 'message' => 'Test endpoint berhasil diakses',
@@ -1005,7 +1027,8 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
     /**
      * Test endpoint untuk pengelolaan kuota cuti sakit
      */
-    public function testQuotaSakitHelper() {
+    public function testQuotaSakitHelper()
+    {
         requireAdmin();
         try {
             $db = Database::getInstance();
@@ -1035,7 +1058,8 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
     /**
      * Endpoint untuk menjalankan pengelolaan kuota cuti sakit secara manual
      */
-    public function runQuotaSakitManagement() {
+    public function runQuotaSakitManagement()
+    {
         requireAdmin();
         try {
             $targetYear = isset($_POST['year']) ? intval($_POST['year']) : null;
@@ -1053,14 +1077,18 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
                     'updated' => $result['updated'],
                     'deleted' => $result['deleted']
                 ];
-                if (!empty($result['backup_file'])) $response['backup_file'] = $result['backup_file'];
-                if (!empty($result['log_file'])) $response['log_file'] = $result['log_file'];
+                if (!empty($result['backup_file']))
+                    $response['backup_file'] = $result['backup_file'];
+                if (!empty($result['log_file']))
+                    $response['log_file'] = $result['log_file'];
                 $this->jsonResponse($response);
             } else {
                 $msg = is_array($result) && isset($result['message']) ? $result['message'] : 'Pengelolaan kuota cuti sakit gagal. Cek log aplikasi.';
                 $resp = ['success' => false, 'message' => $msg];
-                if (is_array($result) && !empty($result['backup_file'])) $resp['backup_file'] = $result['backup_file'];
-                if (is_array($result) && !empty($result['log_file'])) $resp['log_file'] = $result['log_file'];
+                if (is_array($result) && !empty($result['backup_file']))
+                    $resp['backup_file'] = $result['backup_file'];
+                if (is_array($result) && !empty($result['log_file']))
+                    $resp['log_file'] = $result['log_file'];
                 $this->jsonResponse($resp);
             }
         } catch (Exception $e) {
@@ -1073,7 +1101,8 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
         }
     }
 
-    public function uploadAdminDocument() {
+    public function uploadAdminDocument()
+    {
         requireLogin();
         if (!isAdmin()) {
             $this->jsonResponse(['success' => false, 'message' => 'Akses ditolak']);
@@ -1117,7 +1146,7 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
             $notificationModel = $this->model('Notification');
             $notificationModel->sendNotification(
                 $leave['user_id'],
-                "Dokumen pendukung untuk pengajuan cuti {$leave['nomor_surat']} telah diupload admin. Pengajuan Anda sekarang menunggu approval atasan.",
+                "Dokumen pendukung untuk pengajuan cuti anda telah diupload admin. Pengajuan Anda sekarang menunggu approval atasan.",
                 'info',
                 $leaveId
             );
@@ -1130,108 +1159,109 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
         }
     }
 
-    public function continueProcess() {
+    public function continueProcess()
+    {
         requireLogin();
-        
+
         if (!isAdmin()) {
             $this->jsonResponse(['success' => false, 'message' => 'Akses tidak diizinkan.']);
         }
-        
+
         $leaveId = cleanInput($_POST['leave_id']);
-        
+
         if (!$leaveId) {
             $this->jsonResponse(['success' => false, 'message' => 'ID cuti tidak valid.']);
         }
-        
+
         $db = Database::getInstance();
         $leave = $this->leaveModel->find($leaveId);
         if (!$leave) {
             $this->jsonResponse(['success' => false, 'message' => 'Data cuti tidak ditemukan.']);
         }
-        
+
         if ($leave['status'] !== 'approved') {
             $this->jsonResponse(['success' => false, 'message' => 'Status cuti harus approved untuk melanjutkan proses.']);
         }
-        
+
         if (!empty($leave['admin_blankofinal_sender'])) {
             $this->jsonResponse(['success' => false, 'message' => 'Proses sudah dilanjutkan sebelumnya.']);
         }
-        
+
         // VALIDASI: Check apakah admin yang akan melanjutkan sudah upload paraf
         $adminParaf = $db->fetch(
             "SELECT * FROM user_signatures WHERE user_id = ? AND signature_type = 'paraf' AND is_active = 1",
             [$_SESSION['user_id']]
         );
-        
+
         if (!$adminParaf) {
             $this->jsonResponse([
-                'success' => false, 
+                'success' => false,
                 'message' => 'Anda belum upload paraf di halaman Manajemen Paraf (Signature > Paraf Petugas Cuti). Silakan upload paraf terlebih dahulu sebelum melanjutkan proses pengajuan cuti.'
             ]);
         }
-        
+
         error_log("=== CONTINUE PROCESS START ===");
         error_log("Admin User ID: " . $_SESSION['user_id']);
         error_log("Admin Paraf File: " . $adminParaf['signature_file']);
         error_log("Leave ID: " . $leaveId);
-        
+
         // Update admin_blankofinal_sender dengan user_id admin yang melanjutkan proses
         $updateSql = "UPDATE leave_requests SET admin_blankofinal_sender = ? WHERE id = ?";
         $result = $db->execute($updateSql, [$_SESSION['user_id'], $leaveId]);
-        
+
         error_log("Database Update Result: " . ($result ? 'SUCCESS' : 'FAILED'));
-        
+
         if (!$result) {
             $this->jsonResponse(['success' => false, 'message' => 'Gagal memperbarui data cuti.']);
         }
-        
+
         // Refresh data leave dari database untuk mendapatkan admin_blankofinal_sender yang baru diupdate
         $leave = $this->leaveModel->find($leaveId);
-        
+
         error_log("Leave ID: " . $leaveId);
         error_log("Leave status: " . ($leave['status'] ?? 'NULL'));
         error_log("Leave admin_blankofinal_sender (after update): " . ($leave['admin_blankofinal_sender'] ?? 'NULL'));
         error_log("Leave user_id: " . ($leave['user_id'] ?? 'NULL'));
-        
+
         if (!$leave['admin_blankofinal_sender']) {
             error_log("ERROR: admin_blankofinal_sender masih NULL setelah update!");
             $this->jsonResponse(['success' => false, 'message' => 'Gagal set admin_blankofinal_sender di database.']);
         }
-        
+
         // Generate ulang blanko cuti
         require_once dirname(__DIR__) . '/helpers/document_helper.php';
         require_once dirname(__DIR__) . '/models/User.php';
-        
+
         $userModel = new User();
         $userData = $userModel->find($leave['user_id']);
-        
+
         if (!$userData) {
             $this->jsonResponse(['success' => false, 'message' => 'Data user tidak ditemukan.']);
         }
-        
+
         error_log("Calling generateLeaveDocument:");
         error_log("  - Leave Status: " . $leave['status']);
         error_log("  - Admin_blankofinal_sender: " . $leave['admin_blankofinal_sender']);
         error_log("  - Parameter isAfterApprove: true");
         error_log("  - Expect placeholder paraf akan diisi dengan paraf admin ID: " . $leave['admin_blankofinal_sender']);
-        
+
         try {
             // Generate document dengan admin_blankofinal_sender yang sudah diisi
             // Parameter: ($leaveData, $userData, $templateFile, $includeAdminSignature, $isAfterApprove, $isAwaitingPimpinan)
             $generateResult = generateLeaveDocument($leave, $userData, 'blanko_cuti_template.docx', false, true, false);
             error_log("generateLeaveDocument execution: SUCCESS");
             error_log("Generate result: " . json_encode($generateResult));
-            
+
             // Simpan hasil generate ke database
             if ($generateResult && isset($generateResult['success']) && $generateResult['success']) {
                 $documentModel = $this->model('DocumentModel');
                 $existingDoc = $documentModel->getLatestByLeaveId($leaveId, 'generated');
-                
+
                 if ($existingDoc) {
                     // Update dokumen yang sudah ada
                     $oldPath = dirname(dirname(__DIR__)) . '/public/uploads/documents/temp/' . $existingDoc['filename'];
-                    if (file_exists($oldPath)) { 
-                        @unlink($oldPath); 
+                    if (file_exists($oldPath)) {
+                        @unlink($oldPath);
                     }
                     $documentModel->update($existingDoc['id'], [
                         'filename' => $generateResult['filename'],
@@ -1257,9 +1287,9 @@ $result = generateLeaveDocument($leaveDataWithStatus, $userData, 'blanko_cuti_te
             error_log("generateLeaveDocument execution: FAILED - " . $e->getMessage());
             $this->jsonResponse(['success' => false, 'message' => 'Gagal generate ulang blanko cuti: ' . $e->getMessage()]);
         }
-        
+
         error_log("=== CONTINUE PROCESS END ===");
-        
+
         $this->jsonResponse(['success' => true, 'message' => 'Proses pengajuan cuti berhasil dilanjutkan.']);
     }
 

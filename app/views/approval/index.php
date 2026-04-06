@@ -34,6 +34,100 @@ $isSpecialRole = $isKasubbag || $isKabag || $isSekretaris || $isKetua;
 
 <div class="card">
     <div class="card-body">
+
+        <?php if ($isSpecialRole): ?>
+        <!-- Tab Navigation: hanya untuk atasan dengan role khusus -->
+        <ul class="nav nav-tabs approval-tabs mb-3" id="approvalTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab-bawahan-btn" data-bs-toggle="tab" data-bs-target="#tab-bawahan" type="button" role="tab" aria-controls="tab-bawahan" aria-selected="true">
+                    <i class="bi bi-person-fill me-1"></i>
+                    Dari Bawahan
+                    <span class="badge rounded-pill ms-1" id="badge-bawahan" style="background:#1a6fc4;display:none;">0</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-diteruskan-btn" data-bs-toggle="tab" data-bs-target="#tab-diteruskan" type="button" role="tab" aria-controls="tab-diteruskan" aria-selected="false">
+                    <i class="bi bi-arrow-right-circle me-1"></i>
+                    Diteruskan
+                    <span class="badge rounded-pill ms-1" id="badge-diteruskan" style="background:#5a2d8c;display:none;">0</span>
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="approvalTabsContent">
+            <!-- TAB 1: Dari Bawahan (lvl.1 – status pending) -->
+            <div class="tab-pane fade show active" id="tab-bawahan" role="tabpanel" aria-labelledby="tab-bawahan-btn">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <small class="text-muted">Pengajuan cuti yang langsung diajukan oleh bawahan Anda (Approval Lvl.1)</small>
+                    <select class="form-select form-select-sm" id="statusFilterBawahan" style="min-width: 150px;">
+                        <option value="">Semua Status</option>
+                        <option value="pending">Menunggu Atasan</option>
+                        <option value="approved">Disetujui</option>
+                        <option value="rejected">Ditolak</option>
+                        <option value="changed">Perlu Perubahan</option>
+                        <option value="postponed">Ditangguhkan</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="persetujuanTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Tanggal Pengajuan</th>
+                                <th>Nama</th>
+                                <th>Unit Kerja</th>
+                                <th>Jenis Cuti</th>
+                                <th>Periode</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="8" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Memuat data...</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 2: Diteruskan (lvl.2/3/4/5) -->
+            <div class="tab-pane fade" id="tab-diteruskan" role="tabpanel" aria-labelledby="tab-diteruskan-btn">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <small class="text-muted">Pengajuan cuti yang diteruskan dari atasan sebelumnya untuk diproses Anda (Approval Lvl.2/3/4/5)</small>
+                    <select class="form-select form-select-sm" id="statusFilterDiteruskan" style="min-width: 150px;">
+                        <option value="">Semua Status</option>
+                        <option value="pending_kasubbag">Menunggu Kasubbag</option>
+                        <option value="pending_kabag">Menunggu Kabag</option>
+                        <option value="pending_sekretaris">Menunggu Sekretaris</option>
+                        <option value="awaiting_pimpinan">Menunggu Pimpinan</option>
+                        <option value="approved">Disetujui</option>
+                        <option value="rejected">Ditolak</option>
+                        <option value="changed">Perlu Perubahan</option>
+                        <option value="postponed">Ditangguhkan</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="persetujuanTableDiteruskan">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Tanggal Pengajuan</th>
+                                <th>Nama</th>
+                                <th>Unit Kerja</th>
+                                <th>Jenis Cuti</th>
+                                <th>Periode</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="8" class="text-center"><div class="spinner-border text-purple" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Memuat data...</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <?php else: ?>
+        <!-- Non-special role: tampilan tunggal (atasan biasa atau admin) -->
         <div class="d-flex justify-content-between mb-3">
             <h5 class="card-title mb-0">Daftar Pengajuan Cuti</h5>
             <div>
@@ -77,6 +171,8 @@ $isSpecialRole = $isKasubbag || $isKabag || $isSekretaris || $isKetua;
                 </tbody>
             </table>
         </div>
+        <?php endif; ?>
+
     </div>
 </div>
 
@@ -170,12 +266,48 @@ $isSpecialRole = $isKasubbag || $isKabag || $isSekretaris || $isKetua;
         vertical-align: middle;
     }
     
-    #persetujuanTable_wrapper {
+    #persetujuanTable_wrapper,
+    #persetujuanTableDiteruskan_wrapper {
         margin-top: 10px;
     }
     
     .dataTables_length, .dataTables_filter {
         margin-bottom: 10px;
+    }
+
+    /* ===== Approval Tabs Styling ===== */
+    .approval-tabs {
+        border-bottom: 2px solid #dee2e6;
+        gap: 4px;
+    }
+    .approval-tabs .nav-link {
+        border: 1px solid transparent;
+        border-bottom: none;
+        border-radius: 8px 8px 0 0;
+        padding: 0.5rem 1.25rem;
+        font-weight: 500;
+        color: #495057;
+        transition: background 0.2s, color 0.2s;
+    }
+    .approval-tabs .nav-link:hover {
+        background: #f1f3f5;
+        border-color: #dee2e6 #dee2e6 transparent;
+        color: #1a6fc4;
+    }
+    .approval-tabs .nav-link.active {
+        background: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+        color: #1a6fc4;
+        font-weight: 600;
+    }
+    #tab-diteruskan-btn.active {
+        color: #5a2d8c;
+    }
+    #tab-diteruskan-btn:hover {
+        color: #5a2d8c;
+    }
+    .spinner-border.text-purple {
+        color: #5a2d8c !important;
     }
 
     @media (min-width: 577px) and (max-width: 1024px) {
@@ -189,12 +321,14 @@ $isSpecialRole = $isKasubbag || $isKabag || $isSekretaris || $isKetua;
             box-sizing: border-box !important;
             padding: 0 !important;
         }
-        #persetujuanTable {
+        #persetujuanTable,
+        #persetujuanTableDiteruskan {
             min-width: 1100px !important;
             width: 100% !important;
             box-sizing: border-box !important;
         }
-        #persetujuanTable th, #persetujuanTable td {
+        #persetujuanTable th, #persetujuanTable td,
+        #persetujuanTableDiteruskan th, #persetujuanTableDiteruskan td {
             white-space: nowrap !important;
             padding: 0.5rem 0.75rem !important;
             text-align: left !important;
@@ -207,9 +341,17 @@ $isSpecialRole = $isKasubbag || $isKabag || $isSekretaris || $isKetua;
         .table-hover tbody tr:hover { background: transparent; }
 
         /* Match status filter width (use same min and explicit width for consistency) */
-        #statusFilter {
+        #statusFilter,
+        #statusFilterBawahan,
+        #statusFilterDiteruskan {
             min-width: 150px;
             width: 150px;
+        }
+
+        /* Tab text adjustments on mobile */
+        .approval-tabs .nav-link {
+            padding: 0.4rem 0.7rem;
+            font-size: 0.85rem;
         }
 
         /* Target DataTables controls inside the table wrapper and force widths */
@@ -344,14 +486,41 @@ function initializeApprovalPage() {
     console.log('Initializing approval page...');
     console.log('Is Special Role:', window.IS_SPECIAL_ROLE);
     
-    // Load initial data
-    loadPersetujuanData();
-    
-    // Filter change
-    $('#statusFilter').change(function() {
-        console.log('Status filter changed to:', $(this).val());
-        loadPersetujuanData($(this).val());
-    });
+    if (window.IS_SPECIAL_ROLE) {
+        // Mode tab: load dua tabel terpisah
+        loadPersetujuanData('', 'bawahan');
+        loadPersetujuanData('', 'diteruskan');
+
+        // Filter tab bawahan
+        $('#statusFilterBawahan').change(function() {
+            loadPersetujuanData($(this).val(), 'bawahan');
+        });
+        // Filter tab diteruskan
+        $('#statusFilterDiteruskan').change(function() {
+            loadPersetujuanData($(this).val(), 'diteruskan');
+        });
+        // Saat tab beralih, reinit DataTable yang mungkin belum ter-render (tab pane baru visible)
+        $('#approvalTabs button[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+            const target = $(e.target).data('bs-target');
+            if (target === '#tab-diteruskan') {
+                if ($.fn.DataTable.isDataTable('#persetujuanTableDiteruskan')) {
+                    $('#persetujuanTableDiteruskan').DataTable().columns.adjust().draw();
+                }
+            } else {
+                if ($.fn.DataTable.isDataTable('#persetujuanTable')) {
+                    $('#persetujuanTable').DataTable().columns.adjust().draw();
+                }
+            }
+        });
+    } else {
+        // Mode tunggal: load normal
+        loadPersetujuanData();
+        // Filter change
+        $('#statusFilter').change(function() {
+            console.log('Status filter changed to:', $(this).val());
+            loadPersetujuanData($(this).val());
+        });
+    }
     
     // Submit approval
     $('#submitApproval').off('click').on('click', function() {
@@ -429,7 +598,12 @@ function initializeApprovalPage() {
                 // Fallback: reload data setelah 3 detik untuk memastikan konsistensi
                 setTimeout(function() {
                     console.log('Reloading data for consistency');
-                    loadPersetujuanData($('#statusFilter').val());
+                    if (window.IS_SPECIAL_ROLE) {
+                        loadPersetujuanData($('#statusFilterBawahan').val(), 'bawahan');
+                        loadPersetujuanData($('#statusFilterDiteruskan').val(), 'diteruskan');
+                    } else {
+                        loadPersetujuanData($('#statusFilter').val());
+                    }
                 }, 3000);
             } else {
                 Swal.fire('Error', response.message || 'Terjadi kesalahan', 'error');
@@ -470,12 +644,31 @@ function getStatusDisplay(statusCode) {
  */
 
 
-function loadPersetujuanData(status = '') {
-    console.log('Loading persetujuan data with status:', status);
+/**
+ * tabMode: 'bawahan' | 'diteruskan' | '' (kosong = mode tunggal/non-special-role)
+ * - 'bawahan'    : hanya pengajuan lvl.1 (status=pending)
+ * - 'diteruskan' : hanya pengajuan lvl.2+ (pending_kasubbag/pending_kabag/pending_sekretaris/awaiting_pimpinan)
+ * - ''           : semua (mode lama untuk non-special-role / admin)
+ */
+function loadPersetujuanData(status = '', tabMode = '') {
+    console.log('Loading persetujuan data with status:', status, 'tabMode:', tabMode);
     console.log('Using URL:', baseUrl('leave/getHistory'));
-    
+
+    const tableId   = (tabMode === 'diteruskan') ? '#persetujuanTableDiteruskan' : '#persetujuanTable';
+    const colSpan   = 8;
+
+    // Tentukan status yang akan diminta dari server berdasarkan tabMode
+    let requestStatus = status;
+    if (tabMode === 'bawahan' && status === '') {
+        requestStatus = 'tab_bawahan'; // sinyal khusus ke server (jika didukung) atau filter di client
+    } else if (tabMode === 'diteruskan' && status === '') {
+        requestStatus = 'tab_diteruskan';
+    }
+
     $.post(baseUrl('leave/getHistory'), {
-        status: status
+        status: status,
+        for_approval: 1,
+        tab_mode: tabMode
     }, function(response) {
         console.log('Response received:', response);
         
@@ -493,15 +686,67 @@ function loadPersetujuanData(status = '') {
                 window.IS_PIMPINAN = response.is_admin;
                 console.log('Updated window.IS_PIMPINAN (admin) from server:', window.IS_PIMPINAN);
             }
-            const tbody = $('#persetujuanTable tbody');
+            // Untuk mode tab, filter data di sisi client berdasarkan tabMode
+            let filteredData = response.data || [];
+            if (tabMode === 'bawahan') {
+                // Hanya tampilkan status pending (approval lvl.1)
+                filteredData = filteredData.filter(function(item) {
+                    return item.status === 'pending';
+                });
+                // Update badge counter (hanya yang butuh aksi atasan)
+                const pendingCount = filteredData.filter(i => i.status === 'pending').length;
+                if (pendingCount > 0) {
+                    $('#badge-bawahan').text(pendingCount).show();
+                } else {
+                    $('#badge-bawahan').hide();
+                }
+            } else if (tabMode === 'diteruskan') {
+                // Status yang termasuk forwarded (lvl.2+) dan status final
+                const forwardedStatuses = ['pending_kasubbag','pending_kabag','pending_sekretaris','awaiting_pimpinan'];
+                const finalStatuses     = ['approved','rejected','changed','postponed','pending_admin_upload'];
+
+                if (status) {
+                    // Filter spesifik dari dropdown: tampilkan data dengan status tsb
+                    // Untuk status forwarded: tampilkan langsung
+                    // Untuk status final: tampilkan jika sebelumnya pernah melewati lvl.2+
+                    // (kita tidak tahu history dari client, jadi tampilkan semua dgn status tsb)
+                    filteredData = filteredData.filter(function(item) {
+                        return item.status === status;
+                    });
+                } else {
+                    // Tanpa filter: hanya tampilkan yang sedang dalam antrian lvl.2+
+                    filteredData = filteredData.filter(function(item) {
+                        return forwardedStatuses.includes(item.status);
+                    });
+                }
+
+                // Badge: hanya yang perlu diproses oleh role saat ini (selalu dari data asli tanpa filter)
+                const allForwarded = (response.data || []).filter(function(i) {
+                    return forwardedStatuses.includes(i.status);
+                });
+                let actionableCount = allForwarded.filter(function(i) {
+                    if (window.IS_KASUBBAG   && i.status === 'pending_kasubbag')   return true;
+                    if (window.IS_KABAG      && i.status === 'pending_kabag')      return true;
+                    if (window.IS_SEKRETARIS && i.status === 'pending_sekretaris') return true;
+                    if (window.IS_KETUA      && i.status === 'awaiting_pimpinan')  return true;
+                    return false;
+                }).length;
+                if (actionableCount > 0) {
+                    $('#badge-diteruskan').text(actionableCount).show();
+                } else {
+                    $('#badge-diteruskan').hide();
+                }
+            }
+
+            const tbody = $(tableId + ' tbody');
             tbody.empty();
             
-            if (!response.data || response.data.length === 0) {
-                tbody.append('<tr><td colspan="8" class="text-center">Tidak ada data</td></tr>');
+            if (!filteredData || filteredData.length === 0) {
+                tbody.append('<tr><td colspan="' + colSpan + '" class="text-center">Tidak ada data</td></tr>');
                 return;
             }
             
-            response.data.forEach(function(item, index) {
+            filteredData.forEach(function(item, index) {
                 // Kolom aksi: tombol detail + aksi role-specific
                 let actions = `
                     <button class="btn btn-sm btn-info me-1" onclick="viewDetail(${item.id})" title="Lihat Detail">
@@ -721,12 +966,12 @@ function loadPersetujuanData(status = '') {
             });
             
             // Initialize DataTable
-            if ($.fn.DataTable.isDataTable('#persetujuanTable')) {
-                $('#persetujuanTable').DataTable().destroy();
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                $(tableId).DataTable().destroy();
             }
             
             setTimeout(function() {
-                $('#persetujuanTable').DataTable({
+                $(tableId).DataTable({
                 language: {
                     "sEmptyTable": "Tidak ada data",
                     "sInfo": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
@@ -881,7 +1126,7 @@ function viewDetail(id) {
 
                         ${(data.status === 'pending' || data.status === 'pending_kasubbag' || data.status === 'awaiting_pimpinan' || (data.status_draft && data.is_pta_makassar)) ? `
                             <div class="d-flex flex-column align-items-start gap-2 mt-3">
-                                ${((data.status === 'awaiting_pimpinan' && window.IS_KETUA) || ((data.status === 'pending' || (data.status === 'pending_kasubbag' && window.IS_KASUBBAG)) && (data.blanko_uploaded || data.has_generated_doc || window.IS_ATASAN)) || (data.status_draft && data.is_pta_makassar)) ? `
+                                ${((data.status === 'awaiting_pimpinan' && window.IS_KETUA) || ((data.status === 'pending' || (data.status === 'pending_kasubbag' && window.IS_KASUBBAG)) && !window.IS_ADMIN && (data.blanko_uploaded || data.has_generated_doc || window.IS_ATASAN)) || (data.status_draft && data.is_pta_makassar)) ? `
                                             ${window.IS_ATASAN ? `<button class="btn btn-primary btn-sm" onclick="approveLeave(${data.id})">
                                                 <i class="bi bi-arrow-up-right-circle"></i> Setujui
                                             </button>` : `<button class="btn btn-success btn-sm" onclick="approveLeave(${data.id})">
@@ -903,7 +1148,7 @@ function viewDetail(id) {
                             ` : ''}
                         ` : ''
                         }
-                        ${(data.status === 'pending') ? `
+                        ${((data.status === 'pending' && !window.IS_ADMIN) || (data.status === 'awaiting_pimpinan' && window.IS_KETUA)) ? `
                             <div class="d-flex flex-column align-items-start gap-2 mt-2">
                                 <button class="btn btn-warning btn-sm text-white" onclick="changeLeave(${data.id})"><i class="bi bi-pencil"></i> Perlu Perubahan</button>
                                 <button class="btn btn-secondary btn-sm" onclick="postponeLeave(${data.id})"><i class="bi bi-pause"></i> Tangguhkan</button>
@@ -911,8 +1156,12 @@ function viewDetail(id) {
                         ` : ''}
                         ${(data.status === 'pending_admin_upload' && window.IS_ADMIN) ? `
                             <div class="mt-3">
-                                <button class="btn btn-info btn-sm" onclick="uploadAdminDocument(${data.id})">
-                                    <i class="bi bi-upload"></i> Upload Dokumen Pendukung
+                                <div class="alert alert-warning py-2 px-3 mb-2" style="font-size:0.92em;">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    <strong>Menunggu Upload Dokumen:</strong> Admin perlu mengupload dokumen pendukung (SK, dll.) agar pengajuan dapat diproses atasan.
+                                </div>
+                                <button class="btn btn-warning btn-sm fw-semibold" onclick="uploadAdminDocument(${data.id})">
+                                    <i class="bi bi-upload me-1"></i> Upload &amp; Preview Dokumen Pendukung
                                 </button>
                             </div>
                         ` : ''}
@@ -921,15 +1170,26 @@ function viewDetail(id) {
                                 <div class="col-12 mt-3">
                                         ${data.dokumen_pendukung ? (() => {
                                             const ext = data.dokumen_pendukung.split('.').pop().toLowerCase();
-                                            let previewBtn = '';
-                                            if (ext === 'pdf') {
-                                                previewBtn = `<button class=\"btn btn-secondary btn-sm ms-2\" onclick=\"previewDokumenPendukung('${encodeURIComponent(data.dokumen_pendukung)}')\"><i class=\"bi bi-eye\"></i> Preview</button>`;
-                                            }
+                                            const docUrl = baseUrl('leave/downloadDocument?file=') + encodeURIComponent(data.dokumen_pendukung);
+                                            const isPdf = (ext === 'pdf');
                                             return `
-                                                <div class=\"alert alert-info\">
-                                                    <i class=\"bi bi-paperclip me-2\"></i>
-                                                    <strong>Dokumen Pendukung:</strong>
-                                                    ${previewBtn}
+                                                <div class=\"card border-info mt-2\">
+                                                    <div class=\"card-header bg-info bg-opacity-10 d-flex align-items-center justify-content-between py-2\">
+                                                        <span><i class=\"bi bi-paperclip me-1 text-info\"></i> <strong>Dokumen Pendukung</strong></span>
+                                                        <div class=\"d-flex gap-2\">
+                                                            ${isPdf ? `<button class=\"btn btn-outline-info btn-sm\" onclick=\"previewDokumenPendukung('${encodeURIComponent(data.dokumen_pendukung)}')\"><i class=\"bi bi-eye me-1\"></i>Preview</button>` : ''}
+                                                            <a href=\"${docUrl}\" class=\"btn btn-outline-secondary btn-sm\" download><i class=\"bi bi-download me-1\"></i>Download</a>
+                                                        </div>
+                                                    </div>
+                                                    ${isPdf ? `
+                                                    <div class=\"card-body p-0\">
+                                                        <iframe src=\"${docUrl}#toolbar=0\" style=\"width:100%;height:420px;border:none;border-radius:0 0 4px 4px;\"
+                                                            title=\"Preview Dokumen Pendukung\"
+                                                            onerror=\"this.style.display='none';\"
+                                                        ></iframe>
+                                                    </div>` : `
+                                                    <div class=\"card-body py-2 text-muted small\"><i class=\"bi bi-file-earmark me-1\"></i>${data.dokumen_pendukung} &mdash; Preview tidak tersedia untuk tipe file ini.</div>
+                                                    `}
                                                 </div>
                                                 <div id=\"previewDokumenPendukungModal\" class=\"modal fade\" tabindex=\"-1\">
                                                     <div class=\"modal-dialog modal-xl\">
@@ -938,8 +1198,8 @@ function viewDetail(id) {
                                                                 <h5 class=\"modal-title\">Preview Dokumen Pendukung</h5>
                                                                 <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
                                                             </div>
-                                                            <div class=\"modal-body\" id=\"previewDokumenPendukungBody\" style=\"min-height:60vh;\">
-                                                                <!-- Preview content will be loaded here -->
+                                                            <div class=\"modal-body\" id=\"previewDokumenPendukungBody\" style=\"min-height:70vh;padding:0;\">
+                                                                <embed id=\"previewDokumenPendukungEmbed\" src=\"\" type=\"application/pdf\" width=\"100%\" height=\"700px\" style=\"border:none;\" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -952,18 +1212,21 @@ function viewDetail(id) {
             $('#detailContent').html(content);
             $('#detailModal').modal('show');
             console.log('Detail modal shown for leave id=', data.id, 'has_generated_doc=', hasGenerated, 'generated_doc_filename=', data.generated_doc_filename);
-            // Agar preview PDF tidak terdownload, pastikan controller PHP (leave/downloadDocument) mengirim header Content-Disposition: inline untuk file PDF
-            // Contoh di controller:
-            // if ($ext === 'pdf') { header('Content-Disposition: inline; filename="' . $filename . '"'); }
+            // Agar preview PDF tidak terdownload, pastikan controller PHP (leave/downloadDocument) mengirim header Content-Disposition: inline
             window.previewDokumenPendukung = function(file) {
                 const url = baseUrl('leave/downloadDocument?file=') + decodeURIComponent(file);
-                let ext = file.split('.').pop().toLowerCase();
+                let ext = decodeURIComponent(file).split('.').pop().toLowerCase();
                 if (ext !== 'pdf') {
-                    Swal.fire('Preview hanya tersedia untuk file PDF.');
+                    Swal.fire('Info', 'Preview hanya tersedia untuk file PDF.', 'info');
                     return;
                 }
-                let previewHtml = `<embed src="${url}" type="application/pdf" width="100%" height="600px" style="border:none;" />`;
-                $('#previewDokumenPendukungBody').html(previewHtml);
+                // Update embed src lalu tampilkan modal
+                const $embed = $('#previewDokumenPendukungEmbed');
+                if ($embed.length) {
+                    $embed.attr('src', url);
+                } else {
+                    $('#previewDokumenPendukungBody').html(`<embed src="${url}" type="application/pdf" width="100%" height="700px" style="border:none;" />`);
+                }
                 $('#previewDokumenPendukungModal').modal('show');
             }
         } else {
@@ -990,54 +1253,52 @@ function approveLeave(id) {
         $('#catatanRequired').hide();
         $('#submitApproval').removeClass('btn-success btn-danger btn-warning btn-secondary').addClass('btn-primary').text('Setujui');
         
-        // Ambil data leave dari table untuk cek status
-        const $row = $(`#persetujuanTable tbody tr[data-leave-id="${id}"]`);
-        if ($row.length > 0) {
-            // Get leave data via AJAX to check status dan role
-            $.post(baseUrl('approval/getDetail'), {
-                leave_id: id
-            }, function(response) {
-                if (response.success) {
-                    const leaveData = response.data;
-                    // Jika status adalah 'awaiting_pimpinan' dan current atasan adalah ketua, treat as final approval
-                    if (leaveData.status === 'awaiting_pimpinan' && typeof window.IS_KETUA !== 'undefined' && window.IS_KETUA) {
-                        $('#approvalTitle').text('Persetujuan Final oleh Ketua');
-                        $('#submitApproval').removeClass('btn-primary').addClass('btn-success').text('Setujui');
-                        // no forwarding options
-                    }
-                    // Jika status adalah 'pending_kasubbag' dan user adalah kasubbag, tampilkan forward routing
-                    else if (leaveData.status === 'pending_kasubbag' && typeof window.IS_KASUBBAG !== 'undefined' && window.IS_KASUBBAG) {
-                        $('#approvalTitle').text('Teruskan Pengajuan Cuti Kasubbag');
-                        $('#forwardRoutingGroup').removeClass('d-none');
-                    }
-                    // Kabag approval - forward to sekretaris
-                    else if (leaveData.status === 'pending_kabag' && typeof window.IS_KABAG !== 'undefined' && window.IS_KABAG) {
-                        $('#approvalTitle').text('Teruskan Pengajuan Cuti ke Sekretaris');
-                        $('#submitApproval').text('Teruskan ke Sekretaris');
-                    }
-                    // Sekretaris approval - forward to pimpinan
-                    else if (leaveData.status === 'pending_sekretaris' && typeof window.IS_SEKRETARIS !== 'undefined' && window.IS_SEKRETARIS) {
-                        $('#approvalTitle').text('Teruskan Pengajuan Cuti ke Pimpinan');
-                        $('#submitApproval').text('Teruskan ke Pimpinan');
-                        // Show pimpinan selector and populate list via AJAX
-                        $('#pimpinanSelectGroup').removeClass('d-none');
-                        // Clear existing options
-                        $('#pimpinanSelect').html('<option value="">-- Pilih Pimpinan --</option>');
-                        $.post(baseUrl('approval/getPimpinanList'), {}, function(resp) {
-                            if (resp.success && resp.data) {
-                                resp.data.forEach(function(r) {
-                                    $('#pimpinanSelect').append('<option value="' + r.id_atasan + '">' + r.nama_atasan + ' (' + (r.jabatan || '') + ')</option>');
-                                });
-                            } else {
-                                console.warn('Gagal memuat daftar pimpinan:', resp.message);
-                            }
-                        }, 'json').fail(function() {
-                            console.warn('Gagal menghubungi server untuk daftar pimpinan');
-                        });
-                    }
+        // Selalu ambil data leave via AJAX untuk cek status dan tampilkan UI yang tepat.
+        // Catatan: tidak lagi menggunakan $row.length karena baris bisa berada di
+        // #persetujuanTable (tab Bawahan) ATAU #persetujuanTableDiteruskan (tab Diteruskan).
+        $.post(baseUrl('approval/getDetail'), {
+            leave_id: id
+        }, function(response) {
+            if (response.success) {
+                const leaveData = response.data;
+                // Jika status adalah 'awaiting_pimpinan' dan current atasan adalah ketua, treat as final approval
+                if (leaveData.status === 'awaiting_pimpinan' && typeof window.IS_KETUA !== 'undefined' && window.IS_KETUA) {
+                    $('#approvalTitle').text('Persetujuan Final oleh Ketua');
+                    $('#submitApproval').removeClass('btn-primary').addClass('btn-success').text('Setujui');
+                    // no forwarding options
                 }
-            }, 'json');
-        }
+                // Jika status adalah 'pending_kasubbag' dan user adalah kasubbag, tampilkan forward routing
+                else if (leaveData.status === 'pending_kasubbag' && typeof window.IS_KASUBBAG !== 'undefined' && window.IS_KASUBBAG) {
+                    $('#approvalTitle').text('Teruskan Pengajuan Cuti Kasubbag');
+                    $('#forwardRoutingGroup').removeClass('d-none');
+                }
+                // Kabag approval - forward to sekretaris
+                else if (leaveData.status === 'pending_kabag' && typeof window.IS_KABAG !== 'undefined' && window.IS_KABAG) {
+                    $('#approvalTitle').text('Teruskan Pengajuan Cuti ke Sekretaris');
+                    $('#submitApproval').text('Teruskan ke Sekretaris');
+                }
+                // Sekretaris approval - forward to pimpinan
+                else if (leaveData.status === 'pending_sekretaris' && typeof window.IS_SEKRETARIS !== 'undefined' && window.IS_SEKRETARIS) {
+                    $('#approvalTitle').text('Teruskan Pengajuan Cuti ke Pimpinan');
+                    $('#submitApproval').text('Teruskan ke Pimpinan');
+                    // Show pimpinan selector and populate list via AJAX
+                    $('#pimpinanSelectGroup').removeClass('d-none');
+                    // Clear existing options
+                    $('#pimpinanSelect').html('<option value="">-- Pilih Pimpinan --</option>');
+                    $.post(baseUrl('approval/getPimpinanList'), {}, function(resp) {
+                        if (resp.success && resp.data) {
+                            resp.data.forEach(function(r) {
+                                $('#pimpinanSelect').append('<option value="' + r.id_atasan + '">' + r.nama_atasan + ' (' + (r.jabatan || '') + ')</option>');
+                            });
+                        } else {
+                            console.warn('Gagal memuat daftar pimpinan:', resp.message);
+                        }
+                    }, 'json').fail(function() {
+                        console.warn('Gagal menghubungi server untuk daftar pimpinan');
+                    });
+                }
+            }
+        }, 'json');
     } else {
         $('#approvalTitle').text('Setujui Pengajuan Cuti');
         $('#catatanRequired').hide();
@@ -1203,41 +1464,75 @@ function updateRowAfterApproval(leaveId, action) {
 }
 
 function uploadAdminDocument(leaveId) {
-    // Create file input
+    // Buat file input tersembunyi
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    fileInput.accept = '.pdf';
+    fileInput.accept = 'application/pdf,.pdf';
     fileInput.style.display = 'none';
-    
+    document.body.appendChild(fileInput);
+
     fileInput.onchange = function(e) {
         const file = e.target.files[0];
+        document.body.removeChild(fileInput);
         if (!file) return;
-        
-        // Validate file type
-        if (file.type !== 'application/pdf') {
+
+        // Validasi tipe file
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
             Swal.fire('Error', 'File harus berupa PDF!', 'error');
             return;
         }
-        
-        // Validate file size (10MB)
+
+        // Validasi ukuran file (10MB)
         if (file.size > 10485760) {
             Swal.fire('Error', 'Ukuran file maksimal 10MB!', 'error');
             return;
         }
-        
-        // Confirm upload
+
+        // Buat object URL untuk preview langsung
+        const objectUrl = URL.createObjectURL(file);
+        const fileSizeKB = (file.size / 1024).toFixed(1);
+        const fileSizeMB = (file.size / 1048576).toFixed(2);
+        const fileSizeDisplay = file.size > 1048576 ? `${fileSizeMB} MB` : `${fileSizeKB} KB`;
+
+        // Tampilkan preview di SweetAlert2 dengan iframe
         Swal.fire({
-            title: 'Konfirmasi Upload',
-            text: `Upload dokumen pendukung "${file.name}" untuk pengajuan cuti ini?`,
-            icon: 'question',
+            title: 'Preview & Konfirmasi Upload',
+            width: '90%',
+            html: `
+                <div style="text-align:left;margin-bottom:10px;">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-file-earmark-pdf text-danger fs-4"></i>
+                        <div>
+                            <div class="fw-semibold" style="word-break:break-all;">${file.name}</div>
+                            <div class="text-muted small">Ukuran: ${fileSizeDisplay}</div>
+                        </div>
+                    </div>
+                    <div style="border:1px solid #dee2e6;border-radius:6px;overflow:hidden;">
+                        <iframe src="${objectUrl}" 
+                            style="width:100%;height:420px;border:none;" 
+                            title="Preview Dokumen Pendukung"
+                        ></iframe>
+                    </div>
+                    <div class="alert alert-warning mt-2 py-1 px-2" style="font-size:0.85em;">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        Pastikan dokumen sudah benar sebelum diupload. Setelah upload, pengajuan akan diteruskan ke atasan.
+                    </div>
+                </div>
+            `,
+            icon: undefined,
             showCancelButton: true,
             confirmButtonColor: '#1b5e20',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, Upload',
-            cancelButtonText: 'Batal'
+            confirmButtonText: '<i class="bi bi-upload me-1"></i> Ya, Upload Dokumen',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+            didClose: function() {
+                // Bebaskan object URL saat ditutup
+                URL.revokeObjectURL(objectUrl);
+            }
         }).then((result) => {
             if (result.isConfirmed) {
-                // Show loading
+                // Tampilkan loading
                 Swal.fire({
                     title: 'Mengupload...',
                     text: 'Mohon tunggu sebentar',
@@ -1246,13 +1541,13 @@ function uploadAdminDocument(leaveId) {
                         Swal.showLoading();
                     }
                 });
-                
-                // Create form data
+
+                // Buat form data
                 const formData = new FormData();
                 formData.append('leave_id', leaveId);
                 formData.append('dokumen_pendukung', file);
-                
-                // Upload
+
+                // Upload via AJAX
                 $.ajax({
                     url: baseUrl('approval/uploadAdminDocument'),
                     type: 'POST',
@@ -1263,12 +1558,20 @@ function uploadAdminDocument(leaveId) {
                         if (response.success) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Berhasil',
+                                title: 'Berhasil!',
                                 text: response.message,
-                                confirmButtonColor: '#1b5e20'
+                                confirmButtonColor: '#1b5e20',
+                                timer: 3000,
+                                timerProgressBar: true
                             }).then(() => {
-                                // Reload data
-                                loadPersetujuanData();
+                                // Tutup detail modal dan reload data
+                                $('#detailModal').modal('hide');
+                                if (window.IS_SPECIAL_ROLE) {
+                                    loadPersetujuanData($('#statusFilterBawahan').val(), 'bawahan');
+                                    loadPersetujuanData($('#statusFilterDiteruskan').val(), 'diteruskan');
+                                } else {
+                                    loadPersetujuanData($('#statusFilter').val());
+                                }
                             });
                         } else {
                             Swal.fire('Error', response.message || 'Upload gagal', 'error');
@@ -1276,14 +1579,14 @@ function uploadAdminDocument(leaveId) {
                     },
                     error: function(xhr, status, error) {
                         console.error('Upload error:', error);
-                        Swal.fire('Error', 'Terjadi kesalahan saat upload', 'error');
+                        Swal.fire('Error', 'Terjadi kesalahan saat upload. Coba lagi.', 'error');
                     }
                 });
             }
         });
     };
-    
-    // Trigger file selection
+
+    // Trigger pemilihan file
     fileInput.click();
 }
 </script>

@@ -374,18 +374,18 @@ class ReportController extends Controller {
         echo '<table border="1" style="border-collapse:collapse;">';
 
         // Title rows
-        echo '<tr><td colspan="6" style="font-weight:bold;font-size:14pt;background:#1565c0;color:white;text-align:center;">Laporan Kinerja Admin</td></tr>';
-        echo '<tr><td colspan="6" style="background:#e3f2fd;">Bulan: ' . $monthName . ' ' . $year . '</td></tr>';
-        echo '<tr><td colspan="6" style="background:#e3f2fd;">Admin: ' . htmlspecialchars($adminNama) . '</td></tr>';
-        echo '<tr><td colspan="6"></td></tr>';
+        echo '<tr><td colspan="5" style="font-weight:bold;font-size:14pt;background:#1565c0;color:white;text-align:center;">Laporan Kinerja Admin</td></tr>';
+        echo '<tr><td colspan="5" style="background:#e3f2fd;">Bulan: ' . $monthName . ' ' . $year . '</td></tr>';
+        echo '<tr><td colspan="5" style="background:#e3f2fd;">Admin: ' . htmlspecialchars($adminNama) . '</td></tr>';
+        echo '<tr><td colspan="5"></td></tr>';
 
         // Column headers
         echo '<tr style="background:#1565c0;color:white;font-weight:bold;">';
-        echo '<td>No</td><td>Tanggal</td><td>Aktivitas</td><td>Nomor Surat</td><td>Pegawai</td><td>Jenis Cuti</td>';
+        echo '<td>No</td><td>Tanggal</td><td>Aktivitas</td><td>Pegawai</td><td>Jenis Cuti</td>';
         echo '</tr>';
 
         if (empty($activities)) {
-            echo '<tr><td colspan="6" style="text-align:center;">Tidak ada aktivitas untuk periode ini</td></tr>';
+            echo '<tr><td colspan="5" style="text-align:center;">Tidak ada aktivitas untuk periode ini</td></tr>';
         } else {
             $no = 1;
             foreach ($activities as $activity) {
@@ -396,7 +396,6 @@ class ReportController extends Controller {
                 echo '<td>' . $no++ . '</td>';
                 echo '<td>' . htmlspecialchars(date('d/m/Y H:i', strtotime($activity['created_at']))) . '</td>';
                 echo '<td>' . htmlspecialchars($actLabel) . '</td>';
-                echo '<td>' . htmlspecialchars($activity['nomor_surat'] ?? '-') . '</td>';
                 echo '<td>' . htmlspecialchars($activity['pegawai_nama'] ?? '-') . '</td>';
                 echo '<td>' . htmlspecialchars($activity['jenis_cuti'] ?? '-') . '</td>';
                 echo '</tr>';

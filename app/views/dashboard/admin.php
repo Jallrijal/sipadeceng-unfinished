@@ -321,35 +321,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Mobile-only styles to make Recent Activities fill the card-body without gaps -->
 <style>
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
         .card .card-body { padding: 0.5rem 0.75rem; }
-        .table-responsive { padding: 0; margin: 0; }
+        .table-responsive { padding: 0; margin: 0; border: none; overflow-x: hidden; }
         #recentActivitiesTable { width: 100%; margin-bottom: 0; }
         #recentActivitiesTable thead { display: none; }
         #recentActivitiesTable tbody { display: block; }
-        #recentActivitiesTable tbody tr { display: block; border: 0; padding: 0.5rem 0; }
+        #recentActivitiesTable tbody tr { display: block; border: 0; padding: 0.5rem 1rem; }
         #recentActivitiesTable tbody tr + tr { border-top: 1px solid rgba(0,0,0,0.08); }
         #recentActivitiesTable td {
             display: flex;
-            align-items: flex-start;
-            padding: 0.35rem 0;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0.5rem;
             white-space: normal;
             border: none;
-            gap: 0.5rem;
+            gap: 1rem;
+            text-align: right;
         }
-        /* Make the label (generated with ::before) a fixed-width column so values line up */
+        /* Style the label */
         #recentActivitiesTable td::before {
-            content: attr(data-label) ":";
+            content: attr(data-label);
             font-weight: 600;
-            flex: 0 0 36%;
-            max-width: 36%;
-            padding-right: .5rem;
             text-align: left;
-        }
-        /* Let the value take remaining space and wrap naturally */
-        #recentActivitiesTable td > *,
-        #recentActivitiesTable td {
-            min-width: 0;
+            flex-shrink: 0;
         }
         .table-hover tbody tr:hover { background: transparent; }
     }

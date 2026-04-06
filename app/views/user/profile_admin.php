@@ -44,7 +44,7 @@
                             <tr><td><strong>Jabatan</strong></td><td>: <?php echo $_SESSION['jabatan']; ?></td></tr>
                             <tr><td><strong>Unit Kerja</strong></td><td>: <?php require_once __DIR__ . '/../../helpers/satker_helper.php'; echo get_nama_satker($_SESSION['unit_kerja']); ?></td></tr>
                             <tr><td><strong>Username</strong></td><td>: <?php echo $_SESSION['username']; ?></td></tr>
-                            <tr><td><strong>Role</strong></td><td>: <?php echo $_SESSION['user_type'] == 'admin' ? 'Pimpinan' : (isset($_SESSION['user_type']) && $_SESSION['user_type'] == 'atasan' ? 'Atasan' : 'Pegawai'); ?></td></tr>
+                            <tr><td><strong>Role</strong></td><td>: <?php echo $_SESSION['user_type'] == 'admin' ? 'Admin' : (isset($_SESSION['user_type']) && $_SESSION['user_type'] == 'atasan' ? 'Atasan' : 'Pegawai'); ?></td></tr>
                         </table>
                     </div>
                 </div>

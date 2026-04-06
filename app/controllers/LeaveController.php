@@ -344,7 +344,7 @@ class LeaveController extends Controller
 
         $filters = [];
 
-        if (isAtasan()) {
+        if (isAtasan() && !isset($_POST['only_self'])) {
             // Load kasubbag workflow helper
             require_once dirname(__DIR__) . '/helpers/kasubbag_workflow_helper.php';
 
@@ -360,8 +360,11 @@ class LeaveController extends Controller
                 // Store atasan role in session for reference
                 $_SESSION['atasan_role'] = $atasanId['role'] ?? null;
 
-                // Atasan juga dapat melihat pengajuan cuti mereka sendiri
-                $filters['include_own_requests'] = $_SESSION['user_id'];
+                // Atasan juga dapat melihat pengajuan cuti mereka sendiri,
+                // kecuali jika dipanggil dari halaman approval (for_approval = 1)
+                if (!isset($_POST['for_approval'])) {
+                    $filters['include_own_requests'] = $_SESSION['user_id'];
+                }
 
                 // Build custom filter logic based on role
                 if ($atasanId['role'] === 'kasubbag') {
@@ -410,8 +413,8 @@ class LeaveController extends Controller
                 }
             }
         }
-        elseif (isPegawai()) {
-            // Regular pegawai (non-atasan) only melihat pengajuan mereka sendiri
+        elseif (isUser()) {
+            // Pegawai atau Atasan yang melihat pengajuan mereka sendiri (only_self)
             $filters['user_id'] = $_SESSION['user_id'];
         }
         elseif (isAdmin()) {

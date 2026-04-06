@@ -136,9 +136,17 @@
                         <h6 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Informasi Kuota Cuti</h6>
                     </div>
                     <div class="card-body">
+                        <div class="mb-3 row">
+                            <div class="col-md-6 col-sm-12">
+                                <label for="leaveTypeSelect" class="form-label fw-bold">Pilih Jenis Cuti</label>
+                                <select class="form-select" id="leaveTypeSelect">
+                                    <!-- Options will be loaded via JS -->
+                                </select>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered">
-                                <thead>
+                                <thead id="quotaTableHeader">
                                     <tr>
                                         <th>Tahun</th>
                                         <th>Kuota Tahunan</th>
@@ -360,10 +368,12 @@
             }, 'json');
         });
 
+        let allQuotas = [];
+
         // Tab switching events
         $('#kuota-tab').on('click', function () {
             if (!quotaLoaded) {
-                loadQuotaInfo();
+                loadAllQuotas();
                 quotaLoaded = true;
             }
         });
@@ -377,11 +387,138 @@
 
 
 
+        function loadAllQuotas() {
+            $.get(baseUrl('user/getLeaveQuotas'), function (response) {
+                if (response.success) {
+                    allQuotas = response.data;
+                    const select = $('#leaveTypeSelect');
+                    select.empty();
+                    allQuotas.forEach(function (quota) {
+                        select.append(`<option value="${quota.id}">${quota.nama_cuti}</option>`);
+                    });
+                    // render default
+                    select.trigger('change');
+                }
+            }, 'json');
+        }
+
+        $('#leaveTypeSelect').on('change', function () {
+            const leaveTypeId = parseInt($(this).val());
+            const thead = $('#quotaTableHeader');
+            const tbody = $('#quotaTableBody');
+            
+            tbody.empty();
+            if (leaveTypeId === 1) {
+                // Cuti Tahunan
+                thead.html(`
+                    <tr>
+                        <th>Tahun</th>
+                        <th>Kuota Tahunan</th>
+                        <th>Terpakai</th>
+                        <th>Sisa</th>
+                        <th>Persentase</th>
+                    </tr>
+                `);
+                loadQuotaInfo();
+            } else {
+                const quota = allQuotas.find(q => q.id === leaveTypeId);
+                if (!quota) return;
+                
+                if (quota.is_akumulatif === 0) {
+                    if (leaveTypeId === 4 && quota.kesempatan_sisa !== undefined) {
+                        // Cuti Melahirkan dg Batas Kesempatan
+                        const totalKesempatan = 3;
+                        const terpakai = totalKesempatan - quota.kesempatan_sisa;
+                        const percentage = (terpakai / totalKesempatan * 100).toFixed(1);
+                        const progressClass = percentage > 80 ? 'danger' : percentage > 50 ? 'warning' : 'success';
+                        
+                        thead.html(`
+                            <tr>
+                                <th>Jenis Cuti</th>
+                                <th>Total Kesempatan</th>
+                                <th>Terpakai</th>
+                                <th>Sisa Kesempatan</th>
+                                <th>Persentase</th>
+                            </tr>
+                        `);
+                        tbody.html(`
+                            <tr>
+                                <td>${quota.nama_cuti}<br><small class="text-muted">${quota.max_days} hari per pengajuan</small></td>
+                                <td>${totalKesempatan} kali</td>
+                                <td>${terpakai} kali</td>
+                                <td><strong>${quota.kesempatan_sisa} kali</strong></td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-${progressClass}" 
+                                             role="progressbar" 
+                                             style="width: ${percentage}%">
+                                            ${percentage}%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        `);
+                    } else {
+                        // Cuti Alasan Penting dll
+                        thead.html(`
+                            <tr>
+                                <th>Jenis Cuti</th>
+                                <th>Max Per Pengajuan</th>
+                                <th>Status Kuota</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        `);
+                        tbody.html(`
+                            <tr>
+                                <td><strong>${quota.nama_cuti}</strong></td>
+                                <td>${quota.max_days} hari</td>
+                                <td><span class="badge bg-success">Tersedia</span></td>
+                                <td><small class="text-muted">${quota.keterangan}</small></td>
+                            </tr>
+                        `);
+                    }
+                } else {
+                    // Akumulatif (Cuti Besar, Cuti Sakit, Luar Tanggungan)
+                    const totalKuota = quota.max_days;
+                    const terpakai = totalKuota > 0 ? (totalKuota - quota.sisa_kuota) : 0;
+                    const percentage = totalKuota > 0 ? (terpakai / totalKuota * 100).toFixed(1) : 0;
+                    const progressClass = percentage > 80 ? 'danger' : percentage > 50 ? 'warning' : 'success';
+                    
+                    thead.html(`
+                        <tr>
+                            <th>Jenis Cuti</th>
+                            <th>Total Kuota</th>
+                            <th>Terpakai</th>
+                            <th>Sisa</th>
+                            <th>Persentase</th>
+                        </tr>
+                    `);
+                    tbody.html(`
+                        <tr>
+                            <td>${quota.nama_cuti}<br><small class="text-muted">${quota.keterangan}</small></td>
+                            <td>${totalKuota} hari</td>
+                            <td>${terpakai} hari</td>
+                            <td><strong>${quota.sisa_kuota} hari</strong></td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar bg-${progressClass}" 
+                                         role="progressbar" 
+                                         style="width: ${percentage}%">
+                                        ${percentage}%
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                }
+            }
+        });
+
         function loadQuotaInfo() {
             const currentYear = new Date().getFullYear();
             const years = [currentYear - 2, currentYear - 1, currentYear];
             const tbody = $('#quotaTableBody');
-            tbody.empty();
+            // tbody.empty(); called in change event
 
             let totalQuota = 0;
             let totalUsed = 0;
