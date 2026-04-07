@@ -21,6 +21,12 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
+                <button class="nav-link" id="email-tab" data-bs-toggle="tab" data-bs-target="#email-content"
+                    type="button" role="tab" aria-controls="email-content" aria-selected="false">
+                    <i class="bi bi-envelope me-2"></i>Kelola Email
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="signature-tab" data-bs-toggle="tab" data-bs-target="#signature-content"
                     type="button" role="tab" aria-controls="signature-content" aria-selected="false">
                     <i class="bi bi-pen me-2"></i>Tanda Tangan
@@ -162,6 +168,15 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kelola Email Tab -->
+    <div class="tab-pane fade" id="email-content" role="tabpanel" aria-labelledby="email-tab">
+        <div class="row">
+            <div class="col-12">
+                <?php include __DIR__ . '/email_management.php'; ?>
             </div>
         </div>
     </div>

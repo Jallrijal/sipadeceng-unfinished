@@ -253,12 +253,34 @@ class LeaveController extends Controller
         // Ambil atasan_id dari user yang sedang login
         $userModel = $this->model('User');
         $currentUser = $userModel->find($_SESSION['user_id']);
-        $atasanId = $currentUser['atasan'] ?? null;
+        $idAtasanRef = $currentUser['atasan'] ?? null;
 
         // Validasi: pastikan user memiliki atasan
-        if (!$atasanId) {
+        if (!$idAtasanRef) {
             $this->jsonResponse(['success' => false, 'message' => 'Akun Anda belum terhubung dengan akun atasan Anda. Silakan hubungi staff kepegawaian untuk mengatur data atasan.']);
         }
+
+        // Cari data atasan berdasarkan id_atasan dari tabel atasan
+        $atasanData = $this->db()->fetch(
+            "SELECT id_atasan, nip FROM atasan WHERE id_atasan = ?",
+            [$idAtasanRef]
+        );
+        
+        if (!$atasanData) {
+            $this->jsonResponse(['success' => false, 'message' => 'Data atasan tidak ditemukan di sistem']);
+        }
+
+        // Cari user ID berdasarkan NIP atasan (untuk pengiriman notifikasi)
+        $atasanUser = $this->db()->fetch(
+            "SELECT id FROM users WHERE nip = ?",
+            [$atasanData['nip']]
+        );
+
+        if (!$atasanUser) {
+            $this->jsonResponse(['success' => false, 'message' => 'User atasan tidak ditemukan di sistem']);
+        }
+
+        $atasanUserId = $atasanUser['id'];
 
         // Simpan ke database
         $data = [
@@ -274,7 +296,7 @@ class LeaveController extends Controller
             'dokumen_pendukung' => $dokumenPendukung,
             'status' => $status,
             'catatan_cuti' => $catatanCuti,
-            'atasan_id' => $atasanId
+            'atasan_id' => $idAtasanRef
         ];
 
         $leaveId = $this->leaveModel->create($data);
@@ -286,6 +308,16 @@ class LeaveController extends Controller
                 $notificationModel->notifyAdmins(
                     "Pengajuan cuti baru memerlukan upload dokumen pendukung: {$_SESSION['nama']}",
                     'warning',
+                    $leaveId
+                );
+            }
+            // Kirim notifikasi ke atasan jika status pending
+            elseif ($status === 'pending') {
+                $notificationModel = $this->model('Notification');
+                $notificationModel->sendNotification(
+                    $atasanUserId,
+                    "Pengajuan cuti baru dari {$_SESSION['nama']} memerlukan persetujuan Anda",
+                    'info',
                     $leaveId
                 );
             }

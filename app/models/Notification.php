@@ -42,7 +42,7 @@ class Notification extends Model {
     }
     
     public function sendNotification($userId, $message, $type = 'info', $relatedLeaveId = null) {
-        return $this->create([
+        $result = $this->create([
             'user_id' => $userId,
             'message' => $message,
             'type' => $type,
@@ -50,6 +50,20 @@ class Notification extends Model {
             'related_leave_id' => $relatedLeaveId,
             'created_at' => getCurrentDateTime()
         ]);
+
+        // Send email notification if user has email
+        if ($result) {
+            $userModel = new User();
+            $user = $userModel->find($userId);
+            if ($user && !empty($user['email'])) {
+                require_once __DIR__ . '/../helpers/email_helper.php';
+                $subject = 'Notifikasi Sistem Cuti - ' . ucfirst($type);
+                $body = "Halo {$user['nama']},\n\n{$message}\n\nSalam,\nSipadeceng";
+                sendEmail($user['email'], $subject, $body);
+            }
+        }
+
+        return $result;
     }
     
     public function notifyAdmins($message, $type = 'info', $relatedLeaveId = null) {

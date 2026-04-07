@@ -517,6 +517,7 @@ class UserController extends Controller {
             'username' => cleanInput($_POST['username']),
             'nama' => cleanInput($_POST['nama']),
             'nip' => cleanInput($_POST['nip']),
+            'email' => !empty($_POST['email']) ? cleanInput($_POST['email']) : null,
             'jabatan' => cleanInput($_POST['jabatan']),
             'golongan' => cleanInput($_POST['golongan']),
             'unit_kerja' => cleanInput($_POST['unit_kerja']),
@@ -539,6 +540,12 @@ class UserController extends Controller {
             return;
         }
 
+        // Validasi email jika diisi
+        if (!empty($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $this->jsonResponse(['success' => false, 'message' => 'Format email tidak valid']);
+            return;
+        }
+
         // Definisikan userId untuk action edit
         $userId = null;
         if ($action == 'edit') {
@@ -554,6 +561,12 @@ class UserController extends Controller {
         // Validasi duplikasi NIP
         if ($this->userModel->exists('nip', $data['nip'], $userId)) {
             $this->jsonResponse(['success' => false, 'message' => 'NIP sudah terdaftar']);
+            return;
+        }
+
+        // Validasi duplikasi email jika diisi
+        if (!empty($data['email']) && $this->userModel->exists('email', $data['email'], $userId)) {
+            $this->jsonResponse(['success' => false, 'message' => 'Email sudah digunakan']);
             return;
         }
         
@@ -2316,6 +2329,112 @@ class UserController extends Controller {
             $this->jsonResponse(['success' => false, 'message' => implode('; ', $errors)]);
         } else {
             $this->jsonResponse(['success' => true, 'message' => 'Seluruh kuota tahunan berhasil diupdate']);
+        }
+    }
+
+    /**
+     * Update user's email
+     */
+    public function updateUserEmail() {
+        requireLogin();
+        
+        // Only non-admin users can update their own email
+        if ($_SESSION['user_type'] == 'admin') {
+            $this->jsonResponse([
+                'success' => false,
+                'message' => 'Admin tidak dapat mengubah email melalui fitur ini'
+            ]);
+            return;
+        }
+        
+        $userId = $_SESSION['user_id'];
+        $newEmail = trim(cleanInput($_POST['email'] ?? ''));
+        
+        // Validation
+        if (empty($newEmail)) {
+            $this->jsonResponse([
+                'success' => false,
+                'message' => 'Email tidak boleh kosong'
+            ]);
+            return;
+        }
+        
+        // Validate email format
+        if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
+            $this->jsonResponse([
+                'success' => false,
+                'message' => 'Format email tidak valid'
+            ]);
+            return;
+        }
+        
+        // Check if email already exists (excluding current user)
+        $db = Database::getInstance();
+        $existingEmail = $db->fetch(
+            "SELECT id FROM users WHERE email = ? AND id != ?",
+            [$newEmail, $userId]
+        );
+        
+        if ($existingEmail) {
+            $this->jsonResponse([
+                'success' => false,
+                'message' => 'Email sudah digunakan oleh pengguna lain'
+            ]);
+            return;
+        }
+        
+        // Update email
+        $result = $this->userModel->update($userId, ['email' => $newEmail]);
+        
+        if ($result) {
+            // Update session email
+            $_SESSION['email'] = $newEmail;
+            
+            $this->jsonResponse([
+                'success' => true,
+                'message' => 'Email berhasil diperbarui'
+            ]);
+        } else {
+            $this->jsonResponse([
+                'success' => false,
+                'message' => 'Gagal memperbarui email. Silakan coba lagi.'
+            ]);
+        }
+    }
+
+    /**
+     * Delete user's email
+     */
+    public function deleteUserEmail() {
+        requireLogin();
+        
+        // Only non-admin users can delete their own email
+        if ($_SESSION['user_type'] == 'admin') {
+            $this->jsonResponse([
+                'success' => false,
+                'message' => 'Admin tidak dapat menghapus email melalui fitur ini'
+            ]);
+            return;
+        }
+        
+        $userId = $_SESSION['user_id'];
+        
+        // Delete email by setting it to NULL
+        $result = $this->userModel->update($userId, ['email' => null]);
+        
+        if ($result) {
+            // Update session email
+            $_SESSION['email'] = null;
+            
+            $this->jsonResponse([
+                'success' => true,
+                'message' => 'Email berhasil dihapus'
+            ]);
+        } else {
+            $this->jsonResponse([
+                'success' => false,
+                'message' => 'Gagal menghapus email. Silakan coba lagi.'
+            ]);
         }
     }
 

@@ -1,7 +1,7 @@
 <?php
 class User extends BaseModel {
     protected $table = 'users';
-    protected $fillable = ['username', 'password', 'nama', 'nip', 'jabatan', 'golongan', 'tanggal_masuk', 'unit_kerja', 'atasan', 'user_type', 'is_deleted', 'deleted_at', 'is_modified', 'last_modified_at', 'failed_login_attempts', 'lock_until'];
+    protected $fillable = ['username', 'password', 'nama', 'nip', 'email', 'jabatan', 'golongan', 'tanggal_masuk', 'unit_kerja', 'atasan', 'user_type', 'is_deleted', 'deleted_at', 'is_modified', 'last_modified_at', 'failed_login_attempts', 'lock_until'];
     
     public function findByUsername($username) {
         return $this->db->fetch("SELECT * FROM {$this->table} WHERE username = ?", [$username]);

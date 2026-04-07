@@ -104,9 +104,7 @@ input[type="password"]::-o-reveal-button {
                         <small class="text-muted">Kosongkan jika tidak ingin mengubah password.</small>
                     <?php endif; ?>
                 </div>
-            </div>
-            
-            <div class="row">
+                
                 <div class="col-md-6 mb-3">
                     <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="nama" name="nama" value="<?php echo $user ? $user['nama'] : ''; ?>" required>
@@ -124,20 +122,22 @@ input[type="password"]::-o-reveal-button {
                         </div>
                     <?php endif; ?>
                 </div>
-            </div>
-            
-            <div class="row">
+                
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="<?php echo $user ? $user['email'] : ''; ?>">
+                </div>
+                
                 <div class="col-md-6 mb-3">
                     <label for="jabatan" class="form-label">Jabatan <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="jabatan" name="jabatan" value="<?php echo $user ? $user['jabatan'] : ''; ?>" required>
                 </div>
+                
                 <div class="col-md-6 mb-3">
                     <label for="golongan" class="form-label">Golongan <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="golongan" name="golongan" value="<?php echo $user ? $user['golongan'] : ''; ?>" required>
                 </div>
-            </div>
-            
-            <div class="row">
+                
                 <div class="col-md-6 mb-3">
                     <label for="unit_kerja" class="form-label">Unit Kerja <span class="text-danger">*</span></label>
                     <?php 
@@ -152,6 +152,7 @@ input[type="password"]::-o-reveal-button {
                         <?php endforeach; ?>
                     </select>
                 </div>
+                
                 <div class="col-md-6 mb-3">
                     <label for="atasan" class="form-label">Atasan</label>
                     <select class="form-control" id="atasan" name="atasan">
@@ -166,9 +167,7 @@ input[type="password"]::-o-reveal-button {
                         <?php endif; ?>
                     </select>
                 </div>
-            </div>
-            
-            <div class="row">
+                
                 <div class="col-md-6 mb-3">
                     <label for="user_type" class="form-label">Tipe User <span class="text-danger">*</span></label>
                     <select class="form-control" id="user_type" name="user_type" required>
@@ -178,10 +177,8 @@ input[type="password"]::-o-reveal-button {
                         <option value="atasan" <?php echo ($user && $user['user_type'] == 'atasan') ? 'selected' : ''; ?>>Atasan</option>
                     </select>
                 </div>
-            </div>
-            
-            <?php if ($action == 'edit'): ?>
-            <div class="row">
+                
+                <?php if ($action == 'edit'): ?>
                 <div class="col-md-6 mb-3">
                     <label for="user_status" class="form-label">Status Akun <span class="text-danger">*</span></label>
                     <select class="form-control" id="user_status" name="user_status" required>
@@ -190,8 +187,8 @@ input[type="password"]::-o-reveal-button {
                     </select>
                     <small class="text-muted">Status "Non-Aktif" akan mencegah user untuk login ke sistem</small>
                 </div>
+                <?php endif; ?>
             </div>
-            <?php endif; ?>
             
             <div class="row">
                 <div class="col-md-12 text-end">
@@ -827,6 +824,20 @@ $(document).ready(function() {
                 isValid = false;
             }
         }
+        
+        // Validasi email jika diisi
+        const email = $('#email').val().trim();
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            $('#email').addClass('is-invalid');
+            if (!$('#email').next('.invalid-feedback').length) {
+                $('#email').after('<div class="invalid-feedback">Format email tidak valid</div>');
+            }
+            isValid = false;
+        } else {
+            $('#email').removeClass('is-invalid');
+            $('#email').next('.invalid-feedback').remove();
+        }
+        
         if (!isValid) {
             let errorMessage = 'Mohon lengkapi semua field yang wajib diisi';
             if ($('#password').hasClass('is-invalid')) {
@@ -976,6 +987,20 @@ $(document).ready(function() {
             if (!$(this).next('.invalid-feedback').length) {
                 $(this).after('<div class="invalid-feedback">NIP hanya boleh berisi angka</div>');
             }
+        }
+    });
+    
+    // Real-time validation for email
+    $('#email').on('blur', function() {
+        const email = $(this).val().trim();
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            $(this).addClass('is-invalid');
+            if (!$(this).next('.invalid-feedback').length) {
+                $(this).after('<div class="invalid-feedback">Format email tidak valid</div>');
+            }
+        } else {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').remove();
         }
     });
 
