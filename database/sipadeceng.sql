@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 07, 2026 at 12:11 AM
+-- Generation Time: Apr 08, 2026 at 02:50 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,7 +38,7 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id_admin`, `nama_admin`) VALUES
 (1, 'Admin'),
-(2, 'Alif Cukurukuk');
+(6, 'Fikri');
 
 -- --------------------------------------------------------
 
@@ -828,7 +828,7 @@ INSERT INTO `kuota_cuti_sakit` (`id`, `user_id`, `leave_type_id`, `tahun`, `kuot
 (304, 114, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-02-03 01:45:50'),
 (305, 115, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-02-03 01:45:50'),
 (306, 116, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-02-03 01:45:50'),
-(307, 117, 3, 2026, 14, 12, NULL, '2026-02-03 01:45:50', '2026-04-06 13:06:48'),
+(307, 117, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-04-08 00:35:54'),
 (308, 118, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-02-03 01:45:50'),
 (309, 119, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-02-03 01:45:50'),
 (310, 120, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-02-03 01:45:50'),
@@ -854,7 +854,7 @@ INSERT INTO `kuota_cuti_sakit` (`id`, `user_id`, `leave_type_id`, `tahun`, `kuot
 (330, 140, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-02-03 01:45:50'),
 (331, 141, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-02-03 01:45:50'),
 (332, 142, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-02-03 01:45:50'),
-(333, 143, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-04-06 13:12:12'),
+(333, 143, 3, 2026, 14, 14, NULL, '2026-02-03 01:45:50', '2026-04-08 00:36:56'),
 (335, 149, 3, 2026, 14, 14, NULL, '2026-04-06 09:28:07', '2026-04-06 09:28:07');
 
 -- --------------------------------------------------------
@@ -989,7 +989,7 @@ INSERT INTO `leave_balances` (`id`, `user_id`, `tahun`, `kuota_tahunan`, `sisa_k
 (420, 114, '2025', 12, 6),
 (423, 115, '2025', 12, 6),
 (426, 116, '2025', 12, 6),
-(429, 117, '2025', 12, 4),
+(429, 117, '2025', 12, 6),
 (432, 118, '2025', 12, 6),
 (435, 119, '2025', 12, 6),
 (438, 120, '2025', 12, 6),
@@ -1015,7 +1015,7 @@ INSERT INTO `leave_balances` (`id`, `user_id`, `tahun`, `kuota_tahunan`, `sisa_k
 (498, 140, '2025', 12, 6),
 (501, 141, '2025', 12, 6),
 (504, 142, '2025', 12, 6),
-(507, 143, '2025', 6, 5),
+(507, 143, '2025', 6, 6),
 (511, 3, '2024', 12, 0),
 (513, 4, '2024', 12, 0),
 (515, 5, '2024', 12, 0),
@@ -1559,15 +1559,15 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `nama`, `nip`, `email`, `jabatan`, `golongan`, `unit_kerja`, `tanggal_masuk`, `atasan`, `user_type`, `is_deleted`, `deleted_at`, `is_modified`, `last_modified_at`, `failed_login_attempts`, `lock_until`, `created_at`, `updated_at`) VALUES
-(1, 'admin_pta', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin', '-', NULL, 'Admin', '-', 1, '1986-03-01', NULL, 'admin', 0, NULL, 0, NULL, 0, NULL, '2025-06-05 02:30:25', '2026-04-06 14:00:19'),
-(3, 'pa_makassar', '$2y$10$iogrdZxHCKZ660ZbJtZINO7zisFbZucrvGB5BH.8zCBi1H.11zOo.', 'Dr. Hj. Hasnaya H. Abd. Rasyid, M.H.', '196712121993032006', NULL, 'Ketua Pengadilan Agama', 'IV/d', 2, '1993-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:28', '2026-03-11 05:55:48'),
+(1, 'admin_pta', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin', '-', NULL, 'Admin', '-', 1, '1986-03-01', NULL, 'admin', 0, NULL, 0, NULL, 0, NULL, '2025-06-05 02:30:25', '2026-04-08 00:49:08'),
+(3, 'pa_makassar', '$2y$10$iogrdZxHCKZ660ZbJtZINO7zisFbZucrvGB5BH.8zCBi1H.11zOo.', 'Dr. Hj. Hasnaya H. Abd. Rasyid, M.H.', '196712121993032006', NULL, 'Ketua Pengadilan Agama', 'IV/d', 2, '1993-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:28', '2026-04-07 07:02:42'),
 (4, 'pa_sengkang', '$2y$10$01LKaFiir2WztHlr8zFYR.LVLKHpIUsOy3XTayjThJZVkOy6kwPba', 'Dra. Heriyah, S.H., M.H.', '196712311993032018', NULL, 'Ketua Pengadilan Agama', 'IV/d', 3, '1993-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:28', '2026-03-11 05:55:48'),
 (5, 'pa_watampone', '$2y$10$lRhVQFe7J0/89adUmi6BvurQtIL/oSyhRn4br3xMCNsiwhhPdQt7W', 'Dra. Hj. Nurlinah. K, S.H., M.H.', '196712311994032020', NULL, 'Ketua Pengadilan Agama', 'IV/d', 4, '1994-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:29', '2026-03-11 05:55:48'),
 (6, 'pa_watansoppeng', '$2y$10$J5HKnwlA.FDe0kEtkQtv/ekfamwKKWhQsL2iKRXblxwmqgVjzFqla', 'Drs. H. Mursidin, M.H.', '196612311994031059', NULL, 'Ketua Pengadilan Agama', 'IV/d', 5, '1994-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:29', '2026-03-11 05:55:48'),
 (7, 'pa_pinrang', '$2y$10$SQ8xty8mgdixcxg60Lg4bOMefsCR/YiO22qsyapHp5/bZADBkXnQG', 'Hadrawati, S.Ag., M.HI.', '197301311998022003', NULL, 'Ketua Pengadilan Agama', 'IV/c', 6, '1998-02-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:29', '2026-04-06 14:05:02'),
 (8, 'pa_sungguminasa', '$2y$10$k8mGnsiok2Qyv42ey3r9Lel1R15iAr.c3ZpM16QiFtvhp736BXvoK', 'Abdul Rahman Salam, S.Ag., M.H.', '197302121999031001', NULL, 'Ketua Pengadilan Agama', 'IV/c', 7, '1999-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:29', '2026-03-11 05:55:48'),
 (9, 'pa_maros', '$2y$10$tc632MgIdtjHOPYE/lrABOMcCldF4FeDrBpE5xyXR5OjL8h2aogQa', 'A. Muh Yusri Patawari, S.H.I., M.H.', '198001262007041001', NULL, 'Ketua Pengadilan Agama', 'IV/b', 8, '2007-04-01', 1, 'pegawai', 0, NULL, 0, '2025-07-31 00:56:08', 0, NULL, '2025-07-07 05:31:29', '2026-04-06 14:04:21'),
-(10, 'pa_bulukumba', '$2y$10$ZqQgiaYE9abSIypzqF0BZuJOvE0VWxE50hgMjSASC951EM0qI94Qa', 'Laila Syahidan, S.Ag.M.H.', '197410172006042002', NULL, 'Ketua Pengadilan Agama', 'IV/b', 9, '2006-04-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:29', '2026-03-11 05:55:48'),
+(10, 'pa_bulukumba', '$2y$10$ZqQgiaYE9abSIypzqF0BZuJOvE0VWxE50hgMjSASC951EM0qI94Qa', 'Laila Syahidan, S.Ag.M.H.', '197410172006042002', NULL, 'Ketua Pengadilan Agama', 'IV/b', 9, '2006-04-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:29', '2026-04-07 06:44:00'),
 (11, 'pa_palopo', '$2y$10$SnitJICYCMZqxOGnsugYFuwVBDTGWD/BWCoaiIgHe.AJRj2.c7nae', 'Tommi, S.H.I.', '197905172006041005', NULL, 'Ketua Pengadilan Agama', 'IV/b', 10, '2006-04-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:29', '2026-03-11 05:55:48'),
 (12, 'pa_sidrap', '$2y$10$S/AZ0GK13xLtoNLbfRudCeMPJogHGkhvQ7W4H0rPUbicUkbx0OyCO', 'Andi Muhammad Yusuf Bakri, S.H.I., M.H.', '197908062005021001', NULL, 'Ketua Pengadilan Agama', 'IV/b', 11, '2005-02-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:29', '2026-03-11 05:55:48'),
 (13, 'pa_jeneponto', '$2y$10$3MXHRjqznU6IsmGXNnri9uQpNoVJbqZsNYpNXCi6E69RqMZlyoKlm', 'Fadilah, S.Ag., M.H.', '197408212002122001', NULL, 'Ketua Pengadilan Agama', 'IV/b', 12, '2002-12-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:30', '2026-03-11 05:55:48'),
@@ -1583,7 +1583,7 @@ INSERT INTO `users` (`id`, `username`, `password`, `nama`, `nip`, `email`, `jaba
 (23, 'pa_enrekang', '$2y$10$w4B7vrwgrRqltG38aNNbAu2PE10HnvFmytFMybs5L66sFvud1laTq', 'Dr Amin Bahroni, S.H.I., M.H.', '197705152007041001', NULL, 'Ketua Pengadilan Agama', 'IV/a', 22, '2007-04-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:31', '2026-03-11 05:55:48'),
 (24, 'pa_masamba', '$2y$10$eB/qYTeED8AdCmfB58M5cOZmfXQ/h8TA3J6z7zJbwRCsihpVyfmjO', 'Nirwana, S.H.I., M.H.', '198212012008052001', NULL, 'Ketua Pengadilan Agama', 'IV/a', 23, '2008-05-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:31', '2026-03-11 05:55:48'),
 (25, 'pa_malili', '$2y$10$b1jDQnGMeUMCO28w2tNOke5p/psg9soX2Eg9MqjzCIFqAXxhuTtZy', 'Rajiman, S.H.I., M.H.', '198210102007041001', NULL, 'Ketua Pengadilan Agama', 'IV/a', 24, '2007-04-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-07-07 05:31:31', '2026-03-11 05:55:48'),
-(27, '195901311990031001', '$2y$10$VHfHOB1Wu7L9usGO622kiOye7RjN/ulx8AklLY8Ja5boAQkvBICxC', 'Drs. Muhammad Alwi, M.H.', '195901311990031001', NULL, 'Wakil Ketua', 'IV/e', 1, '1990-03-01', 1, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:15', '2026-03-11 06:44:13'),
+(27, '195901311990031001', '$2y$10$VHfHOB1Wu7L9usGO622kiOye7RjN/ulx8AklLY8Ja5boAQkvBICxC', 'Drs. Muhammad Alwi, M.H.', '195901311990031001', NULL, 'Wakil Ketua', 'IV/e', 1, '1990-03-01', 1, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:15', '2026-04-08 00:49:26'),
 (28, '196012311987031054', '$2y$10$bL6To7pg2XhjCfmqJ6FeeeDb8oatemHxIUXvB1kY/SpnxDPPGJ.kG', 'Drs. Iskandar, S.H.', '196012311987031054', NULL, 'Hakim Tinggi', 'IV/e', 1, '1987-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:15', '2026-03-11 05:16:19'),
 (29, '196303101992032008', '$2y$10$z0mW4pNfO4jWXqXr6ZbSJuq6O6lFSQ9hhHDCm0YHr1gjf9dX6iVyy', 'Dra. Dzakiyyah, M.H.', '196303101992032008', NULL, 'Hakim Tinggi', 'IV/e', 1, '1992-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:15', '2026-03-11 05:16:19'),
 (30, '196504201993031002', '$2y$10$MOyvYFeA8ThwZpARZL90X.9s5mhspW8LfoOi5ngJa1.Ug0EDwzea2', 'Drs Samarul Falah, M.H.', '196504201993031002', NULL, 'Hakim Tinggi', 'IV/e', 1, '1993-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:15', '2026-03-11 05:16:19'),
@@ -1595,13 +1595,13 @@ INSERT INTO `users` (`id`, `username`, `password`, `nama`, `nip`, `email`, `jaba
 (36, '195907311982031001', '$2y$10$TAoGggcxCs0h0Woj/5vD1OEFdT27NK9rNTDChMOXIKLFlJfhke67K', 'Drs. M. Anas Malik, S.H., M.H.', '195907311982031001', NULL, 'Hakim Tinggi', 'IV/e', 1, '1982-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:16', '2026-03-11 05:16:19'),
 (37, '195812311984032004', '$2y$10$gEMnh/eYT58yS0vPseuv8.0J33Jd4MjsGfoHYSzGBpaAkRFSBPGfG', 'Dra. Kamariah, S.H., M.H.', '195812311984032004', NULL, 'Hakim Tinggi', 'IV/e', 1, '1984-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:16', '2026-03-11 05:16:19'),
 (38, '196012311983031049', '$2y$10$xce94gS.geh9lIjsH0p.FO4JJ.n5DlcVstjqGJsNzNEpWTHGMXa/a', 'Drs Mahmud, S.H., M.H.', '196012311983031049', NULL, 'Hakim Tinggi', 'IV/e', 1, '1983-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:16', '2026-03-11 05:16:19'),
-(39, '195912311988031025', '$2y$10$Lmuq9U3mLVoqFgjSrIAvfuIzWeI4P4Ur8FMgvtAt4f02C8SfTmXgi', 'Drs. Hasbi, M.H.', '195912311988031025', NULL, 'Hakim Tinggi', 'IV/e', 1, '1988-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:16', '2026-03-11 05:16:19'),
+(39, '195912311988031025', '$2y$10$Lmuq9U3mLVoqFgjSrIAvfuIzWeI4P4Ur8FMgvtAt4f02C8SfTmXgi', 'Drs. Hasbi, M.H.', '195912311988031025', NULL, 'Hakim Tinggi', 'IV/e', 1, '1988-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:16', '2026-04-08 00:45:46'),
 (40, '196303171992032002', '$2y$10$lyYTFmJqGNpEt3fEX.8YBO3n8Fl/4dYTmNbOVEs7B/IU9OFcDloNO', 'Dra. Martina Budiana Mulya, M.H.', '196303171992032002', NULL, 'Hakim Tinggi', 'IV/d', 1, '1992-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:17', '2026-03-11 05:16:19'),
 (41, '196408201993032002', '$2y$10$7.RRoNQJNFydMcuEbAg7De2xkKdZRI5Wq0oRqQMdiXqbhU5G07y2.', 'Dra. Fatmah Abujahja', '196408201993032002', NULL, 'Hakim Tinggi', 'IV/d', 1, '1993-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:17', '2026-03-11 05:16:19'),
 (42, '196812291994031005', '$2y$10$BTBj4Pky149Rme5GfZkqWudbQG56EDNAo/cWJwfz.t1bpslVCE.yy', 'Drs Gunawan, M.H.', '196812291994031005', NULL, 'Hakim Tinggi', 'IV/d', 1, '1994-03-01', 1, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:17', '2026-03-11 05:16:19'),
 (43, '196410041994031004', '$2y$10$nKWL/M9LagsNBqFfYGv9..SLZ6xzzsq4/ltYEEGE4BoezQsVsv.My', 'Dr Hasanuddin, S.H., M.H.', '196410041994031004', NULL, 'Panitera', 'IV/c', 1, '1994-03-01', 1, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:17', '2026-03-11 05:16:19'),
-(44, '197011021997031001', '$2y$10$ahM0pWljctGFnWs9NjEyluh2TYGa7WVXXcekbFTO3AlyRkhloZiT.', 'Dr. Abdul Mutalip, S.Ag., S.H., M.H.', '197011021997031001', NULL, 'Sekretaris', 'IV/c', 1, '1997-03-01', 1, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:17', '2026-04-06 13:47:47'),
-(45, '197803091998031002', '$2y$10$rq306H9kJbrdPBXJb8HX7u.upVU61998uvux1Zsr18/n2CvmJESaS', 'Dr. Muhammad Busyaeri, S.H., M.H.', '197803091998031002', NULL, 'Kepala Bagian Perencanaan dan Kepegawaian', 'IV/b', 1, '1998-03-01', 4, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:17', '2026-04-06 13:58:46'),
+(44, '197011021997031001', '$2y$10$ahM0pWljctGFnWs9NjEyluh2TYGa7WVXXcekbFTO3AlyRkhloZiT.', 'Dr. Abdul Mutalip, S.Ag., S.H., M.H.', '197011021997031001', NULL, 'Sekretaris', 'IV/c', 1, '1997-03-01', 1, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:17', '2026-04-08 00:34:31'),
+(45, '197803091998031002', '$2y$10$rq306H9kJbrdPBXJb8HX7u.upVU61998uvux1Zsr18/n2CvmJESaS', 'Dr. Muhammad Busyaeri, S.H., M.H.', '197803091998031002', NULL, 'Kepala Bagian Perencanaan dan Kepegawaian', 'IV/b', 1, '1998-03-01', 4, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:17', '2026-04-08 00:34:08'),
 (46, '196907162003121003', '$2y$10$su1lEwQipDX/P.pshMxukuDEAzoDM.Hjqdqoxg/qomnCb95EWIoou', 'Drs. Muhammad Amin, M.A.', '196907162003121003', NULL, 'Kepala Bagian Umum dan Keuangan', 'IV/b', 1, '2003-12-01', 4, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:17', '2026-03-11 06:38:02'),
 (47, '197211101998022002', '$2y$10$Nhy47eJX2nJj4IJ9bcy1huAUs7C2UGDc2pUKSwtzzNmhEwMGNGiNO', 'Nurbaya, S.Ag., M.H.I.', '197211101998022002', NULL, 'Panitera Muda Hukum', 'IV/a', 1, '1998-02-01', 3, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:17', '2026-03-11 05:16:19'),
 (48, '196512081993031007', '$2y$10$Bmfv9H3CjlJiupgogVFMOOZW6pKABnsB0g/0/mGEyTzRQM8IHgdJG', 'Hasbi, S.H., M.H.', '196512081993031007', NULL, 'Panitera Muda Banding', 'IV/a', 1, '1993-03-01', 3, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:18', '2026-03-11 05:16:19'),
@@ -1673,7 +1673,7 @@ INSERT INTO `users` (`id`, `username`, `password`, `nama`, `nip`, `email`, `jaba
 (114, '198508092010012027', '$2y$10$8HtIdZ4/sK68ws8VdjZw9eZBy5TdS8SeZcIjIfC1hFdVTK.kWkhju', 'Nur Haerani, S.H.', '198508092010012027', NULL, 'Klerek - Analis Perkara Peradilan, Panitera Muda Banding', 'III/d', 1, '2010-01-01', 8, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:26', '2026-03-11 05:16:19'),
 (115, '198712152011012020', '$2y$10$l514yV711xHgiFulzSeraeadu26usOelNMgBUizYqTg2D/ov9ubhe', 'Mawar Putri, S.E.M.Si.,AK', '198712152011012020', NULL, 'Pranata Keuangan APBN Penyelia, Sekretaris', 'III/d', 1, '2011-01-01', 4, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:26', '2026-03-11 05:16:19'),
 (116, '198210152009121001', '$2y$10$EZ4GfsDe7RSyuWpvHG0WIeC0sxD8yd1kT0zzQQl3tQNM8F9KG633O', 'A. Maradona, S.H.I.', '198210152009121001', NULL, 'Analis Pengelolaan Keuangan APBN Ahli Muda, Sekretaris', 'III/d', 1, '2009-12-01', 4, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:26', '2026-03-11 05:16:19'),
-(117, '198109082011011007', '$2y$10$FLclN0nrtQgBpNSB60x4YuAHW9tqOgztwZMcl.dYh3a25CoWMAoYK', 'Darias, S.Kom.', '198109082011011007', NULL, 'Kepala Subbagian, Subbagian Kepegawaian dan Teknologi Informasi', 'III/d', 1, '2011-01-01', 5, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:26', '2026-04-06 13:59:24'),
+(117, '198109082011011007', '$2y$10$FLclN0nrtQgBpNSB60x4YuAHW9tqOgztwZMcl.dYh3a25CoWMAoYK', 'Darias, S.Kom.', '198109082011011007', NULL, 'Kepala Subbagian, Subbagian Kepegawaian dan Teknologi Informasi', 'III/d', 1, '2011-01-01', 5, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:26', '2026-04-08 00:48:51'),
 (118, '198501142015042001', '$2y$10$OH1LAm3gRwDGpoDJAnbEou03YM4lmXYu11mP.TxySGiidXdhwohtG', 'Nur Hikmah, S.H.', '198501142015042001', NULL, 'Klerek - Analis Perkara Peradilan, Panitera Muda Banding', 'III/c', 1, '2015-04-01', 8, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:27', '2026-03-11 05:16:19'),
 (119, '197612122011012005', '$2y$10$AuFKdy8aUxVoCBsK9xfoeOIMVQmUWu7hxKbqSNvDEn7gb7dcNa0rO', 'Husnaeni, S.H.I., M.H.', '197612122011012005', NULL, 'Analis Sumber Daya Manusia Aparatur Ahli Muda, Sekretaris', 'III/c', 1, '2011-01-01', 4, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:27', '2026-03-11 05:16:19'),
 (120, '198412132008052001', '$2y$10$fpdIaqd5js8eZH51VEoLGevH4aixUu.kTLOo4/QTr4JmCWSMF6pHW', 'Nur Rahma Baharuddin, S.SI.', '198412132008052001', NULL, 'Analis Sumber Daya Manusia Aparatur Ahli Muda, Subbagian Kepegawaian dan Teknologi Informasi', 'III/c', 1, '2008-05-01', 10, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:27', '2026-03-11 05:16:19'),
@@ -1699,9 +1699,9 @@ INSERT INTO `users` (`id`, `username`, `password`, `nama`, `nip`, `email`, `jaba
 (140, '199908062022031005', '$2y$10$2tQlFqEiy2xCX8QbbQa8T.QbTGTStVYxc2sUzZazATGFounU4IBOe', 'Sinang Mahatma Dhewa, A.Md.Bns', '199908062022031005', NULL, 'Klerek - Pengolah Data dan Informasi, Subbagian Keuangan dan Pelaporan', 'II/c', 1, '2022-03-01', 12, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:29', '2026-04-06 03:05:33'),
 (141, '198011152023211008', '$2y$10$wfKKqaP1FRB3xpTARfRQ4eantFPD2a2CLHStJJWg1dkhzfKmoTZ7S', 'Ahmad Ridha, S.E.', '198011152023211008', NULL, 'Arsiparis Ahli Pertama, Sekretaris', 'IX', 1, '1900-01-01', 4, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:30', '2026-03-11 05:16:19'),
 (142, '199609212023212031', '$2y$10$FiLxPcjQQC8OuHkI37DrwOBA6M6kbat98n.Wa/UNNL2i5YuL.3c2a', 'Satriani Har, S.M.', '199609212023212031', NULL, 'Perencana Ahli Pertama, Sekretaris', 'IX', 1, '1900-01-01', 4, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-19 05:17:30', '2026-03-11 05:16:19'),
-(143, 'tester', '$2y$10$vJqv49x499/M/DnbtSZEIuHO3oSyejzEwUHjdpdqM1M9h89M2XlWy', 'Alif Qadri', '200305282024082008', NULL, 'Akun Test, Subbagian Kepegawaian dan Teknologi Informasi', 'III/b', 1, '2024-08-01', 10, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-20 00:20:33', '2026-04-06 13:59:40'),
-(146, '195912311986031038', '$2y$10$pSjrug.DXCGrzvJ0Vsfr4OnyAEycLdbcsNl3hZyP.zpPNbka6Xc2O', 'Dr. Drs. Khaeril  R, M.H.', '195912311986031038', NULL, 'Ketua', 'IV/e', 1, '1986-03-01', NULL, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2026-01-16 09:57:30', '2026-04-06 13:48:08'),
-(149, 'fikri', '$2y$10$BrmoiKV9E3nsx/cy.zsOluNz3L32rzHK4voXyjZpi8ZrnSkXjpLVi', 'Fikri', '200505052024041001', NULL, 'Akun Test, Panitera Muda Hukum', 'III/d', 1, '2024-04-01', 7, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2026-04-06 09:28:07', '2026-04-06 09:28:07');
+(143, 'tester', '$2y$10$vJqv49x499/M/DnbtSZEIuHO3oSyejzEwUHjdpdqM1M9h89M2XlWy', 'Alif Qadri', '200305282024082008', NULL, 'Akun Test, Subbagian Kepegawaian dan Teknologi Informasi', 'III/b', 1, '2024-08-01', 10, 'pegawai', 0, NULL, 0, NULL, 0, NULL, '2025-08-20 00:20:33', '2026-04-08 00:46:08'),
+(146, '195912311986031038', '$2y$10$pSjrug.DXCGrzvJ0Vsfr4OnyAEycLdbcsNl3hZyP.zpPNbka6Xc2O', 'Dr. Drs. Khaeril  R, M.H.', '195912311986031038', NULL, 'Ketua', 'IV/e', 1, '1986-03-01', NULL, 'atasan', 0, NULL, 0, NULL, 0, NULL, '2026-01-16 09:57:30', '2026-04-08 00:34:52'),
+(149, 'fikri', '$2y$10$BrmoiKV9E3nsx/cy.zsOluNz3L32rzHK4voXyjZpi8ZrnSkXjpLVi', 'Fikri', '200505052024041001', NULL, 'Akun Test, Panitera Muda Hukum', 'III/d', 1, '2024-04-01', 7, 'admin', 0, NULL, 0, NULL, 0, NULL, '2026-04-06 09:28:07', '2026-04-07 08:34:20');
 
 --
 -- Triggers `users`
@@ -2027,7 +2027,10 @@ INSERT INTO `user_snapshots` (`id`, `original_user_id`, `username`, `nama`, `nip
 (125, 143, 'tester', 'Alif Cukurukuk', '200305282024081008', 'Akun Test, Subbagian Kepegawaian dan Teknologi Informasi', 'III/b', '2024-08-01', 1, NULL, 'admin', 'modified', '2026-04-05 02:53:38', 'User data modified'),
 (126, 143, 'tester', 'Alif Cukurukuk', '200305282024081008', 'Hakim Tinggi', 'III/b', '2024-08-01', 1, 1, 'pegawai', 'modified', '2026-04-06 02:17:38', 'User data modified'),
 (127, 143, 'tester', 'Alif Cukurukuk', '200305282024082008', 'Hakim Tinggi', 'III/b', '2024-08-01', 1, 1, 'pegawai', 'modified', '2026-04-06 07:49:55', 'User data modified'),
-(131, 143, 'tester', 'Alif Cukurukuk', '200305282024082008', 'Akun Test, Subbagian Kepegawaian dan Teknologi Informasi', 'III/b', '2024-08-01', 1, 10, 'pegawai', 'modified', '2026-04-06 13:10:40', 'User data modified');
+(131, 143, 'tester', 'Alif Cukurukuk', '200305282024082008', 'Akun Test, Subbagian Kepegawaian dan Teknologi Informasi', 'III/b', '2024-08-01', 1, 10, 'pegawai', 'modified', '2026-04-06 13:10:40', 'User data modified'),
+(132, 143, 'tester', 'Alif Qadri', '200305282024082008', 'Akun Test, Subbagian Kepegawaian dan Teknologi Informasi', 'III/b', '2024-08-01', 1, 10, 'pegawai', 'modified', '2026-04-07 06:59:30', 'User data modified'),
+(133, 143, 'tester', 'Alif Qadri', '200305282024082008', 'Akun Test, Subbagian Kepegawaian dan Teknologi Informasi', 'III/b', '2024-08-01', 1, 10, 'pegawai', 'modified', '2026-04-07 06:59:46', 'User data modified'),
+(134, 3, 'pa_makassar', 'Dr. Hj. Hasnaya H. Abd. Rasyid, M.H.', '196712121993032006', 'Ketua Pengadilan Agama', 'IV/d', '1993-03-01', 2, 1, 'pegawai', 'modified', '2026-04-07 07:02:20', 'User data modified');
 
 -- --------------------------------------------------------
 
@@ -2267,13 +2270,13 @@ ALTER TABLE `user_snapshots`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `admin_activities`
 --
 ALTER TABLE `admin_activities`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `alasan_cuti`
@@ -2339,13 +2342,13 @@ ALTER TABLE `leave_balances`
 -- AUTO_INCREMENT for table `leave_documents`
 --
 ALTER TABLE `leave_documents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=467;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=488;
 
 --
 -- AUTO_INCREMENT for table `leave_requests`
 --
 ALTER TABLE `leave_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `leave_types`
@@ -2363,7 +2366,7 @@ ALTER TABLE `migration_logs`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
 
 --
 -- AUTO_INCREMENT for table `satker`
@@ -2393,13 +2396,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_signatures`
 --
 ALTER TABLE `user_signatures`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `user_snapshots`
 --
 ALTER TABLE `user_snapshots`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 
 --
 -- Constraints for dumped tables
