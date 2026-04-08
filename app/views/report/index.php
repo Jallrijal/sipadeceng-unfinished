@@ -264,15 +264,19 @@ function laporanBulanan() {
                         // Build table rows
                         let tableRows = '';
                         if (leaveData.length === 0) {
-                            tableRows = '<tr><td colspan="4" class="text-center text-muted">Tidak ada data cuti untuk periode ini</td></tr>';
+                            tableRows = '<tr><td colspan="5" class="text-center text-muted">Tidak ada data cuti untuk periode ini</td></tr>';
                         } else {
                             tableRows = leaveData.map(leave => {
+                                const sisaKuotaHtml = (leave.sisa_kuota !== null && leave.sisa_kuota !== undefined)
+                                    ? `<strong class="text-success">${leave.sisa_kuota} hari</strong>`
+                                    : `<span class="text-muted">-</span>`;
                                 return `
                                     <tr>
                                         <td data-label="Nama Pegawai">${leave.nama || '-'}</td>
+                                        <td data-label="Jenis Cuti">${leave.jenis_cuti || '-'}</td>
                                         <td data-label="Tanggal Mulai">${leave.tanggal_mulai || '-'}</td>
                                         <td data-label="Tanggal Selesai">${leave.tanggal_selesai || '-'}</td>
-                                        <td data-label="Sisa Kuota"><strong class="text-success">${leave.sisa_kuota || 0} hari</strong></td>
+                                        <td data-label="Sisa Kuota">${sisaKuotaHtml}</td>
                                     </tr>
                                 `;
                             }).join('');
@@ -288,6 +292,7 @@ function laporanBulanan() {
                                         <thead class="table-light">
                                             <tr>
                                                 <th>Nama Pegawai</th>
+                                                <th>Jenis Cuti</th>
                                                 <th>Tanggal Mulai</th>
                                                 <th>Tanggal Selesai</th>
                                                 <th>Sisa Kuota</th>

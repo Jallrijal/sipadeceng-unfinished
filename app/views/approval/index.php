@@ -1286,7 +1286,7 @@ $isSpecialRole = $isKasubbag || $isKabag || $isSekretaris || $isKetua;
         // Jika current user adalah atasan, ubah teks dan style menjadi Rekomendasikan kecuali
         // saat ketua melakukan final approval (status awaiting_pimpinan)
         if (typeof window.IS_ATASAN !== 'undefined' && window.IS_ATASAN) {
-            $('#approvalTitle').text('Rekomendasikan Pengajuan Cuti ke Pimpinan');
+            $('#approvalTitle').text('Setujui Pengajuan Cuti');
             $('#catatanRequired').hide();
             $('#submitApproval').removeClass('btn-success btn-danger btn-warning btn-secondary').addClass('btn-primary').text('Setujui');
 

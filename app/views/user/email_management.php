@@ -56,16 +56,10 @@
             e.preventDefault();
 
             const newEmail = $.trim($('#newEmail').val());
-            const confirmEmail = $.trim($('#confirmEmail').val());
 
             // Validation
             if (!newEmail) {
                 showEmailAlert('danger', 'Email tidak boleh kosong');
-                return;
-            }
-
-            if (newEmail !== confirmEmail) {
-                showEmailAlert('danger', 'Email tidak cocok. Silakan periksa kembali.');
                 return;
             }
 
@@ -108,23 +102,34 @@
 
         // Delete email button
         $('#clearEmailBtn').on('click', function () {
-            if (confirm('Yakin ingin menghapus email?')) {
-                $.ajax({
-                    url: baseUrl('user/deleteUserEmail'),
-                    type: 'POST',
-                    success: function (response) {
-                        if (response.success) {
-                            showEmailAlert('success', response.message);
-                            setTimeout(() => location.reload(), 1500);
-                        } else {
-                            showEmailAlert('danger', response.message);
+            Swal.fire({
+                title: 'Hapus Email?',
+                text: "Apakah Anda yakin ingin menghapus email ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: baseUrl('user/deleteUserEmail'),
+                        type: 'POST',
+                        success: function (response) {
+                            if (response.success) {
+                                showEmailAlert('success', response.message);
+                                setTimeout(() => location.reload(), 1500);
+                            } else {
+                                showEmailAlert('danger', response.message);
+                            }
+                        },
+                        error: function () {
+                            showEmailAlert('danger', 'Terjadi kesalahan. Silakan coba lagi.');
                         }
-                    },
-                    error: function () {
-                        showEmailAlert('danger', 'Terjadi kesalahan. Silakan coba lagi.');
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
 
         // Helpers

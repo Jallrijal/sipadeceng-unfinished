@@ -162,7 +162,7 @@
                 <div class="info-box mb-3">
                     <i class="bi bi-info-circle me-2"></i>
                     <small id="dokumenInfo"><strong>Opsional:</strong> Upload dokumen pendukung jika diperlukan (Surat Keterangan Dokter untuk cuti sakit, dll). 
-                    Format: PDF. Max: 5MB</small>
+                    Format: PDF. Max: 3 MB</small>
                 </div>
                 <div class="file-upload-wrapper">
                     <input type="file" id="dokumen_pendukung" name="dokumen_pendukung" 
@@ -526,12 +526,12 @@ $(document).ready(function() {
         const typeId = $('#leave_type_id').val();
         if (typeId == 3 || typeId == 5) { // Cuti Sakit atau Cuti Alasan Penting
             $('#dokumenRequired').show();
-            $('#dokumenInfo').html('<strong>Opsional:</strong> Upload dokumen pendukung jika tersedia (Surat Keterangan Dokter untuk cuti sakit, atau dokumen pendukung lainnya untuk cuti alasan penting). Jika tidak ada, admin akan mengupload nanti. Format: PDF. Max: 5MB');
+            $('#dokumenInfo').html('<strong>Opsional:</strong> Upload dokumen pendukung jika tersedia (Surat Keterangan Dokter untuk cuti sakit, atau dokumen pendukung lainnya untuk cuti alasan penting). Jika tidak mengupload, admin akan mengupload nanti. Format: PDF. Max: 3 MB');
             $('#fileName').text('Klik untuk upload dokumen PDF');
             // Dokumen tidak wajib, admin akan upload jika diperlukan
         } else {
             $('#dokumenRequired').hide();
-            $('#dokumenInfo').html('<strong>Opsional:</strong> Upload dokumen pendukung jika diperlukan. Format: PDF. Max: 5MB');
+            $('#dokumenInfo').html('<strong>Opsional:</strong> Upload dokumen pendukung jika diperlukan. Format: PDF. Max: 3 MB');
             $('#fileName').text('Klik untuk upload dokumen PDF');
             $('#dokumen_pendukung').removeAttr('required');
         }
@@ -1195,7 +1195,7 @@ $(document).ready(function() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Ukuran File Terlalu Besar',
-                    text: 'Ukuran file maksimal 5MB!',
+                    text: 'Ukuran file maksimal 3 MB!',
                     confirmButtonColor: '#1b5e20'
                 });
                 // Reset input file

@@ -462,18 +462,19 @@ class ReportController extends Controller {
             $sqlLeave = "SELECT lr.tanggal_mulai, lr.tanggal_selesai, lr.jumlah_hari, lt.nama_cuti, lr.status FROM leave_requests lr JOIN leave_types lt ON lr.leave_type_id = lt.id WHERE lr.user_id = ? ORDER BY lr.tanggal_mulai DESC";
             $leaveRequests = $db->fetchAll($sqlLeave, [$userId]);
             
-            // Get total sisa_kuota from all years (sum all sisa_kuota for this user)
-            $sqlTotalKuota = "SELECT COALESCE(SUM(sisa_kuota), 0) as total_sisa_kuota FROM leave_balances WHERE user_id = ?";
-            $totalKuotaResult = $db->fetch($sqlTotalKuota, [$userId]);
-            $totalSisaKuota = $totalKuotaResult ? $totalKuotaResult['total_sisa_kuota'] : 0;
+            // Get total current sisa_kuota (this is the actual remaining balance)
+            $sqlTotalSisa = "SELECT COALESCE(SUM(sisa_kuota), 0) as sisa FROM leave_balances WHERE user_id = ?";
+            $totalSisaResult = $db->fetch($sqlTotalSisa, [$userId]);
+            $sisaKuota = $totalSisaResult ? $totalSisaResult['sisa'] : 0;
             
-            // Calculate cuti terpakai from approved leave requests
-            $sqlCutiTerpakai = "SELECT COALESCE(SUM(jumlah_hari), 0) as total_terpakai FROM leave_requests WHERE user_id = ? AND status = 'approved'";
-            $cutiTerpakaiResult = $db->fetch($sqlCutiTerpakai, [$userId]);
+            // Calculate cuti terpakai (Only Cuti Tahunan for the current year)
+            $currentYear = date('Y');
+            $sqlCutiTerpakai = "SELECT COALESCE(SUM(jumlah_hari), 0) as total_terpakai FROM leave_requests WHERE user_id = ? AND status = 'approved' AND leave_type_id = 1 AND YEAR(tanggal_mulai) = ?";
+            $cutiTerpakaiResult = $db->fetch($sqlCutiTerpakai, [$userId, $currentYear]);
             $cutiTerpakai = $cutiTerpakaiResult ? $cutiTerpakaiResult['total_terpakai'] : 0;
             
-            // Calculate sisa_kuota as kuota_tahunan - cuti_terpakai
-            $sisaKuota = $totalSisaKuota - $cutiTerpakai;
+            // Original annual quota is the remaining quota plus what has been taken this year
+            $kuotaTahunan = $sisaKuota + $cutiTerpakai;
             
             $this->jsonResponse([
                 'success' => true,
@@ -481,8 +482,8 @@ class ReportController extends Controller {
                     'nama' => $user['nama'],
                     'nip' => $user['nip'],
                     'leave_requests' => $leaveRequests,
-                    'sisa_kuota' => $sisaKuota,  // Calculated: kuota_tahunan - cuti_terpakai
-                    'kuota_tahunan' => $totalSisaKuota,  // Total sisa kuota dari semua tahun
+                    'sisa_kuota' => $sisaKuota,
+                    'kuota_tahunan' => $kuotaTahunan,
                     'cuti_terpakai' => $cutiTerpakai
                 ]
             ]);
@@ -549,6 +550,46 @@ class ReportController extends Controller {
         }
     }
 
+    /**
+     * Menghitung sisa kuota berdasarkan jenis cuti yang benar.
+     * Setiap jenis cuti punya tabel/logika penyimpanan masing-masing.
+     *
+     * @param int $userId
+     * @param int $leaveTypeId  ID dari tabel leave_types
+     * @return int|null  null jika jenis cuti tidak akumulatif
+     */
+    private function getSisaKuotaByLeaveType($db, $userId, $leaveTypeId) {
+        switch ((int)$leaveTypeId) {
+            case 1: // Cuti Tahunan — leave_balances (3-year window)
+                $currentYear = (int)date('Y');
+                $years = [$currentYear - 2, $currentYear - 1, $currentYear];
+                $total = 0;
+                foreach ($years as $y) {
+                    $row = $db->fetch("SELECT sisa_kuota FROM leave_balances WHERE user_id = ? AND tahun = ?", [$userId, $y]);
+                    $total += $row ? (int)$row['sisa_kuota'] : 0;
+                }
+                return $total;
+
+            case 2: // Cuti Besar — kuota_cuti_besar
+                $row = $db->fetch("SELECT sisa_kuota FROM kuota_cuti_besar WHERE user_id = ? LIMIT 1", [$userId]);
+                return $row ? (int)$row['sisa_kuota'] : 90;
+
+            case 3: // Cuti Sakit — kuota_cuti_sakit (tahun berjalan)
+                $currentYear = (int)date('Y');
+                $row = $db->fetch("SELECT sisa_kuota FROM kuota_cuti_sakit WHERE user_id = ? AND tahun = ?", [$userId, $currentYear]);
+                return $row ? (int)$row['sisa_kuota'] : 0;
+
+            case 6: // Cuti Luar Tanggungan — kuota_cuti_luar_tanggungan
+                $currentYear = (int)date('Y');
+                $row = $db->fetch("SELECT sisa_kuota FROM kuota_cuti_luar_tanggungan WHERE user_id = ? AND tahun = ?", [$userId, $currentYear]);
+                return $row ? (int)$row['sisa_kuota'] : 0;
+
+            default:
+                // Jenis cuti tidak dikenal atau tidak akumulatif
+                return null;
+        }
+    }
+
     public function getMonthlyLeaveReport() {
         requireAdmin();
 
@@ -568,13 +609,18 @@ class ReportController extends Controller {
 
             // Get leave requests for the selected month/year with employee names
             // Filter: status must be 'approved' AND is_completed must be 1
-            $sql = "SELECT DISTINCT
+            $sql = "SELECT
                         u.id,
                         u.nama,
+                        lr.id AS lr_id,
                         lr.tanggal_mulai,
-                        lr.tanggal_selesai
+                        lr.tanggal_selesai,
+                        lr.leave_type_id,
+                        lt.nama_cuti,
+                        lt.is_akumulatif
                     FROM leave_requests lr
                     JOIN users u ON lr.user_id = u.id
+                    JOIN leave_types lt ON lr.leave_type_id = lt.id
                     WHERE ((YEAR(lr.tanggal_mulai) = ? AND MONTH(lr.tanggal_mulai) = ?)
                        OR (YEAR(lr.tanggal_selesai) = ? AND MONTH(lr.tanggal_selesai) = ?))
                     AND lr.status = 'approved'
@@ -584,24 +630,23 @@ class ReportController extends Controller {
             $params = [$year, (int)ltrim($month, '0'), $year, (int)ltrim($month, '0')];
             $results = $db->fetchAll($sql, $params);
 
-            // Remove duplicates and calculate total sisa_kuota for each user
+            // Build result rows, one row per leave request
             $uniqueResults = [];
             foreach ($results as $result) {
-                $key = $result['id'] . '_' . $result['tanggal_mulai'] . '_' . $result['tanggal_selesai'];
+                $key = $result['lr_id'];
                 if (!isset($uniqueResults[$key])) {
-                    // Get total sisa_kuota for this user (sum from all years)
-                    $sqlKuota = "SELECT COALESCE(SUM(sisa_kuota), 0) as total_sisa_kuota 
-                                 FROM leave_balances 
-                                 WHERE user_id = ?";
-                    $kuotaResult = $db->fetch($sqlKuota, [$result['id']]);
-                    $totalSisaKuota = $kuotaResult ? $kuotaResult['total_sisa_kuota'] : 0;
+                    $isAkumulatif = (int)$result['is_akumulatif'];
+                    $sisaKuota = $isAkumulatif
+                        ? $this->getSisaKuotaByLeaveType($db, $result['id'], $result['leave_type_id'])
+                        : null;
 
                     $uniqueResults[$key] = [
-                        'id' => $result['id'],
-                        'nama' => $result['nama'],
-                        'tanggal_mulai' => $result['tanggal_mulai'],
+                        'id'              => $result['id'],
+                        'nama'            => $result['nama'],
+                        'jenis_cuti'      => $result['nama_cuti'],
+                        'tanggal_mulai'   => $result['tanggal_mulai'],
                         'tanggal_selesai' => $result['tanggal_selesai'],
-                        'sisa_kuota' => (int)$totalSisaKuota
+                        'sisa_kuota'      => $sisaKuota,
                     ];
                 }
             }
@@ -648,17 +693,18 @@ class ReportController extends Controller {
             );
 
             // Get quota info
-            $totalSisaKuota = (int)($db->fetch(
+            $currentYear = date('Y');
+            $sisaKuota = (int)($db->fetch(
                 "SELECT COALESCE(SUM(sisa_kuota), 0) as total FROM leave_balances WHERE user_id = ?",
                 [$userId]
             )['total'] ?? 0);
 
             $cutiTerpakai = (int)($db->fetch(
-                "SELECT COALESCE(SUM(jumlah_hari), 0) as total FROM leave_requests WHERE user_id = ? AND status = 'approved'",
-                [$userId]
+                "SELECT COALESCE(SUM(jumlah_hari), 0) as total FROM leave_requests WHERE user_id = ? AND status = 'approved' AND leave_type_id = 1 AND YEAR(tanggal_mulai) = ?",
+                [$userId, $currentYear]
             )['total'] ?? 0);
 
-            $sisaKuota = $totalSisaKuota - $cutiTerpakai;
+            $totalSisaKuota = $sisaKuota + $cutiTerpakai;
 
             $filename = 'Laporan_Cuti_' . preg_replace('/[^A-Za-z0-9_]/', '_', $user['nama']) . '_' . date('Ymd');
 
@@ -728,13 +774,18 @@ class ReportController extends Controller {
         try {
             $db = Database::getInstance();
 
-            $sql = "SELECT DISTINCT
+            $sql = "SELECT
                         u.id,
                         u.nama,
+                        lr.id AS lr_id,
                         lr.tanggal_mulai,
-                        lr.tanggal_selesai
+                        lr.tanggal_selesai,
+                        lr.leave_type_id,
+                        lt.nama_cuti,
+                        lt.is_akumulatif
                     FROM leave_requests lr
                     JOIN users u ON lr.user_id = u.id
+                    JOIN leave_types lt ON lr.leave_type_id = lt.id
                     WHERE ((YEAR(lr.tanggal_mulai) = ? AND MONTH(lr.tanggal_mulai) = ?)
                        OR (YEAR(lr.tanggal_selesai) = ? AND MONTH(lr.tanggal_selesai) = ?))
                     AND lr.status = 'approved'
@@ -744,20 +795,23 @@ class ReportController extends Controller {
             $params = [$year, (int)ltrim($month, '0'), $year, (int)ltrim($month, '0')];
             $results = $db->fetchAll($sql, $params);
 
-            // Remove duplicates & enrich with sisa_kuota
+            // Build result rows, one row per leave request
             $uniqueResults = [];
             foreach ($results as $result) {
-                $key = $result['id'] . '_' . $result['tanggal_mulai'] . '_' . $result['tanggal_selesai'];
+                $key = $result['lr_id'];
                 if (!isset($uniqueResults[$key])) {
-                    $kuota = $db->fetch(
-                        "SELECT COALESCE(SUM(sisa_kuota), 0) as total FROM leave_balances WHERE user_id = ?",
-                        [$result['id']]
-                    );
+                    $isAkumulatif = (int)$result['is_akumulatif'];
+
+                    $sisaKuota = $isAkumulatif
+                        ? $this->getSisaKuotaByLeaveType($db, $result['id'], $result['leave_type_id'])
+                        : null;
+
                     $uniqueResults[$key] = [
                         'nama'            => $result['nama'],
+                        'jenis_cuti'      => $result['nama_cuti'],
                         'tanggal_mulai'   => $result['tanggal_mulai'],
                         'tanggal_selesai' => $result['tanggal_selesai'],
-                        'sisa_kuota'      => (int)($kuota['total'] ?? 0),
+                        'sisa_kuota'      => $sisaKuota,
                     ];
                 }
             }
@@ -773,23 +827,25 @@ class ReportController extends Controller {
             echo '<head><meta charset="UTF-8"></head><body>';
             echo '<table border="1" style="border-collapse:collapse;">';
             // Title
-            echo '<tr><td colspan="4" style="font-weight:bold;font-size:14pt;background:#0d47a1;color:white;text-align:center;">Laporan Bulanan - ' . $monthName . ' ' . $year . '</td></tr>';
-            echo '<tr><td colspan="4"></td></tr>';
+            echo '<tr><td colspan="5" style="font-weight:bold;font-size:14pt;background:#0d47a1;color:white;text-align:center;">Laporan Bulanan - ' . $monthName . ' ' . $year . '</td></tr>';
+            echo '<tr><td colspan="5"></td></tr>';
             // Column headers
             echo '<tr style="background:#0d47a1;color:white;font-weight:bold;">';
-            echo '<td>No</td><td>Nama Pegawai</td><td>Tanggal Mulai</td><td>Tanggal Selesai</td><td>Sisa Kuota</td>';
+            echo '<td>No</td><td>Nama Pegawai</td><td>Jenis Cuti</td><td>Tanggal Mulai</td><td>Tanggal Selesai</td><td>Sisa Kuota</td>';
             echo '</tr>';
             if (empty($uniqueResults)) {
-                echo '<tr><td colspan="4" style="text-align:center;">Tidak ada data cuti untuk periode ini</td></tr>';
+                echo '<tr><td colspan="5" style="text-align:center;">Tidak ada data cuti untuk periode ini</td></tr>';
             } else {
                 $no = 1;
                 foreach ($uniqueResults as $row) {
+                    $sisaKuotaDisplay = $row['sisa_kuota'] !== null ? $row['sisa_kuota'] . ' hari' : '-';
                     echo '<tr>';
                     echo '<td>' . $no++ . '</td>';
                     echo '<td>' . htmlspecialchars($row['nama'] ?? '-') . '</td>';
+                    echo '<td>' . htmlspecialchars($row['jenis_cuti'] ?? '-') . '</td>';
                     echo '<td>' . htmlspecialchars($row['tanggal_mulai'] ?? '-') . '</td>';
                     echo '<td>' . htmlspecialchars($row['tanggal_selesai'] ?? '-') . '</td>';
-                    echo '<td>' . $row['sisa_kuota'] . ' hari</td>';
+                    echo '<td>' . $sisaKuotaDisplay . '</td>';
                     echo '</tr>';
                 }
             }

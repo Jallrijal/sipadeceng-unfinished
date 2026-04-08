@@ -1,11 +1,25 @@
 <?php
 require_once dirname(dirname(__DIR__)) . '/helpers/signature_helper.php';
+require_once dirname(dirname(__DIR__)) . '/core/Database.php';
+
 $hasSignature = getUserSignature($_SESSION['user_id'], 'user');
+$db = Database::getInstance();
+$userEmail = $db->fetch("SELECT email FROM users WHERE id = ?", [$_SESSION['user_id']]);
+$hasEmail = $userEmail['email'] ?? null;
+
 if (!$hasSignature):
 ?>
 <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
     Anda belum mengunggah gambar tanda tangan. Silakan unggah tanda tangan Anda <a href="<?= baseUrl('signature') ?>" class="alert-link">di sini</a>.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php endif; ?>
+
+<?php if (!$hasEmail): ?>
+<div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+    <i class="bi bi-envelope-exclamation me-2"></i>
+    Email Anda belum ditambahkan. Silakan tambahkan email di <a href="<?= baseUrl('user/profile') ?>" class="alert-link">profil Anda</a>.
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 <?php endif; ?>

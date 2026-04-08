@@ -267,9 +267,17 @@ class UserController extends Controller {
                     
                 case 5: // Cuti Karena Alasan Penting (Per tahun)
                     $quotaInfo['is_akumulatif'] = 0;
-                    $quotaInfo['sisa_kuota'] = $leaveType['max_days'];
-                    $quotaInfo['kuota_tersedia'] = $leaveType['max_days'];
-                    $quotaInfo['keterangan'] = "Maksimal 30 hari per sekali mengajukan, tidak akumulatif";
+                    
+                    // Sesuaikan jumlah hari cuti karena alasan penting dengan jabatan
+                    $jabatanUser = isset($_SESSION['jabatan']) ? strtolower(trim($_SESSION['jabatan'])) : '';
+                    $maxDays = 10; // Default untuk pegawai biasa
+                    if (strpos($jabatanUser, 'hakim tinggi') !== false) {
+                        $maxDays = 30; // Maksimal untuk Hakim Tinggi
+                    }
+                    
+                    $quotaInfo['sisa_kuota'] = $maxDays;
+                    $quotaInfo['kuota_tersedia'] = $maxDays;
+                    $quotaInfo['keterangan'] = "Maksimal {$maxDays} hari per sekali mengajukan, tidak akumulatif";
                     break;
                     
                 case 6: // Cuti di Luar Tanggungan Negara (Per tahun)

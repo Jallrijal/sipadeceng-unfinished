@@ -1196,8 +1196,19 @@ class LeaveController extends Controller
         $leaveId = cleanInput($_GET['id']);
         $leave = $this->leaveModel->find($leaveId);
 
-        // Validasi akses
-        if (!$leave || ($leave['user_id'] != $_SESSION['user_id'] && !isAdmin())) {
+        // Validasi akses: pemilik pengajuan, admin, atau atasan yang berwenang
+        $accessAllowed = false;
+        if ($leave && $leave['user_id'] == $_SESSION['user_id']) {
+            $accessAllowed = true;
+        }
+        if (!$accessAllowed && isAdmin()) {
+            $accessAllowed = true;
+        }
+        if (!$accessAllowed && function_exists('isAtasan') && isAtasan()) {
+            $accessAllowed = true;
+        }
+
+        if (!$leave || !$accessAllowed) {
             $_SESSION['error'] = 'Akses ditolak';
             $this->redirect('leave');
         }
@@ -1207,8 +1218,8 @@ class LeaveController extends Controller
         $doc = $documentModel->getLatestByLeaveId($leaveId, 'user_signed');
 
         if (!$doc) {
-            $_SESSION['error'] = 'Dokumen tidak ditemukan';
-            $this->redirect('leave');
+            $_SESSION['error'] = 'Blanko yang ditandatangani user belum ditemukan. Pastikan user sudah mengupload blanko terlebih dahulu.';
+            $this->redirect('approval');
         }
 
         $filepath = dirname(dirname(__DIR__)) . '/public/uploads/documents/signed/' . $doc['filename'];
