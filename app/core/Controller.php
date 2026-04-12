@@ -20,8 +20,9 @@ class Controller {
     }
     
     protected function baseUrl($url = '') {
-        $base = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']);
-        return rtrim($base, '/') . '/' . ltrim($url, '/');
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        $base = $protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']);
+        return rtrim($base, '\\/') . '/' . ltrim($url, '/');
     }
     
     protected function isAjax() {

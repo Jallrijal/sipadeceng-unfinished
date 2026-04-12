@@ -259,7 +259,7 @@ Lisensi Kepada: Pengadilan Tinggi Agama Makassar
             <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center p-0"
                 style="background: #e6eaf3;">
                 <div class="text-center w-100">
-                    <img src="<?php echo baseUrl('public/images/login.jpeg'); ?>" alt="Welcome Illustration"
+                    <img src="<?php echo baseUrl('public/images/Login.jpeg'); ?>" alt="Welcome Illustration"
                         style="max-width: 320px; width: 90%; margin-bottom: 30px;">
                     <div style="font-size: 2rem; font-weight: 700; color: #001f4d; letter-spacing: 2px;">SIPADECENG
                     </div>
