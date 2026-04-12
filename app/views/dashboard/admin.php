@@ -1,3 +1,8 @@
+<!-- 
+Author: Rijal Imamul Haq Syamsu Alam
+Lisensi Kepada: Pengadilan Tinggi Agama Makassar
+-->
+
 <?php
 // Dashboard Admin
 $hide_charts = false;

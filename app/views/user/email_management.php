@@ -1,3 +1,8 @@
+<!-- 
+Author: Rijal Imamul Haq Syamsu Alam
+Lisensi Kepada: Pengadilan Tinggi Agama Makassar
+-->
+
 <div class="card">
     <div class="card-header bg-light">
         <h6 class="mb-0"><i class="bi bi-envelope me-2"></i>Kelola Email</h6>

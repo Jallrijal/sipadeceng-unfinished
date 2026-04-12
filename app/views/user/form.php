@@ -1,3 +1,8 @@
+<!-- 
+Author: Rijal Imamul Haq Syamsu Alam
+Lisensi Kepada: Pengadilan Tinggi Agama Makassar
+-->
+
 <style>
 /* Hilangkan ikon show/hide password default browser pada input password (khusus Chrome, Edge, Safari) */
 input[type="password"]::-ms-reveal,

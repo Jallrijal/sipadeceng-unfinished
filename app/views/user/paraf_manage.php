@@ -1,3 +1,8 @@
+<!-- 
+Author: Rijal Imamul Haq Syamsu Alam
+Lisensi Kepada: Pengadilan Tinggi Agama Makassar
+-->
+
 <?php
 // Akses kontrol - hanya admin yang bisa akses
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {

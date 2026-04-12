@@ -1,3 +1,8 @@
+<!-- 
+Author: Rijal Imamul Haq Syamsu Alam
+Lisensi Kepada: Pengadilan Tinggi Agama Makassar
+-->
+
 <?php
 require_once dirname(dirname(__DIR__)) . '/helpers/signature_helper.php';
 require_once dirname(dirname(__DIR__)) . '/core/Database.php';

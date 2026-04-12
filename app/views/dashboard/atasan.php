@@ -1,3 +1,8 @@
+<!-- 
+Author: Rijal Imamul Haq Syamsu Alam
+Lisensi Kepada: Pengadilan Tinggi Agama Makassar
+-->
+
 <?php $hide_charts = isset($hide_charts) ? $hide_charts : false; ?>
 
 <?php

@@ -1,3 +1,8 @@
+<!-- 
+Author: Rijal Imamul Haq Syamsu Alam
+Lisensi Kepada: Pengadilan Tinggi Agama Makassar
+-->
+
 <style>
 /* reduce horizontal gap between the two report cards */
 .report-cards-row > [class*="col-"] { padding-left: 6px; padding-right: 6px; }
