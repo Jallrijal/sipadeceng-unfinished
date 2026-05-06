@@ -196,23 +196,67 @@ Lisensi Kepada: Pengadilan Tinggi Agama Makassar
             overflow-x: auto !important;
         }
 
-        #kuotaTable {
-            width: 100% !important;
-        }
 
-        #kuotaTable th,
-        #kuotaTable td {
-            padding: 0.35rem 0.5rem !important;
-            border: 1px solid #dee2e6 !important;
-            text-align: left !important;
-            white-space: normal !important;
-            font-size: 0.95rem !important;
-            word-break: break-word !important;
-        }
     }
 
     /* Fix modal untuk mobile (width <= 768px) */
     @media (max-width: 768px) {
+        /* Force table and all DataTables wrappers to 100% width */
+        #kuotaTable_wrapper,
+        #kuotaTable_wrapper .row,
+        #kuotaTable_wrapper .col-sm-12,
+        #kuotaTable,
+        #kuotaTable tbody,
+        #kuotaTable tr {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        #kuotaTable td {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: flex-start !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            white-space: normal !important;
+            text-align: right !important;
+            font-size: 0.78rem !important;
+            padding-right: 15px !important;
+            padding-left: 10px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            border-bottom: 1px solid #eee !important;
+            border-left: none !important;
+            border-right: none !important;
+            border-top: none !important;
+        }
+
+        #kuotaTable td::before {
+            flex-basis: 30% !important;
+            flex-shrink: 0 !important;
+            text-align: left !important;
+            padding-right: 5px !important;
+            font-size: 0.78rem !important;
+        }
+
+        #kuotaTable td > div {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+            max-width: 70%;
+            white-space: normal !important;
+            word-break: break-all !important;
+        }
+
         .modal-open {
             overflow: auto !important;
             padding-right: 0 !important;
@@ -550,9 +594,9 @@ Lisensi Kepada: Pengadilan Tinggi Agama Makassar
                 response.data.forEach(function (item, index) {
                     let sisaPengambilanTd = '';
                     if (jenisCuti == 4) {
-                        sisaPengambilanTd = `<td data-label="Sisa Pengambilan" class="text-center">${item.sisa_pengambilan ?? '-'}</td>`;
+                        sisaPengambilanTd = `<td data-label="Sisa Pengambilan" class="text-center"><div>${item.sisa_pengambilan ?? '-'}</div></td>`;
                     } else {
-                        sisaPengambilanTd = `<td data-label="Sisa Pengambilan" class="text-center"></td>`;
+                        sisaPengambilanTd = `<td data-label="Sisa Pengambilan" class="text-center" style="display:none"></td>`;
                     }
                     let terpakaiTd = '';
                     let sisaKuotaTd = '';
@@ -566,19 +610,19 @@ Lisensi Kepada: Pengadilan Tinggi Agama Makassar
                         progressTd = `<td data-label="Progress" style="display:none"></td>`;
                         aksiTd = `<td data-label="Aksi" style="display:none"></td>`;
                     } else {
-                        terpakaiTd = `<td data-label="Terpakai" class="text-center">${item.cuti_terpakai}</td>`;
-                        sisaKuotaTd = `<td data-label="Total Sisa" class="text-center"><strong>${item.sisa_kuota}</strong></td>`;
-                        detailSisaTd = `<td data-label="Detail Sisa"><a href="#" class="detail-tooltip" onclick="showDetailKuota(${item.id}, '${item.nama}', '${item.detail_sisa}', ${jenisCuti}, ${tahun})"><small>${item.detail_sisa}</small></a></td>`;
-                        progressTd = `<td data-label="Progress">\n<div class=\"progress\">\n<div class=\"progress-bar bg-${item.persentase_terpakai > 80 ? 'danger' : item.persentase_terpakai > 50 ? 'warning' : 'success'}\" role=\"progressbar\" style=\"width: ${item.persentase_terpakai}%\">${item.persentase_terpakai}%</div>\n</div>\n</td>`;
-                        aksiTd = `<td data-label="Aksi">\n<button class="btn btn-sm btn-info" onclick="viewUserHistory(${item.id}, '${item.nama}')\">\n<i class="bi bi-clock-history"></i>\n</button>\n</td>`;
+                        terpakaiTd = `<td data-label="Terpakai" class="text-center"><div>${item.cuti_terpakai}</div></td>`;
+                        sisaKuotaTd = `<td data-label="Total Sisa" class="text-center"><div><strong>${item.sisa_kuota}</strong></div></td>`;
+                        detailSisaTd = `<td data-label="Detail Sisa"><div><a href="#" class="detail-tooltip" onclick="showDetailKuota(${item.id}, '${item.nama}', '${item.detail_sisa}', ${jenisCuti}, ${tahun})"><small>${item.detail_sisa}</small></a></div></td>`;
+                        progressTd = `<td data-label="Progress"><div>\n<div class=\"progress w-100\">\n<div class=\"progress-bar bg-${item.persentase_terpakai > 80 ? 'danger' : item.persentase_terpakai > 50 ? 'warning' : 'success'}\" role=\"progressbar\" style=\"width: ${item.persentase_terpakai}%\">${item.persentase_terpakai}%</div>\n</div>\n</div></td>`;
+                        aksiTd = `<td data-label="Aksi"><div class="w-100 d-flex justify-content-end gap-1">\n<button class="btn btn-sm btn-info" onclick="viewUserHistory(${item.id}, '${item.nama}')\">\n<i class="bi bi-clock-history"></i>\n</button>\n</div></td>`;
                     }
                     tbody.append(`
                     <tr>
-                        <td data-label="No">${index + 1}</td>
-                        <td data-label="Nama">${item.nama}</td>
-                        <td data-label="NIP">${item.nip}</td>
-                        <td data-label="Unit Kerja">${item.nama_satker ? item.nama_satker : item.unit_kerja}</td>
-                        <td data-label="Total Kuota" class="text-center">${item.kuota_tahunan}</td>
+                        <td data-label="No"><div>${index + 1}</div></td>
+                        <td data-label="Nama"><div>${item.nama}</div></td>
+                        <td data-label="NIP"><div>${item.nip}</div></td>
+                        <td data-label="Unit Kerja"><div>${item.nama_satker ? item.nama_satker : item.unit_kerja}</div></td>
+                        <td data-label="Total Kuota" class="text-center"><div>${item.kuota_tahunan}</div></td>
                         ${terpakaiTd}
                         ${sisaKuotaTd}
                         ${detailSisaTd}

@@ -245,6 +245,60 @@ Lisensi Kepada: Pengadilan Tinggi Agama Makassar
     #detailContent div {
         text-align: left !important;
     }
+
+    /* Fix Responsive Table Content for History Table */
+    @media (max-width: 768px) {
+        #historyTable_wrapper,
+        #historyTable_wrapper .row,
+        #historyTable_wrapper .col-sm-12,
+        #historyTable,
+        #historyTable tbody,
+        #historyTable tr {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        #historyTable td {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: flex-start !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            white-space: normal !important;
+            text-align: right !important;
+            font-size: 0.78rem !important;
+            padding-right: 15px !important;
+            padding-left: 10px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        #historyTable td::before {
+            flex-basis: 30% !important;
+            flex-shrink: 0 !important;
+            text-align: left !important;
+            padding-right: 5px !important;
+            font-size: 0.78rem !important;
+        }
+
+        #historyTable td > div {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+            max-width: 70%;
+            white-space: normal !important;
+            word-break: break-all !important;
+        }
+    }
 </style>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
@@ -365,14 +419,14 @@ Lisensi Kepada: Pengadilan Tinggi Agama Makassar
                 status_display += item.status_badge;
                 tbody.append(`
                 <tr>
-                    <td data-label="No">${index + 1}</td>
-                    <td data-label="Tanggal Pengajuan">${item.created_at_formatted}</td>
-                    <td data-label="Nama Pengaju">${item.nama}</td>
-                    <td data-label="Jenis Cuti">${item.nama_cuti}</td>
-                    <td data-label="Periode">${item.tanggal_mulai_formatted} - ${item.tanggal_selesai_formatted}</td>
-                    <td data-label="Jumlah Hari">${item.jumlah_hari} hari</td>
-                    <td data-label="Status">${status_display}</td>
-                    <td data-label="Aksi">${actions}</td>
+                    <td data-label="No"><div>${index + 1}</div></td>
+                    <td data-label="Tanggal Pengajuan"><div>${item.created_at_formatted}</div></td>
+                    <td data-label="Nama Pengaju"><div>${item.nama}</div></td>
+                    <td data-label="Jenis Cuti"><div>${item.nama_cuti}</div></td>
+                    <td data-label="Periode"><div>${item.tanggal_mulai_formatted} - ${item.tanggal_selesai_formatted}</div></td>
+                    <td data-label="Jumlah Hari"><div>${item.jumlah_hari} hari</div></td>
+                    <td data-label="Status"><div class="d-flex flex-wrap justify-content-end gap-1">${status_display}</div></td>
+                    <td data-label="Aksi"><div class="w-100 d-flex justify-content-end gap-1">${actions}</div></td>
                 </tr>
             `);
             });

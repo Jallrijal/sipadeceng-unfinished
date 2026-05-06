@@ -170,6 +170,10 @@ document.addEventListener('DOMContentLoaded', function() {
             var ex = e.extendedProps;
             var details = ex.details || [];
             
+            // Generate Title Date
+            var dateObj = new Date(e.start);
+            var modalTitleDate = dateObj.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            
             // Build table rows for each employee
             var tableRows = '';
             if (details.length > 0) {
@@ -177,11 +181,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     var startDate = person.start || '';
                     var endDate = person.end ? new Date(person.end).toISOString().split('T')[0] : startDate;
                     tableRows += '<tr>' +
-                        '<td>' + (person.nama || '-') + '</td>' +
-                        '<td>' + (person.unit_kerja || '-') + '</td>' +
-                        '<td>' + (person.leave_type || '-') + '</td>' +
-                        '<td>' + (person.jumlah_hari || '-') + ' hari</td>' +
-                        '<td>' + startDate + ' - ' + endDate + '</td>' +
+                        '<td data-label="Nama"><div>' + (person.nama || '-') + '</div></td>' +
+                        '<td data-label="Unit Kerja"><div>' + (person.unit_kerja || '-') + '</div></td>' +
+                        '<td data-label="Jenis Cuti"><div>' + (person.leave_type || '-') + '</div></td>' +
+                        '<td data-label="Durasi"><div>' + (person.jumlah_hari || '-') + ' hari</div></td>' +
+                        '<td data-label="Tanggal"><div>' + startDate + ' - ' + endDate + '</div></td>' +
                         '</tr>';
                 });
             }
@@ -191,12 +195,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 '<div class="modal-dialog modal-lg">' +
                 '<div class="modal-content">' +
                 '<div class="modal-header">' +
-                '<h5 class="modal-title">' + e.title + '</h5>' +
+                '<h5 class="modal-title">' + modalTitleDate + '</h5>' +
                 '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
                 '</div>' +
                 '<div class="modal-body">' +
                 '<div class="table-responsive">' +
-                '<table class="table table-striped">' +
+                '<table class="table table-striped" id="leaveDetailTable">' +
                 '<thead class="table-light">' +
                 '<tr>' +
                 '<th>Nama</th>' +
@@ -257,6 +261,19 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 <?php endif; ?>
+
+<!-- SOP Pengajuan Cuti -->
+<div class="card mb-4 border-info border-start border-4">
+    <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+            <h6 class="mb-1"><i class="bi bi-file-earmark-ruled text-info me-2"></i>SOP Pengajuan Cuti</h6>
+            <p class="small text-muted mb-0">Pelajari alur dan standar operasional prosedur pengajuan cuti secara lengkap.</p>
+        </div>
+        <a href="<?php echo baseUrl('leave/sop'); ?>" class="btn btn-info btn-sm text-white px-3">
+            <i class="bi bi-eye me-1"></i> Lihat SOP
+        </a>
+    </div>
+</div>
 
 <!-- Recent Activities -->
 <div class="card">
@@ -341,15 +358,26 @@ document.addEventListener('DOMContentLoaded', function() {
     @media (max-width: 768px) {
         .card .card-body { padding: 0.5rem 0.75rem; }
         .table-responsive { padding: 0; margin: 0; border: none; overflow-x: hidden; }
-        #recentActivitiesTable { width: 100%; margin-bottom: 0; }
-        #recentActivitiesTable thead { display: none; }
-        #recentActivitiesTable tbody { display: block; }
+        #recentActivitiesTable, #leaveDetailTable { width: 100%; margin-bottom: 0; }
+        #recentActivitiesTable thead, #leaveDetailTable thead { display: none; }
+        #recentActivitiesTable tbody, #leaveDetailTable tbody { display: block; }
         #recentActivitiesTable tbody tr { display: block; border: 0; padding: 0.5rem 1rem; }
         #recentActivitiesTable tbody tr + tr { border-top: 1px solid rgba(0,0,0,0.08); }
-        #recentActivitiesTable td {
+        
+        #leaveDetailTable tbody tr { 
+            display: block; 
+            border: 1px solid rgba(0,0,0,0.125); 
+            border-radius: 0.5rem; 
+            padding: 0.75rem; 
+            margin: 0.5rem; 
+            background-color: #fff;
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+        }
+
+        #recentActivitiesTable td, #leaveDetailTable td {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             padding: 0.4rem 0.5rem;
             white-space: normal;
             border: none;
@@ -357,11 +385,21 @@ document.addEventListener('DOMContentLoaded', function() {
             text-align: right;
         }
         /* Style the label */
-        #recentActivitiesTable td::before {
+        #recentActivitiesTable td::before, #leaveDetailTable td::before {
             content: attr(data-label);
             font-weight: 600;
             text-align: left;
             flex-shrink: 0;
+            flex-basis: 35%;
+        }
+        /* Style the content */
+        #recentActivitiesTable td > div, #leaveDetailTable td > div {
+            flex-grow: 1;
+            word-break: break-word;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
         }
         .table-hover tbody tr:hover { background: transparent; }
     }
@@ -487,11 +525,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     response.data.forEach(function(item) {
                         tbody.append(`
                             <tr>
-                                <td data-label="Tanggal">${item.created_at_formatted}</td>
-                                <td data-label="Nama">${item.nama}</td>
-                                <td data-label="Unit Kerja">${item.nama_satker && item.nama_satker !== '' ? item.nama_satker : (item.unit_kerja || '-')}</td>
-                                <td data-label="Jenis Cuti">${item.nama_cuti}</td>
-                                <td data-label="Status">${item.status_badge}</td>
+                                <td data-label="Tanggal"><div>${item.created_at_formatted}</div></td>
+                                <td data-label="Nama"><div>${item.nama}</div></td>
+                                <td data-label="Unit Kerja"><div>${item.nama_satker && item.nama_satker !== '' ? item.nama_satker : (item.unit_kerja || '-')}</div></td>
+                                <td data-label="Jenis Cuti"><div>${item.nama_cuti}</div></td>
+                                <td data-label="Status"><div>${item.status_badge}</div></td>
                             </tr>
                         `);
                     });
@@ -541,11 +579,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 response.data.forEach(function(item) {
                     tbody.append(`
                         <tr>
-                            <td data-label="Tanggal">${item.created_at_formatted}</td>
-                            <td data-label="Nama">${item.nama}</td>
-                            <td data-label="Unit Kerja">${item.nama_satker && item.nama_satker !== '' ? item.nama_satker : (item.unit_kerja || '-')}</td>
-                            <td data-label="Jenis Cuti">${item.nama_cuti}</td>
-                            <td data-label="Status">${item.status_badge}</td>
+                            <td data-label="Tanggal"><div>${item.created_at_formatted}</div></td>
+                            <td data-label="Nama"><div>${item.nama}</div></td>
+                            <td data-label="Unit Kerja"><div>${item.nama_satker && item.nama_satker !== '' ? item.nama_satker : (item.unit_kerja || '-')}</div></td>
+                            <td data-label="Jenis Cuti"><div>${item.nama_cuti}</div></td>
+                            <td data-label="Status"><div>${item.status_badge}</div></td>
                         </tr>
                     `);
                 });

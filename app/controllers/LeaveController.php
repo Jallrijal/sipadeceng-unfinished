@@ -55,6 +55,20 @@ class LeaveController extends Controller
         $this->view('leave/form', $data);
     }
 
+    public function sop()
+    {
+        if (!isLoggedIn()) {
+            $this->redirect('auth/login');
+        }
+
+        $data = [
+            'title' => 'SOP Pengajuan Cuti',
+            'page_title' => 'SOP Pengajuan Cuti'
+        ];
+
+        $this->view('leave/sop', $data);
+    }
+
     /**
      * Generate catatan cuti otomatis via AJAX
      * Called when user selects leave type and/or date

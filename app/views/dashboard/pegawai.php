@@ -132,7 +132,7 @@ if (!$hasSignature):
         </div>
     </div>
     <div class="col-md-4 mb-4">
-        <div class="card">
+        <!--<div class="card">
             <div class="card-header">
                 <h6 class="mb-0">Panduan Cepat</h6>
             </div>
@@ -146,16 +146,28 @@ if (!$hasSignature):
                         <i class="bi bi-2-circle text-primary me-2"></i>
                         Cek status pengajuan
                     </a>
-                    <!--<a href="<?php echo baseUrl('leave/documents'); ?>" class="list-group-item list-group-item-action">
+                    <a href="<?php echo baseUrl('leave/documents'); ?>" class="list-group-item list-group-item-action">
                         <i class="bi bi-3-circle text-primary me-2"></i>
                         Download formulir
-                    </a>-->
+                    </a>
                 </div>
                 
                 <div class="alert alert-info mt-3" role="alert">
                     <h6 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Info</h6>
                     <small>Pengajuan cuti harus dilakukan minimal 3 hari kerja sebelum tanggal cuti yang diinginkan.</small>
                 </div>
+            </div>
+        </div>-->
+
+        <div class="card">
+            <div class="card-header bg-info bg-opacity-10">
+                <h6 class="mb-0"><i class="bi bi-file-earmark-ruled text-info me-2"></i>SOP Pengajuan Cuti</h6>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted mb-3">Pelajari alur dan standar operasional prosedur pengajuan cuti secara lengkap.</p>
+                <a href="<?php echo baseUrl('leave/sop'); ?>" class="btn btn-info btn-sm w-100 text-white">
+                    <i class="bi bi-eye me-1"></i> Lihat SOP
+                </a>
             </div>
         </div>
     </div>

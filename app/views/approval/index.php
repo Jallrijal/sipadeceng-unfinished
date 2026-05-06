@@ -511,6 +511,72 @@ $isSpecialRole = $isKasubbag || $isKabag || $isSekretaris || $isKetua;
         #detailContent div {
             text-align: left !important;
         }
+
+        /* Force table and all DataTables wrappers to 100% width */
+        #persetujuanTable_wrapper,
+        #persetujuanTable_wrapper .row,
+        #persetujuanTable_wrapper .col-sm-12,
+        #persetujuanTable,
+        #persetujuanTable tbody,
+        #persetujuanTable tr,
+        #persetujuanTableDiteruskan_wrapper,
+        #persetujuanTableDiteruskan_wrapper .row,
+        #persetujuanTableDiteruskan_wrapper .col-sm-12,
+        #persetujuanTableDiteruskan,
+        #persetujuanTableDiteruskan tbody,
+        #persetujuanTableDiteruskan tr {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        /* Fix Responsive Table Content (Daftar Pengajuan) */
+        #persetujuanTable td,
+        #persetujuanTableDiteruskan td {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: flex-start !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            white-space: normal !important;
+            text-align: right !important;
+            font-size: 0.78rem !important; /* Kembalikan ke ukuran ideal */
+            padding-right: 15px !important; 
+            padding-left: 10px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            border-bottom: 1px solid #eee !important;
+            border-left: none !important;
+            border-right: none !important;
+            border-top: none !important;
+        }
+
+        #persetujuanTable td::before,
+        #persetujuanTableDiteruskan td::before {
+            flex-basis: 30% !important;
+            flex-shrink: 0 !important;
+            text-align: left !important;
+            padding-right: 5px !important;
+            font-size: 0.78rem !important;
+        }
+
+        #persetujuanTable td > div,
+        #persetujuanTableDiteruskan td > div {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+            max-width: 70%;
+            white-space: normal !important;
+            word-break: break-all !important;
+        }
     }
 </style>
 
@@ -995,14 +1061,14 @@ $isSpecialRole = $isKasubbag || $isKabag || $isSekretaris || $isKetua;
 
                     tbody.append(`
                     <tr data-leave-id="${item.id}">
-                        <td data-label="No">${index + 1}</td>
-                        <td data-label="Tanggal Pengajuan">${item.created_at_formatted || item.created_at || '-'}</td>
-                        <td data-label="Nama">${item.nama || '-'}</td>
-                        <td data-label="Unit Kerja">${item.nama_satker ? item.nama_satker : (item.unit_kerja || '-')}</td>
-                        <td data-label="Jenis Cuti">${item.nama_cuti || '-'}</td>
-                        <td data-label="Periode">${item.tanggal_mulai_formatted || item.tanggal_mulai || '-'} - ${item.tanggal_selesai_formatted || item.tanggal_selesai || '-'}</td>
-                        <td data-label="Status">${status_display} ${postponedInfo}</td>
-                        <td data-label="Aksi">${actionContainer}</td>
+                        <td data-label="No"><div>${index + 1}</div></td>
+                        <td data-label="Tanggal Pengajuan"><div>${item.created_at_formatted || item.created_at || '-'}</div></td>
+                        <td data-label="Nama"><div>${item.nama || '-'}</div></td>
+                        <td data-label="Unit Kerja"><div>${item.nama_satker ? item.nama_satker : (item.unit_kerja || '-')}</div></td>
+                        <td data-label="Jenis Cuti"><div>${item.nama_cuti || '-'}</div></td>
+                        <td data-label="Periode"><div>${item.tanggal_mulai_formatted || item.tanggal_mulai || '-'} - ${item.tanggal_selesai_formatted || item.tanggal_selesai || '-'}</div></td>
+                        <td data-label="Status"><div class="d-flex flex-wrap justify-content-end gap-1">${status_display} ${postponedInfo}</div></td>
+                        <td data-label="Aksi"><div class="w-100 d-flex justify-content-end">${actionContainer}</div></td>
                     </tr>
                 `);
                 });

@@ -700,6 +700,59 @@ Lisensi Kepada: Pengadilan Tinggi Agama Makassar
             font-size: 0.875rem;
             padding: 0.5rem 0.75rem;
         }
+
+        /* Force table and all DataTables wrappers to 100% width */
+        #usersTable_wrapper,
+        #usersTable_wrapper .row,
+        #usersTable_wrapper .col-sm-12,
+        #usersTable,
+        #usersTable tbody,
+        #usersTable tr {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        /* Fix Responsive Table Content for Users Table */
+        #usersTable td {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: flex-start !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            white-space: normal !important;
+            text-align: right !important;
+            font-size: 0.78rem !important; /* Kembalikan ke ukuran ideal */
+            padding-right: 15px !important; 
+            padding-left: 10px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        #usersTable td::before {
+            flex-basis: 30% !important;
+            flex-shrink: 0 !important;
+            text-align: left !important;
+            padding-right: 5px !important;
+            font-size: 0.75rem !important;
+        }
+
+        #usersTable td > div {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+            max-width: 70%;
+            white-space: normal !important;
+            word-break: break-all !important;
+        }
     }
 </style>
 
@@ -795,15 +848,15 @@ Lisensi Kepada: Pengadilan Tinggi Agama Makassar
                     response.data.forEach((user, index) => {
                         const row = `
                         <tr>
-                            <td data-label="No">${index + 1}</td>
-                            <td data-label="Nama">${user.nama}</td>
-                            <td data-label="NIP">${user.nip}</td>
-                            <td data-label="Jabatan">${user.jabatan}</td>
-                            <td data-label="Unit Kerja">${user.nama_satker ? user.nama_satker : user.unit_kerja}</td>
-                            <td data-label="Atasan">${user.nama_atasan ? `${user.nama_atasan}<br><small class="text-muted">${user.nip_atasan}</small>` : '<span class="text-muted">-</span>'}</td>
-                            <td data-label="Tipe"><span class="badge bg-${user.user_type === 'admin' ? 'success' : 'info'}">${user.user_type}</span></td>
-                            <td data-label="Status User">${user.user_status_badge || '<span class="badge bg-success">Aktif</span>'}</td>
-                            <td data-label="Aksi"><a href="${baseUrl('user/edit/' + user.id)}" class="btn btn-sm btn-warning" title="Edit"><i class="bi bi-pencil"></i></a><button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})" title="Hapus"><i class="bi bi-trash"></i></button></td>
+                            <td data-label="No"><div>${index + 1}</div></td>
+                            <td data-label="Nama"><div>${user.nama}</div></td>
+                            <td data-label="NIP"><div>${user.nip}</div></td>
+                            <td data-label="Jabatan"><div>${user.jabatan}</div></td>
+                            <td data-label="Unit Kerja"><div>${user.nama_satker ? user.nama_satker : user.unit_kerja}</div></td>
+                            <td data-label="Atasan"><div>${user.nama_atasan ? `${user.nama_atasan}<br><small class="text-muted d-none d-md-inline">${user.nip_atasan}</small>` : '<span class="text-muted">-</span>'}</div></td>
+                            <td data-label="Tipe"><div><span class="badge bg-${user.user_type === 'admin' ? 'success' : 'info'}">${user.user_type}</span></div></td>
+                            <td data-label="Status User"><div>${user.user_status_badge || '<span class="badge bg-success">Aktif</span>'}</div></td>
+                            <td data-label="Aksi"><div class="w-100 d-flex justify-content-end gap-1"><a href="${baseUrl('user/edit/' + user.id)}" class="btn btn-sm btn-warning" title="Edit"><i class="bi bi-pencil"></i></a><button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})" title="Hapus"><i class="bi bi-trash"></i></button></div></td>
                         </tr>
                     `;
                         tbody.append(row);

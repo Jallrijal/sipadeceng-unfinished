@@ -5,11 +5,11 @@ class DashboardController extends Controller {
         if (!isLoggedIn()) {
             $this->redirect('auth/login');
         }
-        // Route to correct dashboard based on role: atasan -> atasan view, pimpinan -> pimpinan view, else pegawai
+        // Route to correct dashboard based on role: atasan -> atasan view, admin -> admin view, else pegawai
         if (isAtasan()) {
             $this->atasan();
         } elseif (isAdmin()) {
-            $this->pimpinan();
+            $this->admin();
         } else {
             $this->user();
         }
@@ -29,13 +29,13 @@ class DashboardController extends Controller {
         $this->view('dashboard/atasan', $data);
     }
 
-    public function pimpinan() {
+    public function admin() {
         if (!isAdmin()) {
             $this->redirect('dashboard/pegawai');
         }
 
         $data = [
-            'title' => 'Dashboard Pimpinan',
+            'title' => 'Dashboard Admin',
             'page_title' => 'Dashboard'
         ];
 

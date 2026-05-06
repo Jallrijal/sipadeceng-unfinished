@@ -114,6 +114,19 @@ if (!$hasSignature):
     </div>
 <?php endif; ?>
 
+<!-- SOP Pengajuan Cuti -->
+<div class="card mb-4 border-info border-start border-4">
+    <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+            <h6 class="mb-1"><i class="bi bi-file-earmark-ruled text-info me-2"></i>SOP Pengajuan Cuti</h6>
+            <p class="small text-muted mb-0">Pelajari alur dan standar operasional prosedur pengajuan cuti secara lengkap.</p>
+        </div>
+        <a href="<?php echo baseUrl('leave/sop'); ?>" class="btn btn-info btn-sm text-white px-3">
+            <i class="bi bi-eye me-1"></i> Lihat SOP
+        </a>
+    </div>
+</div>
+
 <!-- My Recent Activities -->
 <div class="card mb-4">
     <div class="card-header d-flex justify-content-between align-items-center">
@@ -262,7 +275,7 @@ if (!$hasSignature):
         #recentActivitiesTable td {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             padding: 0.4rem 0.5rem;
             /* Increased horizontal padding */
             white-space: normal;
@@ -279,6 +292,18 @@ if (!$hasSignature):
             font-weight: 600;
             text-align: left;
             flex-shrink: 0;
+            flex-basis: 35%;
+        }
+
+        /* Style the content */
+        #myRecentActivitiesTable td > div,
+        #recentActivitiesTable td > div {
+            flex-grow: 1;
+            word-break: break-word;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
         }
 
         .table-hover tbody tr:hover {
@@ -407,11 +432,11 @@ if (!$hasSignature):
                             response.data.forEach(function (item) {
                                 tbody.append(`
                             <tr>
-                                <td data-label="Tanggal">${item.created_at_formatted}</td>
-                                <td data-label="Jenis Cuti">${item.nama_cuti}</td>
-                                <td data-label="Mulai">${item.tanggal_mulai}</td>
-                                <td data-label="Selesai">${item.tanggal_selesai}</td>
-                                <td data-label="Status">${item.status_badge}</td>
+                                <td data-label="Tanggal"><div>${item.created_at_formatted}</div></td>
+                                <td data-label="Jenis Cuti"><div>${item.nama_cuti}</div></td>
+                                <td data-label="Mulai"><div>${item.tanggal_mulai}</div></td>
+                                <td data-label="Selesai"><div>${item.tanggal_selesai}</div></td>
+                                <td data-label="Status"><div>${item.status_badge}</div></td>
                             </tr>
                         `);
                             });
@@ -432,11 +457,11 @@ if (!$hasSignature):
                             response.data.forEach(function (item) {
                                 tbody.append(`
                             <tr>
-                                <td data-label="Tanggal">${item.created_at_formatted}</td>
-                                <td data-label="Nama">${item.nama}</td>
-                                <td data-label="Unit Kerja">${item.nama_satker && item.nama_satker !== '' ? item.nama_satker : (item.unit_kerja || '-')}</td>
-                                <td data-label="Jenis Cuti">${item.nama_cuti}</td>
-                                <td data-label="Status">${item.status_badge}</td>
+                                <td data-label="Tanggal"><div>${item.created_at_formatted}</div></td>
+                                <td data-label="Nama"><div>${item.nama}</div></td>
+                                <td data-label="Unit Kerja"><div>${item.nama_satker && item.nama_satker !== '' ? item.nama_satker : (item.unit_kerja || '-')}</div></td>
+                                <td data-label="Jenis Cuti"><div>${item.nama_cuti}</div></td>
+                                <td data-label="Status"><div>${item.status_badge}</div></td>
                             </tr>
                         `);
                             });
@@ -486,11 +511,11 @@ if (!$hasSignature):
                         response.data.forEach(function (item) {
                             tbody.append(`
                         <tr>
-                            <td data-label="Tanggal">${item.created_at_formatted}</td>
-                            <td data-label="Jenis Cuti">${item.nama_cuti}</td>
-                            <td data-label="Mulai">${item.tanggal_mulai}</td>
-                            <td data-label="Selesai">${item.tanggal_selesai}</td>
-                            <td data-label="Status">${item.status_badge}</td>
+                            <td data-label="Tanggal"><div>${item.created_at_formatted}</div></td>
+                            <td data-label="Jenis Cuti"><div>${item.nama_cuti}</div></td>
+                            <td data-label="Mulai"><div>${item.tanggal_mulai}</div></td>
+                            <td data-label="Selesai"><div>${item.tanggal_selesai}</div></td>
+                            <td data-label="Status"><div>${item.status_badge}</div></td>
                         </tr>
                     `);
                         });
@@ -511,11 +536,11 @@ if (!$hasSignature):
                         response.data.forEach(function (item) {
                             tbody.append(`
                         <tr>
-                            <td data-label="Tanggal">${item.created_at_formatted}</td>
-                            <td data-label="Nama">${item.nama}</td>
-                            <td data-label="Unit Kerja">${item.nama_satker && item.nama_satker !== '' ? item.nama_satker : (item.unit_kerja || '-')}</td>
-                            <td data-label="Jenis Cuti">${item.nama_cuti}</td>
-                            <td data-label="Status">${item.status_badge}</td>
+                            <td data-label="Tanggal"><div>${item.created_at_formatted}</div></td>
+                            <td data-label="Nama"><div>${item.nama}</div></td>
+                            <td data-label="Unit Kerja"><div>${item.nama_satker && item.nama_satker !== '' ? item.nama_satker : (item.unit_kerja || '-')}</div></td>
+                            <td data-label="Jenis Cuti"><div>${item.nama_cuti}</div></td>
+                            <td data-label="Status"><div>${item.status_badge}</div></td>
                         </tr>
                     `);
                         });
