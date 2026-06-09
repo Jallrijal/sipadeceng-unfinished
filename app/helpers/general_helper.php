@@ -240,9 +240,14 @@ function getSisaKuotaByType($userId, $leaveTypeId, $tahun = null) {
     switch ($leaveTypeId) {
         case 1: // Cuti Tahunan (menggunakan tabel leave_balances yang sudah ada)
             if (!$tahun) $tahun = date('Y');
-            $sql = "SELECT sisa_kuota FROM leave_balances WHERE user_id = ? AND tahun = ?";
-            $result = $db->fetch($sql, [$userId, $tahun]);
-            return $result ? $result['sisa_kuota'] : 0;
+            $tahunInt = (int)$tahun;
+            $years = [$tahunInt - 2, $tahunInt - 1, $tahunInt];
+            $totalSisa = 0;
+            foreach ($years as $y) {
+                $result = $db->fetch("SELECT sisa_kuota FROM leave_balances WHERE user_id = ? AND tahun = ?", [$userId, $y]);
+                $totalSisa += $result ? (int)$result['sisa_kuota'] : 0;
+            }
+            return $totalSisa;
             
         case 2: // Cuti Besar
             $sql = "SELECT sisa_kuota FROM kuota_cuti_besar WHERE user_id = ?";
