@@ -114,6 +114,160 @@ if (!$hasSignature):
     </div>
 <?php endif; ?>
 
+<!-- Kalender Cuti Pegawai Bawahan -->
+<div class="row mt-4 mb-5">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Kalender Cuti Pegawai Saya</h6>
+            </div>
+            <div class="card-body">
+                <!-- FullCalendar container -->
+                <div id="leaveCalendarAtasan">
+                    <div id="fcAtasan"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FullCalendar CSS (CDN) -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet" />
+
+<!-- FullCalendar JS (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.global.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var fcEl = document.getElementById('fcAtasan');
+    if (!fcEl) return;
+
+    var calendarAtasan = new FullCalendar.Calendar(fcEl, {
+        initialView: 'dayGridMonth',
+        locale: 'id',
+        headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,dayGridWeek,dayGridDay' },
+        height: 650,
+        events: function(info, successCallback, failureCallback) {
+            // Ambil data pengajuan cuti bawahan via endpoint kalender (mendukung range)
+            $.post(baseUrl('leave/calendarEvents'), { start: info.startStr, end: info.endStr }, function(resp) {
+                if (!resp.success) { failureCallback('Gagal mengambil data'); return; }
+
+                // Group data by start date and count
+                var groupedByDate = {};
+                resp.data.forEach(function(item) {
+                    var key = item.start;
+                    if (!groupedByDate[key]) {
+                        groupedByDate[key] = {
+                            start: item.start,
+                            end: item.end,
+                            backgroundColor: item.backgroundColor || item.borderColor || '#6c757d',
+                            borderColor: item.borderColor || item.backgroundColor || '#6c757d',
+                            details: []
+                        };
+                    }
+                    groupedByDate[key].details.push({
+                        id: item.id,
+                        nama: item.nama,
+                        leave_type: item.leave_type,
+                        status: item.status,
+                        jumlah_hari: item.jumlah_hari,
+                        unit_kerja: item.unit_kerja,
+                        start: item.start,
+                        end: item.end
+                    });
+                });
+
+                // Transform to event format with count as title
+                var events = Object.values(groupedByDate).map(function(item) {
+                    var count = item.details.length;
+                    return {
+                        title: count + ' Pegawai',
+                        start: item.start,
+                        end: item.end,
+                        allDay: true,
+                        backgroundColor: item.backgroundColor,
+                        borderColor: item.borderColor,
+                        extendedProps: {
+                            details: item.details,
+                            count: count
+                        }
+                    };
+                });
+                successCallback(events);
+            }, 'json').fail(function() { failureCallback('AJAX error'); });
+        },
+        eventClick: function(info) {
+            var e = info.event;
+            var ex = e.extendedProps;
+            var details = ex.details || [];
+
+            // Generate Title Date
+            var dateObj = new Date(e.start);
+            var modalTitleDate = dateObj.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Build table rows for each employee
+            var tableRows = '';
+            if (details.length > 0) {
+                details.forEach(function(person) {
+                    var startDate = person.start || '';
+                    var endDate = person.end ? new Date(person.end).toISOString().split('T')[0] : startDate;
+                    tableRows += '<tr>' +
+                        '<td data-label="Nama"><div>' + (person.nama || '-') + '</div></td>' +
+                        '<td data-label="Unit Kerja"><div>' + (person.unit_kerja || '-') + '</div></td>' +
+                        '<td data-label="Jenis Cuti"><div>' + (person.leave_type || '-') + '</div></td>' +
+                        '<td data-label="Durasi"><div>' + (person.jumlah_hari || '-') + ' hari</div></td>' +
+                        '<td data-label="Tanggal"><div>' + startDate + ' - ' + endDate + '</div></td>' +
+                        '</tr>';
+                });
+            }
+
+            // Build modal HTML (bootstrap) with table of employees
+            var modalHtml = '<div class="modal fade" id="leaveDetailModalAtasan" tabindex="-1" aria-hidden="true">' +
+                '<div class="modal-dialog modal-lg">' +
+                '<div class="modal-content">' +
+                '<div class="modal-header">' +
+                '<h5 class="modal-title">' + modalTitleDate + '</h5>' +
+                '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                '</div>' +
+                '<div class="modal-body">' +
+                '<div class="table-responsive">' +
+                '<table class="table table-striped" id="leaveDetailTableAtasan">' +
+                '<thead class="table-light">' +
+                '<tr>' +
+                '<th>Nama</th>' +
+                '<th>Unit Kerja</th>' +
+                '<th>Jenis Cuti</th>' +
+                '<th>Durasi</th>' +
+                '<th>Tanggal</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                tableRows +
+                '</tbody>' +
+                '</table>' +
+                '</div>' +
+                '</div>' +
+                '<div class="modal-footer">' +
+                '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+            // Remove existing modal, append new, and show
+            $('#leaveDetailModalAtasan').remove();
+            $('body').append(modalHtml);
+            var myModalEl = document.getElementById('leaveDetailModalAtasan');
+            var modal = new bootstrap.Modal(myModalEl);
+            modal.show();
+        }
+    });
+
+    calendarAtasan.render();
+});
+</script>
+
 <!-- SOP Pengajuan Cuti -->
 <div class="card mb-4 border-info border-start border-4">
     <div class="card-body d-flex justify-content-between align-items-center">
@@ -308,6 +462,45 @@ if (!$hasSignature):
 
         .table-hover tbody tr:hover {
             background: transparent;
+        }
+
+        /* leaveDetailTableAtasan mobile styles */
+        #leaveDetailTableAtasan { width: 100%; margin-bottom: 0; }
+        #leaveDetailTableAtasan thead { display: none; }
+        #leaveDetailTableAtasan tbody { display: block; }
+        #leaveDetailTableAtasan tbody tr {
+            display: block;
+            border: 1px solid rgba(0,0,0,0.125);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin: 0.5rem;
+            background-color: #fff;
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+        }
+        #leaveDetailTableAtasan td {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.4rem 0.5rem;
+            white-space: normal;
+            border: none;
+            gap: 1rem;
+            text-align: right;
+        }
+        #leaveDetailTableAtasan td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            text-align: left;
+            flex-shrink: 0;
+            flex-basis: 35%;
+        }
+        #leaveDetailTableAtasan td > div {
+            flex-grow: 1;
+            word-break: break-word;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
         }
     }
 </style>

@@ -76,7 +76,7 @@ class UserController extends Controller
         // Get database instance
         $db = Database::getInstance();
 
-        if (isUser()) {
+        if (isPegawai()) {
             // User statistics
             // Total balance from specific years (last 3 years)
             $stats['sisa_cuti'] = $this->leaveBalanceModel->getTotalBalance($userId, date('Y'));
